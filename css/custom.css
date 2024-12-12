@@ -1,0 +1,191 @@
+/* 页脚与头图透明 */
+#footer {
+    background: transparent !important;
+}
+#page-header {
+    background: transparent !important;
+}
+
+/* 白天模式遮罩透明 */
+#footer::before {
+    background: transparent !important;
+}
+#page-header::before {
+    background: transparent !important;
+}
+
+/* 夜间模式遮罩透明 */
+[data-theme="dark"] #footer::before {
+    background: transparent !important;
+}
+[data-theme="dark"] #page-header::before {
+    background: transparent !important;
+}
+/* 夜间模式 背景 */
+[data-theme='dark'] #web_bg{
+    background-image: url('/img/pokemon1.jpg') !important;
+}
+:root {
+    --trans-light: rgba(255, 255, 255, 0.75);
+    --trans-dark: rgba(25, 25, 25, 0.75);
+    --backdrop-filter: blur(5px) saturate(150%);
+  }
+  
+  /* 首页文章卡片 */
+  #recent-posts  .recent-post-item {
+    background: var(--trans-light);
+    backdrop-filter: var(--backdrop-filter);
+  }
+  
+  /* 首页侧栏卡片 */
+  #aside-content .card-widget {
+    background: var(--trans-light);
+    backdrop-filter: var(--backdrop-filter);
+  }
+  
+  /* 文章页、归档页、普通页面 */
+  div#post,
+  div#page,
+  div#archive {
+    background: var(--trans-light);
+    backdrop-filter: var(--backdrop-filter);
+  }
+  
+  /* 导航栏 */
+  #page-header.nav-fixed #nav {
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: var(--backdrop-filter);
+  }
+  
+  [data-theme="dark"] #page-header.nav-fixed #nav {
+    background: rgba(0, 0, 0, 0.7) !important;
+  }
+  
+  /* 夜间模式遮罩 */
+  [data-theme="dark"] #recent-posts .recent-post-item,
+  [data-theme="dark"] #aside-content .card-widget,
+  [data-theme="dark"] div#post,
+  [data-theme="dark"] div#archive,
+  [data-theme="dark"] div#page {
+    background: var(--trans-dark);
+  }
+  
+  
+  /* 阅读模式 */
+  .read-mode #aside-content .card-widget {
+    background: rgba(158, 204, 171, 0.5) !important;
+  }
+  .read-mode div#post {
+    background: rgba(158, 204, 171, 0.5) !important;
+  }
+  
+  /* 夜间模式下的阅读模式 */
+  [data-theme="dark"] .read-mode #aside-content .card-widget {
+    background: rgba(25, 25, 25, 0.8) !important;
+    color: #ffffff;
+  }
+  [data-theme="dark"] .read-mode div#post {
+    background: rgba(25, 25, 25, 0.8) !important;
+    color: #ffffff;
+  }
+
+
+  /*aplayer日间模式调整*/
+/*背景色*/
+.aplayer{
+	background: rgba(255, 255, 255, 0.60)!important;
+	box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.07),0 1px 5px 0 rgba(0,0,0,.1);
+	position: relative;
+}
+.aplayer.aplayer-fixed .aplayer-lrc:after,.aplayer.aplayer-fixed .aplayer-lrc:before {
+	display: none
+}
+.aplayer.aplayer.aplayer-fixed .aplayer-body{
+	background:rgba(255, 255, 255, 0.60)!important;
+	box-shadow: 0 2px 2px 0 rgba(0,0,0,.07),0 1px 5px 0 rgba(0,0,0,.1);
+	position: fixed;
+  bottom:1%;
+}
+/*毛玻璃效果*/
+.aplayer-list{
+	backdrop-filter: blur(3px);
+}
+.aplayer-info{
+	backdrop-filter: blur(3px);
+}
+/*滚动条*/
+.aplayer .aplayer-list ol::-webkit-scrollbar {
+	width: 5px
+}
+.aplayer .aplayer-list ol::-webkit-scrollbar-thumb {
+	border-radius: 3px;
+	background-color: #b0e1ff
+}
+.aplayer .aplayer-list ol::-webkit-scrollbar-thumb:hover {
+	background-color: #b0e1ff
+}
+/*圆角*/
+.aplayer.aplayer-fixed .aplayer-list{
+    border-radius: 6px 6px 0 0!important;
+}
+.aplayer.aplayer-fixed .aplayer-miniswitcher{
+    border-radius: 0 6px 6px 0!important;
+}
+.aplayer.aplayer-fixed.aplayer-narrow .aplayer-body{
+    transition: 0.28s!important;
+    border-radius: 6px!important;
+}	
+/*选中与播放中歌曲激活颜色*/
+.aplayer .aplayer-list ol li:hover{
+    background: #b0e1ff!important;
+}
+.aplayer .aplayer-list ol li.aplayer-list-light{
+    background: #ffdffa!important;
+}
+
+/*aplayer黑暗模式*/
+[data-theme=dark]
+.aplayer{
+    background: rgba(22, 22, 22, 0.60)!important;
+    color: rgb(255, 255, 255);
+	box-shadow: 0 2px 2px 0 rgba(0,0,0,.07),0 1px 5px 0 rgba(0,0,0,.1);
+}
+[data-theme=dark]
+.aplayer.aplayer-fixed .aplayer-body{
+    background: rgba(22, 22, 22, 0.60)!important;
+    color: rgb(255, 255, 255);
+	box-shadow: 0 2px 2px 0 rgba(0,0,0,.07),0 1px 5px 0 rgba(0,0,0,.1);
+}
+[data-theme=dark]
+.aplayer .aplayer-info .aplayer-controller .aplayer-time .aplayer-icon path{
+	fill: #d4d4d4;
+}
+[data-theme=dark]	
+.aplayer .aplayer-list ol li:hover{
+    background: #407290!important;
+}
+[data-theme=dark]
+.aplayer .aplayer-list ol li.aplayer-list-light{
+    background: #9c8098!important;
+}
+[data-theme=dark]
+.aplayer .aplayer-info .aplayer-controller .aplayer-time{
+    color: #d4d4d4;
+}
+[data-theme=dark]
+.aplayer .aplayer-list ol li .aplayer-list-index{
+    color: #d4d4d4;
+}
+[data-theme=dark]
+.aplayer .aplayer-list ol li .aplayer-list-author{
+    color: #d4d4d4;
+}
+.aplayer.aplayer-fixed.aplayer-narrow .aplayer-body {
+  left: -66px !important;
+  /* 默认情况下缩进左侧66px，只留一点箭头部分 */
+}
+
+.aplayer.aplayer-fixed.aplayer-narrow .aplayer-body:hover {
+  left: 0 !important;
+  /* 鼠标悬停是左侧缩进归零，完全显示按钮 */
+}
