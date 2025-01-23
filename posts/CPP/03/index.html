@@ -1,0 +1,540 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>3、从源码到可执行文件 | LittleBug</title><meta name="author" content="ShawnX"><meta name="copyright" content="ShawnX"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="简析   一般来说，C++程序会分为 头文件和源代码文件。 C++鼓励我们将组件函数放在单独的文件中，这就意味着会存在多个源代码文件，C++鼓励我们对这些源代码文件单独编译，然后将这些文件的编译版本链接。 单独编译后在链接的意义在于：如果我们要对一个源文件修改，我们就可以只对这个源文件编译，然后和其他文件的编译版本链接。   比如下面这个程序，有一个有文件coordin.h,两个源代码文件 fil">
+<meta property="og:type" content="article">
+<meta property="og:title" content="3、从源码到可执行文件">
+<meta property="og:url" content="http://imxxl.top/posts/CPP/03/index.html">
+<meta property="og:site_name" content="LittleBug">
+<meta property="og:description" content="简析   一般来说，C++程序会分为 头文件和源代码文件。 C++鼓励我们将组件函数放在单独的文件中，这就意味着会存在多个源代码文件，C++鼓励我们对这些源代码文件单独编译，然后将这些文件的编译版本链接。 单独编译后在链接的意义在于：如果我们要对一个源文件修改，我们就可以只对这个源文件编译，然后和其他文件的编译版本链接。   比如下面这个程序，有一个有文件coordin.h,两个源代码文件 fil">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://imxxl.top/img/pokemon1.jpg">
+<meta property="article:published_time" content="2024-09-30T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-01-23T15:51:53.701Z">
+<meta property="article:author" content="ShawnX">
+<meta property="article:tag" content="cpp">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://imxxl.top/img/pokemon1.jpg"><link rel="shortcut icon" href="/img/avatar.jpg"><link rel="canonical" href="http://imxxl.top/posts/CPP/03/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          const hour = new Date().getHours()
+          const isNight = hour <= 6 || hour >= 18
+          if (theme === undefined) isNight ? activateDarkMode() : activateLightMode()
+          else theme === 'light' ? activateLightMode() : activateDarkMode()
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":100,"highlightFullpage":true,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '3、从源码到可执行文件',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  isShuoshuo: false
+}</script><link rel="stylesheet" href="/css/mouse.css"><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-image: url(/img/pokemon2.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">28</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">12</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">12</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 全部文章</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 鏈接</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/pokemon1.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">LittleBug</span></a><a class="nav-page-title" href="/"><span class="site-name">3、从源码到可执行文件</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 全部文章</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 鏈接</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">3、从源码到可执行文件<a class="post-edit-link" href="https://github.com/Shawn-Summer/hexo-source/edit/main/source/_posts/CPP/03.md" title="编辑" target="_blank"><i class="fas fa-pencil-alt"></i></a></h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-09-30T16:00:00.000Z" title="发表于 2024-10-01 00:00:00">2024-10-01</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-01-23T15:51:53.701Z" title="更新于 2025-01-23 23:51:53">2025-01-23</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/CPP/">CPP</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">2.3k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>8分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="简析">简析</h2>
+<img src="/posts/CPP/03/1.jpg" alt="编译过程" style="zoom: 80%;">
+<blockquote>
+<p>一般来说，C++程序会分为 头文件和源代码文件。<br>
+C++鼓励我们将组件函数放在单独的文件中，这就意味着会存在多个源代码文件，C++鼓励我们对这些源代码文件单独编译，然后将这些文件的编译版本链接。<br>
+单独编译后在链接的意义在于：如果我们要对一个源文件修改，我们就可以只对这个源文件编译，然后和其他文件的编译版本链接。</p>
+</blockquote>
+<ul>
+<li>比如下面这个程序，有一个有文件coordin.h,两个源代码文件 file1.cpp和file2.cpp<br>
+<img src="/posts/CPP/03/2.jpg" alt="file" style="zoom:50%;"></li>
+</ul>
+<blockquote>
+<p>coordin.h</p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">ifndef</span> a</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> a</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">polar</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">double</span> distance;</span><br><span class="line">    <span class="type">double</span> angle;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">rect</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">double</span> x;</span><br><span class="line">    <span class="type">double</span> y;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function">polar <span class="title">rect_to_polar</span><span class="params">(rect xypos)</span></span>;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">show_polar</span><span class="params">(polar dapos)</span></span>;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>file1.cpp</p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&quot;coordin.h&quot;</span></span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line">    rect rplace;</span><br><span class="line">    polar pplace;</span><br><span class="line">    </span><br><span class="line">    cout&lt;&lt;<span class="string">&quot;Enter the x and y values:&quot;</span>;</span><br><span class="line">    <span class="keyword">while</span> (cin&gt;&gt;rplace.x&gt;&gt;rplace.y)</span><br><span class="line">    &#123;</span><br><span class="line">        pplace = <span class="built_in">rect_to_polar</span>(rplace);</span><br><span class="line">        <span class="built_in">show_polar</span>(pplace);</span><br><span class="line">        cout&lt;&lt;<span class="string">&quot;Next two numbers (q to quit):&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>file2.cpp</p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;cmath&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;coordin.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function">polar <span class="title">rect_to_polar</span><span class="params">(rect xypos )</span></span>&#123;</span><br><span class="line">    <span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line">    polar answer;</span><br><span class="line">    answer.distance=<span class="built_in">sqrt</span>(xypos.x*xypos.x+xypos.y*xypos.y);</span><br><span class="line">    answer.angle=<span class="built_in">atan2</span>(xypos.y,xypos.x);</span><br><span class="line">    <span class="keyword">return</span> answer;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">show_polar</span><span class="params">(polar dapos)</span></span>&#123;</span><br><span class="line">    <span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line">    <span class="type">const</span> <span class="type">double</span> rad_to_deg =<span class="number">57.29577951</span>;</span><br><span class="line"></span><br><span class="line">    cout&lt;&lt;<span class="string">&quot;distance=:&quot;</span>&lt;&lt;dapos.distance&lt;&lt;endl&lt;&lt;<span class="string">&quot;angle=:&quot;</span>&lt;&lt;dapos.angle&lt;&lt;endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>可以看出来，coordin.h里面就是函数原型和结构体声明，file1.cpp 和 file2.cpp里就是函数的定义。<br>
+这个程序就是把直角坐标化成极坐标。<br>
+使用命令行生成可执行文件，是非常简单的</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">g++ file1.cpp file2.cpp -o myfile.exe</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>g++帮你完成了很多工作，包括单独编译然后将目标代码文件，库代码和启动代码合并，并生成可执行文件.</p>
+<p>注意：file1.cpp中没有include&quot;file2.cpp&quot;,可见这两个源代码文件确实是单独编译的。</p>
+</blockquote>
+<h3 id="预处理">预处理</h3>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">g++ -E .\file1.cpp -o file1.i</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>预处理后得到file1.i 文件。<br>
+预处理做的事情有：</p>
+<ol>
+<li>展开所有的宏定义并删除 #define</li>
+<li>处理所有的条件编译指令，例如 #if #else #endif #ifndef …</li>
+<li>把所有的 #include 替换为头文件实际内容，递归进行</li>
+<li>删除所有的注释行</li>
+<li>添加行号和文件名标识以供编译器使用</li>
+<li>保留所有的 #pragma 指令，因为编译器要使用</li>
+</ol>
+</blockquote>
+<img alt="file1.i" src="/posts/CPP/03/3.jpg" width="400">
+<blockquote>
+<p>file1.i 文件里面东西非常多，因为他把<code>&lt;iostream&gt;</code>的代码加进来了，然后我们在文件最后面，发现有coordin.h和file1.cpp中的代码。</p>
+</blockquote>
+<h3 id="编译">编译</h3>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">g++ -S .\file1.i -o file1.s</span><br></pre></td></tr></table></figure>
+<img src="/posts/CPP/03/4.jpg" width="400">
+<blockquote>
+<p>file1.s 里面是x86-64汇编代码.</p>
+</blockquote>
+<h3 id="汇编">汇编</h3>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">g++ -c .\file1.s -o file1.o</span><br></pre></td></tr></table></figure>
+<img src="/posts/CPP/03/5.jpg" width="400">
+<blockquote>
+<p>汇编阶段是把 汇编代码变成机器码，当然用记事本看肯定是乱码，得用专门的二进制文件查看器。</p>
+</blockquote>
+<h3 id="链接">链接</h3>
+<blockquote>
+<p>如果我们直接用file1.o生成可执行文件，发现会出错：<br>
+<img src="/posts/CPP/03/6.jpg" width="400" style="zoom: 150%;"><br>
+这是因为file1.cpp中用到的函数的定义是在 file2.cpp中的。</p>
+</blockquote>
+<p>所以同样的方法我们现生成file2.cpp的.o文件 file2.o<br>
+<img src="/posts/CPP/03/7.jpg" width="400" style="zoom:;"></p>
+<blockquote>
+<p>我们可以把file2.o 先生成静态库文件，然后再链接。（当然也可以两个 .o 文件链接）</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ar -rcs libfile2.a file2.o</span><br></pre></td></tr></table></figure>
+<img src="/posts/CPP/03/8.jpg" alt="libfile2.a" style="zoom:80%;">
+<blockquote>
+<p>可以对比一下 静态库文件libfile2.a 和file2.o文件，我们发现库文件就是.o文件前面加了一些代码（索引）</p>
+<p>最后我们把file1.o和libfile2.a链接一下，生成可执行文件。</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">g++ -g .\file1.o .\libfile2.a -o myfile.exe</span><br></pre></td></tr></table></figure>
+<h2 id="单独编译">单独编译</h2>
+<blockquote>
+<p>一般来说，C++程序会分为 头文件和源代码文件。<br>
+C++鼓励我们将组件函数放在单独的文件中，这就意味着会存在多个源代码文件，C++鼓励我们对这些源代码文件单独编译，然后将这些文件的编译版本链接。<br>
+单独编译后在链接的意义在于：如果我们要对一个源文件修改，我们就可以只对这个源文件编译，然后和其他文件的编译版本链接。</p>
+</blockquote>
+<h3 id="头文件">头文件</h3>
+<blockquote>
+<p>头文件是.h文件<br>
+头文件中常包含的内容有：</p>
+<ul>
+<li>函数原型</li>
+<li>宏 和 const变量</li>
+<li>结构声明</li>
+<li>类声明</li>
+<li>模板声明</li>
+<li>内联函数<br>
+有些程序员喜欢在头文件中使用<code>include&lt;&gt;</code>或<code>include&quot;&quot;</code>,为了避免同一个头文件被include多次，就会有：</li>
+</ul>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">ifndef</span> aa</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> aa</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>这个代码的意思是，在include这个头文件的时候，如果没有导入过这个头文件，那就导入。</p>
+</blockquote>
+<h3 id="源代码文件">源代码文件</h3>
+<blockquote>
+<p>源代码文件是.cpp文件<br>
+源代码文件会有函数的定义和main函数等。<br>
+在源代码文件中 一般都会使用<code>include&lt;&gt;</code>或<code>include&quot;&quot;</code>,可以导入.h文件，也可以导入.cpp文件</p>
+</blockquote>
+<h3 id="如何用命令行编译多个源文件？">如何用命令行编译多个源文件？</h3>
+<p><strong>g++ 参数列表.</strong></p>
+<ol>
+<li>
+<p>-g 编译带调试信息的可执行文件</p>
+<blockquote>
+<p>-g 选项告诉 GCC 产生能被 GNU 调试器GDB使用的调试信息，以调试程序。</p>
+</blockquote>
+</li>
+</ol>
+<blockquote>
+<p>产生带调试信息的可执行文件test<br>
+<code>g++ -g test.cpp</code></p>
+</blockquote>
+<ol start="2">
+<li>
+<p>-O[n] 优化源代码</p>
+<blockquote>
+<p>所谓优化，例如省略掉代码中从未使用过的变量、直接将常量表达式用结果值代替等等，这些操作会缩减目标文件所包含的代码量，提高最终生成的可执行文件的运行效率。</p>
+</blockquote>
+</li>
+</ol>
+<blockquote>
+<p>-O 同时减小代码的长度和执行时间，其效果等价于-O1<br>
+-O0 表示不做优化<br>
+-O1 为默认优化<br>
+-O2 除了完成-O1的优化之外，还进行一些额外的调整工作，如指令调整等。<br>
+-O3 则包括循环展开和其他一些与处理特性相关的优化工作。<br>
+<code>g++ -O2 test.cpp</code></p>
+</blockquote>
+<ol start="3">
+<li>
+<p>-l(小写L)指定库文件和 -L  | 指定库文件路径</p>
+<blockquote>
+<p>-l参数(小写)就是用来指定程序要链接的库，-l参数紧接着就是库名</p>
+</blockquote>
+</li>
+</ol>
+<blockquote>
+<p>在/lib和/usr/lib和/usr/local/lib里的库直接用-l参数就能链接<br>
+链接glog库 <code>g++ -lglog test.cpp</code><br>
+如果库文件没放在上面三个目录里，需要使用-L参数(大写)指定库文件所在目录<br>
+-L参数跟着的是库文件所在的目录名<br>
+链接mytest库，libmytest.so在/home/bing/mytestlibfolder目录下<br>
+<code>g++ -L/home/bing/mytestlibfolder -lmytest test.cpp</code></p>
+</blockquote>
+<ol start="4">
+<li>
+<p>-I (大写i)指定头文件搜索目录</p>
+<blockquote>
+<p>/usr/include目录一般是不用指定的，gcc知道去那里找，但 是如果头文件不在/usr/icnclude里我们就要用-I参数指定了，比如头文件放在/myinclude目录里，那编译命令行就要加上<code>-I/myinclude</code> 参数了，如果不加你会得到一个”<code>xxxx.h: No such file or directory</code>的错误。-I参数可以用相对路径，比如头文件在当前目录，可以用<code>-I.</code>来指定。</p>
+</blockquote>
+</li>
+</ol>
+<blockquote>
+<p><code>g++ -I/myinclude test.cpp</code></p>
+</blockquote>
+<ol start="5">
+<li>
+<p>-Wall 打印警告信息</p>
+<blockquote>
+<p>打印出gcc提供的警告信息</p>
+</blockquote>
+</li>
+</ol>
+<blockquote>
+<p><code>g++ -Wall test.cpp</code></p>
+</blockquote>
+<ol start="6">
+<li>
+<p>-w 关闭警告信息</p>
+<blockquote>
+<p>关闭所有警告信息</p>
+</blockquote>
+</li>
+</ol>
+<blockquote>
+<p><code>g++ -w test.cpp</code></p>
+</blockquote>
+<ol start="7">
+<li>
+<p>-std=c++11 设置编译标准</p>
+<blockquote>
+<p>使用 c++11 标准编译 test.cpp</p>
+</blockquote>
+</li>
+</ol>
+<blockquote>
+<p><code>g++ -std=c++11 test.cpp</code></p>
+</blockquote>
+<ol start="8">
+<li>
+<p>-o 指定输出文件名</p>
+<blockquote>
+<p>指定即将产生的文件名</p>
+</blockquote>
+</li>
+</ol>
+<blockquote>
+<p>指定输出可执行文件名为test<br>
+<code>g++ test.cpp -o test</code></p>
+</blockquote>
+<ol start="9">
+<li>
+<p>-D 定义宏</p>
+<blockquote>
+<p>-D 参数在实际开发中还是经常使用的，比如可通过定义不同的宏，实现选择性编译，编译时定义不同的宏就编译相对应的代码。</p>
+</blockquote>
+ <figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> DEBUG</span></span><br><span class="line">cout&lt;&lt;<span class="string">&quot;hello &quot;</span>;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line">cout&lt;&lt;<span class="string">&quot;world!&quot;</span>&lt;&lt;endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><code>g++ -D DEBUG -o test ./test.cpp</code><br>
+执行<code>test.exe</code>后得到的是<code>hello world!</code></p>
+</blockquote>
+</li>
+</ol>
+<blockquote>
+<p>总结来说,<br>
+<code>g++ -L 库文件目录 -l 库文件 -I 头文件搜索目录 -o 指定输出名 1.cpp 2.cpp</code><br>
+例如,file1.cpp放在.\中,file2.cpp放在.\b\中,头文件在.\include<br>
+则我们编译这两个文件可以使用<br>
+<code>g++ -o mytest -I .\include\ .\file1.cpp .\b\file2.cpp</code></p>
+<p>具体的单独编译细节且看我写的这篇文章：<br>
+<a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_71009069/article/details/125767244?spm=1001.2014.3001.5501">C++_从源码到可执行文件</a></p>
+<p>vscode中如何设置单独编译，只需修改<code>tasks.json</code>中的<code>args:[]</code>参数就行了</p>
+</blockquote>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="attr">&quot;args&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span>    <span class="comment">//方括号里是传给gcc的参数</span></span><br><span class="line">                <span class="string">&quot;$&#123;file&#125;&quot;</span><span class="punctuation">,</span> <span class="comment">//指定要编译的是当前文件</span></span><br><span class="line">                <span class="string">&quot;-o&quot;</span><span class="punctuation">,</span> <span class="comment">//指定输出文件的路径和名称</span></span><br><span class="line">                <span class="string">&quot;$&#123;fileDirname&#125;\\bin\\$&#123;fileBasenameNoExtension&#125;.exe&quot;</span><span class="punctuation">,</span><span class="comment">//承接上一步的-o，让可执行文件输出到源码文件所在的文件夹下的bin文件夹内，并且让它的名字和源码文件相同</span></span><br><span class="line">                <span class="string">&quot;-I&quot;</span><span class="punctuation">,</span><span class="comment">//头文件（自己写的）</span></span><br><span class="line">                <span class="string">&quot;&quot;</span><span class="punctuation">,</span><span class="comment">//头文件所在文件夹</span></span><br><span class="line">                <span class="string">&quot;-lfunc&quot;</span><span class="punctuation">,</span><span class="comment">//外部库的名字</span></span><br><span class="line">                <span class="string">&quot;-L./&quot;</span><span class="punctuation">,</span><span class="comment">//外部库的路径</span></span><br><span class="line">                <span class="string">&quot;-g&quot;</span><span class="punctuation">,</span> <span class="comment">//生成和调试有关的信息</span></span><br><span class="line">                <span class="string">&quot;-Wall&quot;</span><span class="punctuation">,</span> <span class="comment">// 开启额外警告</span></span><br><span class="line">                <span class="string">&quot;-static-libgcc&quot;</span><span class="punctuation">,</span>  <span class="comment">// 静态链接libgcc</span></span><br><span class="line">                <span class="string">&quot;-fexec-charset=GBK&quot;</span><span class="punctuation">,</span> <span class="comment">// 生成的程序使用GBK编码</span></span><br><span class="line">                <span class="string">&quot;-std=c++17&quot;</span><span class="punctuation">,</span> <span class="comment">// 语言标准</span></span><br><span class="line">            <span class="punctuation">]</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>也可以参照其他博主写的这篇<br>
+<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_43061349/article/details/112506504?spm=1001.2101.3001.6650.2&amp;utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7Edefault-2-112506504-blog-123238402.pc_relevant_aa2&amp;depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7Edefault-2-112506504-blog-123238402.pc_relevant_aa2&amp;utm_relevant_index=5">征服VS Code（1）：C/C++单文件编译</a></p>
+</blockquote>
+</article><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/cpp/">cpp</a></div><div class="post-share"><div class="social-share" data-image="/img/pokemon1.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/CPP/02/" title="2、内联函数、引用变量、函数重载"><img class="cover" src="/img/pokemon1.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">2、内联函数、引用变量、函数重载</div></div><div class="info-2"><div class="info-item-1">内联函数 为什么使用内联函数？   减少上下文切换，加快程序运行速度。 是对C语言中的宏函数的改进。   语法 #include&lt;iostream&gt;using namespace std;inline double square(double x)&#123;    return x*x;&#125;int main()&#123;    cout&lt;&lt;square(2.2)&lt;&lt;endl;&#125;  其实就是在函数声明或者定义前加上关键字inline。  引用变量 为什么要使用引用变量   主要用途是用作函数的形参。通过引用变量做参数，函数将使用原始数据，而不是其副本。 高效。   语法  引用实际上就是定义一个别名。看看下面代码：  #include&lt;iostream&gt;using namespace std;int main()&#123;    int a=50;    int &amp;b=a;//定义并初始化，这里b是a的引用。   ...</div></div></div></a><a class="pagination-related" href="/posts/CPP/04/" title="4、内存模型"><img class="cover" src="/img/pokemon1.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">4、内存模型</div></div><div class="info-2"><div class="info-item-1"> C++11使用4种方案来存储数据，这4种方案的区别主要是数据保留在内存的时间，即4种存储持续性（duration）  自动存储 静态存储 线程存储 动态存储  作用域（scope）：描述了名称在文件的多大范围内可见 链接性（linkage）: 描述了名称在不同文件种的共享的方式  外部链接性 内部链接性 无链接性   自动存储（局部变量）  自动存储的变量是最简单的，就是在代码段中int a=1类似的这种变量，也可以使用关键词register来显式表示他是自动存储的变量，register int...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E6%9E%90"><span class="toc-number">1.</span> <span class="toc-text">简析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%84%E5%A4%84%E7%90%86"><span class="toc-number">1.1.</span> <span class="toc-text">预处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%96%E8%AF%91"><span class="toc-number">1.2.</span> <span class="toc-text">编译</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B1%87%E7%BC%96"><span class="toc-number">1.3.</span> <span class="toc-text">汇编</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%93%BE%E6%8E%A5"><span class="toc-number">1.4.</span> <span class="toc-text">链接</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%95%E7%8B%AC%E7%BC%96%E8%AF%91"><span class="toc-number">2.</span> <span class="toc-text">单独编译</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%B4%E6%96%87%E4%BB%B6"><span class="toc-number">2.1.</span> <span class="toc-text">头文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BA%90%E4%BB%A3%E7%A0%81%E6%96%87%E4%BB%B6"><span class="toc-number">2.2.</span> <span class="toc-text">源代码文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E7%94%A8%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%BC%96%E8%AF%91%E5%A4%9A%E4%B8%AA%E6%BA%90%E6%96%87%E4%BB%B6%EF%BC%9F"><span class="toc-number">2.3.</span> <span class="toc-text">如何用命令行编译多个源文件？</span></a></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2025 By ShawnX</div><div class="footer_custom_text">Hi, welcome to my blog</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"></div><div id="rightside-config-show"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script>(() => {
+  const panguFn = () => {
+    if (typeof pangu === 'object') pangu.autoSpacingPage()
+    else {
+      btf.getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js')
+        .then(() => {
+          pangu.autoSpacingPage()
+        })
+    }
+  }
+
+  const panguInit = () => {
+    if (false){
+      GLOBAL_CONFIG_SITE.isPost && panguFn()
+    } else {
+      panguFn()
+    }
+  }
+
+  btf.addGlobalFn('pjaxComplete', panguInit, 'pangu')
+  document.addEventListener('DOMContentLoaded', panguInit)
+})()</script><div class="js-pjax"><script>(async () => {
+  const showKatex = () => {
+    document.querySelectorAll('#article-container .katex').forEach(el => el.classList.add('katex-show'))
+  }
+
+  if (!window.katex_js_css) {
+    window.katex_js_css = true
+    await btf.getCSS('https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css')
+    if (true) {
+      await btf.getScript('https://cdn.jsdelivr.net/npm/katex/dist/contrib/copy-tex.min.js')
+    }
+  }
+
+  showKatex()
+})()</script><script>(() => {
+  const runMermaid = ele => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    ele.forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const mermaidThemeConfig = `%%{init:{ 'theme':'${theme}'}}%%\n`
+      const mermaidID = `mermaid-${index}`
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+      const renderMermaid = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      // mermaid v9 and v10 compatibility
+      typeof renderFn === 'string' ? renderMermaid(renderFn) : renderFn.then(({ svg }) => renderMermaid(svg))
+    })
+  }
+
+  const codeToMermaid = () => {
+    const codeMermaidEle = document.querySelectorAll('pre > code.mermaid')
+    if (codeMermaidEle.length === 0) return
+
+    codeMermaidEle.forEach(ele => {
+      const preEle = document.createElement('pre')
+      preEle.className = 'mermaid-src'
+      preEle.hidden = true
+      preEle.textContent = ele.textContent
+      const newEle = document.createElement('div')
+      newEle.className = 'mermaid-wrap'
+      newEle.appendChild(preEle)
+      ele.parentNode.replaceWith(newEle)
+    })
+  }
+
+  const loadMermaid = () => {
+    if (false) codeToMermaid()
+    const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+    if ($mermaid.length === 0) return
+
+    const runMermaidFn = () => runMermaid($mermaid)
+    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaidFn)
+  }
+
+  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><script src="/js/custom.js"></script><div class="aplayer no-destroy" data-id="12839720510" data-server="netease" data-type="playlist" data-fixed="true"> </div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="false" data-text="coding..,debugging..,running..." data-fontsize="15px" data-random="false" async="async"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script>(() => {
+  const destroyAplayer = () => {
+    if (window.aplayers) {
+      for (let i = 0; i < window.aplayers.length; i++) {
+        if (!window.aplayers[i].options.fixed) {
+          window.aplayers[i].destroy()
+        }
+      }
+    }
+  }
+
+  const runMetingJS = () => {
+    typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+  }
+
+  btf.addGlobalFn('pjaxSend', destroyAplayer, 'destroyAplayer')
+  btf.addGlobalFn('pjaxComplete', loadMeting, 'runMetingJS')
+})()</script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>(() => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => fn())
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      pjax.loadUrl('/404.html')
+    }
+  })
+})()</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
