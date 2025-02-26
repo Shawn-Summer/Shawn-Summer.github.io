@@ -1,0 +1,455 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>LittleBug | LittleBug</title><meta name="author" content="ShawnX"><meta name="copyright" content="ShawnX"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="类和动态内存分配(二) 1. 在类中使用动态内存分配的注意事项 1.1 构造函数中使用new  如果在构造函数中使用new来初始化指针成员,则应在析构函数中使用delete new和delete必须相互兼容,new相对delete;new[]相对delete[] 因为只有一个析构函数,所有的构造函数都必须与它兼容   注意的是:delete或者delete[]都可以对空指针操作. NULl和0和n">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LittleBug">
+<meta property="og:url" content="http://imxxl.top/posts/CPP/%E4%BB%8EC%E5%88%B0C++___%E7%B1%BB%E5%92%8C%E5%8A%A8%E6%80%81%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D(%E4%BA%8C)/index.html">
+<meta property="og:site_name" content="LittleBug">
+<meta property="og:description" content="类和动态内存分配(二) 1. 在类中使用动态内存分配的注意事项 1.1 构造函数中使用new  如果在构造函数中使用new来初始化指针成员,则应在析构函数中使用delete new和delete必须相互兼容,new相对delete;new[]相对delete[] 因为只有一个析构函数,所有的构造函数都必须与它兼容   注意的是:delete或者delete[]都可以对空指针操作. NULl和0和n">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://imxxl.top/img/pokemon1.jpg">
+<meta property="article:published_time" content="2025-02-26T05:31:48.021Z">
+<meta property="article:modified_time" content="2025-02-26T05:31:48.021Z">
+<meta property="article:author" content="ShawnX">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://imxxl.top/img/pokemon1.jpg"><link rel="shortcut icon" href="/img/avatar.jpg"><link rel="canonical" href="http://imxxl.top/posts/CPP/%E4%BB%8EC%E5%88%B0C++___%E7%B1%BB%E5%92%8C%E5%8A%A8%E6%80%81%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D(%E4%BA%8C)/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          const hour = new Date().getHours()
+          const isNight = hour <= 6 || hour >= 18
+          if (theme === undefined) isNight ? activateDarkMode() : activateLightMode()
+          else theme === 'light' ? activateLightMode() : activateDarkMode()
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":100,"highlightFullpage":true,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'LittleBug',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  isShuoshuo: false
+}</script><link rel="stylesheet" href="/css/mouse.css"><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-image: url(/img/pokemon2.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">29</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">12</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">12</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 全部文章</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 鏈接</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/pokemon1.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">LittleBug</span></a><a class="nav-page-title" href="/"><span class="site-name">LittleBug</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 全部文章</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 鏈接</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">无标题<a class="post-edit-link" href="https://github.com/Shawn-Summer/hexo-source/edit/main/source/_posts/CPP/从C到C++___类和动态内存分配(二).md" title="编辑" target="_blank"><i class="fas fa-pencil-alt"></i></a></h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-02-26T05:31:48.021Z" title="发表于 2025-02-26 13:31:48">2025-02-26</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-02-26T05:31:48.021Z" title="更新于 2025-02-26 13:31:48">2025-02-26</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/CPP/">CPP</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">3.1k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>13分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1>类和动态内存分配(二)</h1>
+<h2 id="1-在类中使用动态内存分配的注意事项">1. 在类中使用动态内存分配的注意事项</h2>
+<h3 id="1-1-构造函数中使用new">1.1 构造函数中使用<code>new</code></h3>
+<ul>
+<li>如果在构造函数中使用<code>new</code>来初始化指针成员,则应在析构函数中使用<code>delete</code></li>
+<li><code>new</code>和<code>delete</code>必须相互兼容,<code>new</code>相对<code>delete</code>;<code>new[]</code>相对<code>delete[]</code></li>
+<li>因为只有一个析构函数,所有的构造函数都必须与它兼容</li>
+</ul>
+<blockquote>
+<p>注意的是:<code>delete</code>或者<code>delete[]</code>都可以对空指针操作.<br>
+<em><code>NULl</code>和<code>0</code>和<code>nullptr</code>:空指针可以用<code>0</code>或者<code>NULL</code>来表示,C++11使用一个特殊的关键词:<code>nullptr</code>来表示空指针.</em></p>
+</blockquote>
+<ul>
+<li>
+<p>应该定义一个复制构造函数,通过深度复制将一个对象初始化成另一个对象.</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">String::<span class="built_in">String</span>(<span class="type">const</span> String &amp;st)<span class="comment">//复制构造函数</span></span><br><span class="line">&#123;</span><br><span class="line">    len=st.len;</span><br><span class="line">    str=<span class="keyword">new</span> <span class="type">char</span>[len<span class="number">+1</span>];</span><br><span class="line">    std::<span class="built_in">strcpy</span>(str,st.str);</span><br><span class="line">    num_strings++;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>应该定义一个赋值运算符。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">String&amp; String::<span class="keyword">operator</span>=(<span class="type">const</span> String&amp; st)<span class="comment">//赋值运算符</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">this</span>==&amp;st)</span><br><span class="line">    <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">    <span class="keyword">delete</span>[] str;</span><br><span class="line">    len=st.len;</span><br><span class="line">    str=<span class="keyword">new</span> <span class="type">char</span>[len<span class="number">+1</span>];</span><br><span class="line">    std::<span class="built_in">strcpy</span>(str,st.str);</span><br><span class="line">    <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<blockquote>
+<p>具体来说,操作是:检查自我赋值情况,释放成员指针以前指向的内存,复制数据而不仅仅是地址,返回一个指向调用对象的引用.</p>
+</blockquote>
+<p>==一个典型错误==</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">String::<span class="built_in">String</span>()</span><br><span class="line">&#123;</span><br><span class="line">    str=<span class="string">&quot;default string&quot;</span>;</span><br><span class="line">    len=std::<span class="built_in">strlen</span>(str);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>上面这段代码定义了默认构造函数,但是它犯了一个错误:无法和析构函数中的<code>delete[]</code>匹配.</p>
+</blockquote>
+<p>==包含类成员的类的逐成员复制==</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Magazine</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">        String title;</span><br><span class="line">        String publisher;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>类成员的类型是<code>String</code>,这是否意味着要为<code>Magazine</code>类编写复制构造函数和赋值运算符?不.<br>
+如果你将一个<code>Magazine</code>对象复制或者赋值给另一个<code>Magazine</code>对象,逐成员复制将使用成员类型定义的复制构造函数和赋值运算符.也就是说复制<code>title</code>时,将调用<code>String</code>的复制构造函数,而将<code>title</code>赋值给另一个<code>Magazine</code>对象时,也会使用<code>String</code>的赋值运算符.</p>
+</blockquote>
+<h3 id="1-2-有关返回对象的说明">1.2 有关返回对象的说明</h3>
+<ul>
+<li>返回指向<code>const</code>对象的引用
+<blockquote>
+<p>返回对象会调用复制构造函数生成临时对象,而返回<code>const</code>对象的引用不会.<br>
+引用指向的对象不能是局部变量.<br>
+总之,返回指向<code>const</code>对象的引用,就是按值传递的升级版,但是它不能返回局部变量.</p>
+</blockquote>
+</li>
+<li>返回指向非<code>const</code>对象的引用
+<blockquote>
+<p>例如我们重载<code>&lt;&lt;</code>时,<br>
+<code>ostream&amp; operator&lt;&lt;(ostream &amp; os,class_name object);</code><br>
+返回指向非<code>const</code>对象的引用,主要是我们希望对函数返回对象进行修改.</p>
+</blockquote>
+</li>
+<li>返回对象
+<blockquote>
+<p>就是按值传递.<br>
+如果我们返回的对象是局部变量,那么我们不能使用引用来返回了,只能采用返回对象.</p>
+</blockquote>
+</li>
+<li>返回<code>const</code>对象
+<blockquote>
+<p>不太常用.防止用户对临时对象进行赋值操作,而编译器不会对这种操作报错.</p>
+</blockquote>
+</li>
+</ul>
+<blockquote>
+<p>总之,如果要返回局部对象就必须返回对象;如果,那必须返回对象的引用;如果返回对象也行,返回指向对象的引用也行,那优先使用引用版本,因为效率更高.</p>
+</blockquote>
+<h3 id="1-3-使用new创建对象">1.3 使用<code>new</code>创建对象</h3>
+<p><code>String * glop=new String(&quot;my my my&quot;);</code></p>
+<blockquote>
+<p>这句话会使用构造函数<code>String(const char *);</code></p>
+</blockquote>
+<p><code>glop-&gt;类成员</code></p>
+<blockquote>
+<p>可以使用这种方式调用对象成员,学过C语言的应该明白。</p>
+</blockquote>
+<p>对于动态分配的对象,它的析构函数当且仅当使用<code>delete</code>删除对象时,它的析构函数才会调用。</p>
+<ul>
+<li>定位<code>new</code>的用法</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;new&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> std::string;</span><br><span class="line"><span class="keyword">using</span> std::cout;</span><br><span class="line"><span class="keyword">using</span> std::cin;</span><br><span class="line"><span class="keyword">using</span> std::endl;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> BUF=<span class="number">512</span>;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">JustTesting</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">        string words;</span><br><span class="line">        <span class="type">int</span> number;</span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">        <span class="built_in">JustTesting</span>(<span class="type">const</span> string &amp; s=<span class="string">&quot;Just Testing&quot;</span>,<span class="type">int</span> n=<span class="number">0</span>)</span><br><span class="line">            :<span class="built_in">words</span>(s),<span class="built_in">number</span>(n)&#123;cout&lt;&lt;words&lt;&lt;<span class="string">&quot; constructed.\n&quot;</span>;&#125;</span><br><span class="line">        ~<span class="built_in">JustTesting</span>()&#123;cout&lt;&lt;words&lt;&lt;<span class="string">&quot; destoryed!\n&quot;</span>;&#125;</span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">show</span><span class="params">()</span> <span class="type">const</span> </span>&#123;cout&lt;&lt;words&lt;&lt;<span class="string">&quot;, &quot;</span>&lt;&lt;number&lt;&lt;endl;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">char</span> * buffer=<span class="keyword">new</span> <span class="type">char</span>[BUF];<span class="comment">//获得一块512B内存</span></span><br><span class="line">    JustTesting *pc1,*pc2;</span><br><span class="line">    pc1=<span class="built_in">new</span>(buffer) JustTesting;<span class="comment">//在该块内存中分配空间</span></span><br><span class="line">    pc2=<span class="keyword">new</span> <span class="built_in">JustTesting</span> (<span class="string">&quot;Heap1&quot;</span>,<span class="number">20</span>);</span><br><span class="line"></span><br><span class="line">    cout&lt;&lt;<span class="string">&quot;Memory block addresses:\n&quot;</span>&lt;&lt;<span class="string">&quot;buffer: &quot;</span>&lt;&lt;(<span class="type">void</span>*)buffer&lt;&lt;<span class="string">&quot; heap: &quot;</span>&lt;&lt;pc2&lt;&lt;endl;</span><br><span class="line">    cout&lt;&lt;<span class="string">&quot;Memory contents:\n&quot;</span>;</span><br><span class="line">    cout&lt;&lt;pc1&lt;&lt;<span class="string">&quot;: &quot;</span>;</span><br><span class="line">    pc1-&gt;<span class="built_in">show</span>();</span><br><span class="line">    cout&lt;&lt;pc2&lt;&lt;<span class="string">&quot;: &quot;</span>;</span><br><span class="line">    pc2-&gt;<span class="built_in">show</span>();</span><br><span class="line"></span><br><span class="line">    JustTesting *pc3,*pc4;</span><br><span class="line">    pc3=<span class="built_in">new</span>(buffer+<span class="built_in">sizeof</span>(JustTesting)) <span class="built_in">JustTesting</span> (<span class="string">&quot;Bad Idea&quot;</span>,<span class="number">6</span>);</span><br><span class="line">    pc4=<span class="keyword">new</span> <span class="built_in">JustTesting</span> (<span class="string">&quot;Heap2&quot;</span>,<span class="number">10</span>);</span><br><span class="line">    cout&lt;&lt;<span class="string">&quot;Memory contents:\n&quot;</span>;</span><br><span class="line">    cout&lt;&lt;pc3&lt;&lt;<span class="string">&quot;: &quot;</span>;</span><br><span class="line">    pc3-&gt;<span class="built_in">show</span>();</span><br><span class="line">    cout&lt;&lt;pc4&lt;&lt;<span class="string">&quot;: &quot;</span>;</span><br><span class="line">    pc4-&gt;<span class="built_in">show</span>();</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">delete</span> pc2;</span><br><span class="line">    <span class="keyword">delete</span> pc4;</span><br><span class="line">    pc3-&gt;~<span class="built_in">JustTesting</span>();</span><br><span class="line">    pc1-&gt;~<span class="built_in">JustTesting</span>();</span><br><span class="line">    <span class="keyword">delete</span> [] buffer;</span><br><span class="line">    cout&lt;&lt;<span class="string">&quot;done !\n&quot;</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">Just Testing constructed.</span><br><span class="line">Heap1 constructed.</span><br><span class="line">Memory block addresses:</span><br><span class="line">buffer: 0xf040a0 heap: 0xf042d0</span><br><span class="line">Memory contents:</span><br><span class="line">0xf040a0: Just Testing, 0</span><br><span class="line">0xf042d0: Heap1, 20</span><br><span class="line">Bad Idea constructed.</span><br><span class="line">Heap2 constructed.</span><br><span class="line">Memory contents:</span><br><span class="line">0xf040c8: Bad Idea, 6</span><br><span class="line">0xf04330: Heap2, 10</span><br><span class="line">Heap1 destoryed!</span><br><span class="line">Heap2 destoryed!</span><br><span class="line">Bad Idea destoryed!</span><br><span class="line">Just Testing destoryed!</span><br><span class="line">done !</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>上面这段代码演示了定位<code>new</code>的用法,这个我们之前在内存模型中谈过。这里需要注意的是,如果使用定位<code>new</code>创建对象,如何确保其析构函数被调用,我们不能使用<code>delete p3;delete p1;</code>,这是因为<code>delete</code>和定位<code>new</code>不匹配,我们必须显式调用析构函数<code>p1-&gt;~JustTesting();</code>。</p>
+</blockquote>
+<h2 id="2-队列模拟">2.队列模拟</h2>
+<p>和栈(Stack)一样,队列(Queue)也是一个很重要的抽象数据结构。这一节将会构建一个<code>Queue</code>类,顺便复习之前所学的技术和学习少量新知识。</p>
+<p>我们采用链表来实现队列。<br>
+<img src="https://ossimg-1312770341.cos.ap-shanghai.myqcloud.com/img/IMG_20220808_170138.jpg" width="500"></p>
+<h3 id="2-1-类声明中的一些思考">2.1 类声明中的一些思考</h3>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">typedef</span>  std::string Item;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Queue</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">        <span class="keyword">struct</span> <span class="title class_">Node</span></span><br><span class="line">        &#123;</span><br><span class="line">            Item item;</span><br><span class="line">            <span class="keyword">struct</span> <span class="title class_">Node</span> *next;</span><br><span class="line">            </span><br><span class="line">        &#125;;</span><br><span class="line">        <span class="keyword">enum</span>&#123;Q_SIZE=<span class="number">10</span>&#125;;</span><br><span class="line">        </span><br><span class="line">        Node* front;<span class="comment">//队首指针</span></span><br><span class="line">        Node* rear;<span class="comment">//队尾指针</span></span><br><span class="line">        <span class="type">int</span> items;<span class="comment">//队列中的元素个数</span></span><br><span class="line">        <span class="type">const</span> <span class="type">int</span> qsize;<span class="comment">//队列的最大元素个数</span></span><br><span class="line">        <span class="comment">//抢占式定义</span></span><br><span class="line">        <span class="built_in">Queue</span>(<span class="type">const</span> Queue &amp; q):<span class="built_in">qsize</span>(<span class="number">0</span>)&#123;&#125;</span><br><span class="line">        Queue &amp; <span class="keyword">operator</span>=(<span class="type">const</span> Queue &amp; q)&#123;<span class="keyword">return</span> *<span class="keyword">this</span>;&#125;</span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">        <span class="built_in">Queue</span>(<span class="type">int</span> qs=Q_SIZE);</span><br><span class="line">        ~<span class="built_in">Queue</span>();</span><br><span class="line">        <span class="function"><span class="type">bool</span> <span class="title">isempty</span><span class="params">()</span> <span class="type">const</span></span>;<span class="comment">//空</span></span><br><span class="line">        <span class="function"><span class="type">bool</span> <span class="title">isfull</span><span class="params">()</span> <span class="type">const</span></span>;<span class="comment">//满</span></span><br><span class="line">        <span class="function"><span class="type">int</span> <span class="title">queuecount</span><span class="params">()</span> <span class="type">const</span></span>;<span class="comment">//队列中元素个数</span></span><br><span class="line">        <span class="function"><span class="type">bool</span> <span class="title">enqueue</span><span class="params">(<span class="type">const</span> Item &amp;i)</span></span>;<span class="comment">//入队</span></span><br><span class="line">        <span class="function"><span class="type">bool</span> <span class="title">dequeue</span><span class="params">(Item &amp; i)</span></span>;<span class="comment">//出队</span></span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">show</span><span class="params">()</span> <span class="type">const</span></span>;        </span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>
+<p><strong>类作用域中的结构体</strong></p>
+<blockquote>
+<p>类似于类作用域中的常量,通过将结构体<code>Node</code>声明放在<code>Queue</code>类的私有部分,就可以在类作用域中使用该结构体。这样就不用担心,<code>Node</code>声明和某些全局声明发生冲突。此外,类声明中还能使用<code>Typedef</code>或者<code>namespace</code>等声明,都可以使其作用域变成类中。</p>
+</blockquote>
+</li>
+<li>
+<p><strong>利用构造函数初始化<code>const</code>数据成员</strong></p>
+<blockquote>
+<p>在类中<code>qsize</code>是队列最大元素个数,它是个常量数据成员</p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">Queue::<span class="built_in">Queue</span>(<span class="type">int</span> qs)</span><br><span class="line">&#123;</span><br><span class="line">    qsize=qs;</span><br><span class="line">    front =rear=<span class="literal">nullptr</span>;</span><br><span class="line">    items=<span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>上面这段代码是错误的。因为常量是不允许被赋值的。C++提供了一种新的方式来解决这一问题–<strong>成员初始化列表</strong>。</p>
+</blockquote>
+</li>
+<li>
+<p><strong>成员初始化列表语法</strong></p>
+<p>它的作用是,在调用构造函数的时候,能够初始化数据。<strong>对于<code>const</code>类成员,引用数据成员,都应该使用这种语法</strong>。<br>
+于是,构造函数可以这样:</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">Queue::<span class="built_in">Queue</span>(<span class="type">int</span> qs):<span class="built_in">qsize</span>(qs)</span><br><span class="line">&#123;</span><br><span class="line">    front =rear=<span class="literal">nullptr</span>;</span><br><span class="line">    items=<span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>而且这种方法不限于初始化常量,还能初始化非<code>const</code>变量。则构造函数也可以这样:</p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">Queue::<span class="built_in">Queue</span>(<span class="type">int</span> qs):<span class="built_in">qsize</span>(qs),<span class="built_in">front</span>(<span class="literal">nullptr</span>),<span class="built_in">rear</span>(<span class="literal">nullptr</span>),<span class="built_in">items</span>(<span class="number">0</span>)&#123;&#125;</span><br></pre></td></tr></table></figure>
+<p>但是,<strong>成员初始化列表语法只能用于构造函数</strong>。</p>
+</li>
+<li>
+<p><strong>类内初始化</strong></p>
+<p>在C++中,其实还有一种更直观的初始化方式,那就是直接在类声明中进行初始化。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Classy</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">int</span> mem1=<span class="number">10</span>;</span><br><span class="line">  <span class="type">const</span> <span class="type">int</span> mem2=<span class="number">20</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>相当于在构造函数中使用</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">Classy::<span class="built_in">Classy</span>():<span class="built_in">mem1</span>(<span class="number">10</span>),<span class="built_in">mem2</span>(<span class="number">20</span>)&#123;...&#125;</span><br></pre></td></tr></table></figure>
+<p>但是如果你同时使用类内初始化和成员列表语法时,调用相应构造函数时,成员列表语法会覆盖类内初始化。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">Classy::<span class="built_in">Classy</span>(<span class="type">int</span> n):<span class="built_in">mem1</span>(n)&#123;...&#125;</span><br></pre></td></tr></table></figure>
+<p>调用上面这个构造函数时,<code>mem1</code>会被设置成<code>n</code>,而<code>mem2</code>由于类内初始化的原因被设置成<code>20</code>.</p>
+</li>
+<li>
+<p><strong>是否需要显式析构函数?</strong></p>
+<p><code>Queue</code>类的构造函数中是不需要使用<code>new</code>的,因为构造函数只是构造一个空队列,那这是不是意味著不需要在析构函数中使用<code>delete</code>?</p>
+<blockquote>
+<p>我们知道,虽然构造函数不需要<code>new</code>,但是在<code>enqueue</code>入队时,我们需要<code>new</code>一个新元素加入队列。那么我们必须在析构函数中使用<code>delete</code>以确保所有动态分配的空间被释放。</p>
+</blockquote>
+</li>
+<li>
+<p><strong>伪私有方法(抢占式定义)</strong></p>
+<blockquote>
+<p>既然我们在<code>Queue</code>类中,使用了动态内存分配,那么编译器提供的默认复制构造函数,和默认赋值运算符是不正确的。我们假设队列是不允许被赋值或者复制的,那么我们可以使用<strong>伪私有方法</strong>,目的是禁用某些默认接口。</p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Queue</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">private</span>:</span><br><span class="line">    <span class="built_in">Queue</span>(<span class="type">const</span> Queue &amp; q):<span class="built_in">qsize</span>(<span class="number">0</span>)&#123;&#125;</span><br><span class="line">    Queue &amp; <span class="keyword">operator</span>=(<span class="type">const</span> Queue &amp; q)&#123;<span class="keyword">return</span> *<span class="keyword">this</span>;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>这样做的原理是:在私有部分抢先定义了复制构造函数,赋值运算符,那么编译器就不会提供默认方法了,那么对象就无法调用这些方法。</p>
+</blockquote>
+<p>C++提供了另一种禁用方法的方式–使用关键词<code>delete</code></p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Queue</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Queue</span>(<span class="type">const</span> Queue &amp; q)=<span class="keyword">delete</span>;</span><br><span class="line">    Queue &amp; <span class="keyword">operator</span>=(<span class="type">const</span> Queue &amp; q)=<span class="keyword">delete</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>可以直接在公有部分中禁用某种方法。</p>
+</blockquote>
+</li>
+</ul>
+<h3 id="2-2-代码实现">2.2 代码实现</h3>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//queue.h</span></span><br><span class="line"><span class="meta">#<span class="keyword">ifndef</span> QUEUE_H_</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> QUEUE_H_</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="keyword">typedef</span>  std::string Item;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Queue</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">        <span class="keyword">struct</span> <span class="title class_">Node</span></span><br><span class="line">        &#123;</span><br><span class="line">            Item item;</span><br><span class="line">            <span class="keyword">struct</span> <span class="title class_">Node</span> *next;</span><br><span class="line">            </span><br><span class="line">        &#125;;</span><br><span class="line">        <span class="keyword">enum</span>&#123;Q_SIZE=<span class="number">10</span>&#125;;</span><br><span class="line">        </span><br><span class="line">        Node* front;<span class="comment">//队首指针</span></span><br><span class="line">        Node* rear;<span class="comment">//队尾指针</span></span><br><span class="line">        <span class="type">int</span> items;<span class="comment">//队列中的元素个数</span></span><br><span class="line">        <span class="type">const</span> <span class="type">int</span> qsize;<span class="comment">//队列的最大元素个数</span></span><br><span class="line">        <span class="comment">//抢占式定义</span></span><br><span class="line">        <span class="built_in">Queue</span>(<span class="type">const</span> Queue &amp; q):<span class="built_in">qsize</span>(<span class="number">0</span>)&#123;&#125;</span><br><span class="line">        Queue &amp; <span class="keyword">operator</span>=(<span class="type">const</span> Queue &amp; q)&#123;<span class="keyword">return</span> *<span class="keyword">this</span>;&#125;</span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">        <span class="built_in">Queue</span>(<span class="type">int</span> qs=Q_SIZE);</span><br><span class="line">        ~<span class="built_in">Queue</span>();</span><br><span class="line">        <span class="function"><span class="type">bool</span> <span class="title">isempty</span><span class="params">()</span> <span class="type">const</span></span>;<span class="comment">//空</span></span><br><span class="line">        <span class="function"><span class="type">bool</span> <span class="title">isfull</span><span class="params">()</span> <span class="type">const</span></span>;<span class="comment">//满</span></span><br><span class="line">        <span class="function"><span class="type">int</span> <span class="title">queuecount</span><span class="params">()</span> <span class="type">const</span></span>;<span class="comment">//队列中元素个数</span></span><br><span class="line">        <span class="function"><span class="type">bool</span> <span class="title">enqueue</span><span class="params">(<span class="type">const</span> Item &amp;i)</span></span>;<span class="comment">//入队</span></span><br><span class="line">        <span class="function"><span class="type">bool</span> <span class="title">dequeue</span><span class="params">(Item &amp; i)</span></span>;<span class="comment">//出队</span></span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">show</span><span class="params">()</span> <span class="type">const</span></span>;        </span><br><span class="line">&#125;;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//queue.cpp</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&quot;queue.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;iostream&gt;</span></span></span><br><span class="line">Queue::<span class="built_in">Queue</span>(<span class="type">int</span> qs):<span class="built_in">qsize</span>(qs)</span><br><span class="line">&#123;</span><br><span class="line">    front =rear=<span class="literal">nullptr</span>;</span><br><span class="line">    items=<span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line">Queue::~<span class="built_in">Queue</span>()</span><br><span class="line">&#123;</span><br><span class="line">    Node * p;</span><br><span class="line">    <span class="keyword">while</span> (front!=<span class="literal">nullptr</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        p=front;</span><br><span class="line">        front=front-&gt;next;</span><br><span class="line">        <span class="keyword">delete</span> p;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">Queue::isempty</span><span class="params">()</span> <span class="type">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> items==<span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">Queue::isfull</span><span class="params">()</span> <span class="type">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> items==qsize;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">Queue::queuecount</span><span class="params">()</span> <span class="type">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> items;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">Queue::enqueue</span><span class="params">(<span class="type">const</span> Item &amp;i)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">isfull</span>())</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    Node *add=<span class="keyword">new</span> Node;</span><br><span class="line">    add-&gt;item=i;</span><br><span class="line">    add-&gt;next=<span class="literal">nullptr</span>;</span><br><span class="line">    items++;</span><br><span class="line">    <span class="keyword">if</span>(front==<span class="literal">nullptr</span>)<span class="comment">//队空</span></span><br><span class="line">        front=rear=add;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        rear-&gt;next=add;</span><br><span class="line">        rear=add;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">Queue::dequeue</span><span class="params">(Item &amp; i)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">isempty</span>())</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    i=front-&gt;item;</span><br><span class="line">    items--;</span><br><span class="line">    <span class="keyword">if</span>(items==<span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">delete</span> front;</span><br><span class="line">        front=rear=<span class="literal">nullptr</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        Node *p=front;</span><br><span class="line">        front=front-&gt;next;</span><br><span class="line">        <span class="keyword">delete</span> p;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125; </span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Queue::show</span><span class="params">()</span> <span class="type">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">using</span> std::cout;</span><br><span class="line">    <span class="keyword">using</span> std::endl;</span><br><span class="line">    cout&lt;&lt;<span class="string">&quot;the items: &quot;</span>&lt;&lt;items&lt;&lt;endl;</span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">isempty</span>())</span><br><span class="line">        cout&lt;&lt;<span class="string">&quot;Empty queue!\n&quot;</span>;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        cout&lt;&lt;<span class="string">&quot;front: &quot;</span>;</span><br><span class="line">        <span class="keyword">for</span>(Node*p=front;p!=<span class="literal">nullptr</span>;p=p-&gt;next)</span><br><span class="line">        &#123;</span><br><span class="line">            cout&lt;&lt;p-&gt;item;</span><br><span class="line">            <span class="keyword">if</span>(p!=rear)</span><br><span class="line">                cout&lt;&lt;<span class="string">&quot;-&gt; &quot;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        cout&lt;&lt;<span class="string">&quot; :rear\n&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//queuetest.cpp</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&quot;queue.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">using</span> std::cin;</span><br><span class="line">    <span class="keyword">using</span> std::cout;</span><br><span class="line">    <span class="keyword">using</span> std::endl;</span><br><span class="line">    <span class="keyword">using</span> std::string;</span><br><span class="line">    <span class="function">Queue <span class="title">test</span><span class="params">(<span class="number">8</span>)</span></span>;</span><br><span class="line">    <span class="type">char</span> choice;</span><br><span class="line">    cout&lt;&lt;<span class="string">&quot;Enter E to enqueue ,D to dequeue,Q to quit: &quot;</span>;</span><br><span class="line">    <span class="keyword">while</span>(cin&gt;&gt;choice)</span><br><span class="line">    &#123;</span><br><span class="line">        string temp;</span><br><span class="line">        <span class="keyword">switch</span> (choice)</span><br><span class="line">        &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="string">&#x27;E&#x27;</span>:</span><br><span class="line">            cout&lt;&lt;<span class="string">&quot;Enter the string: &quot;</span>;</span><br><span class="line">            cin&gt;&gt;temp;</span><br><span class="line">            <span class="keyword">if</span>(test.<span class="built_in">enqueue</span>(temp))</span><br><span class="line">                test.<span class="built_in">show</span>();</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                cout&lt;&lt;<span class="string">&quot;can&#x27;t enqueue\n&quot;</span>;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> <span class="string">&#x27;D&#x27;</span>:</span><br><span class="line">            <span class="keyword">if</span> (test.<span class="built_in">dequeue</span>(temp))</span><br><span class="line">            &#123;</span><br><span class="line">                cout&lt;&lt;<span class="string">&quot;the item gotten: &quot;</span>&lt;&lt;temp&lt;&lt;endl;</span><br><span class="line">                test.<span class="built_in">show</span>();</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                cout&lt;&lt;<span class="string">&quot;can&#x27;t dequeue\n&quot;</span>;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> <span class="string">&#x27;Q&#x27;</span>:</span><br><span class="line">            <span class="keyword">goto</span> aa;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">default</span>:</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        cout&lt;&lt;endl;</span><br><span class="line">        cout&lt;&lt;<span class="string">&quot;Enter E to enqueue ,D to dequeue,Q to quit: &quot;</span>;</span><br><span class="line">        cin.<span class="built_in">ignore</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    aa:test.~<span class="built_in">Queue</span>();</span><br><span class="line">    cout&lt;&lt;<span class="string">&quot;Bye!: &quot;</span>;</span><br><span class="line">    test.<span class="built_in">show</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">PS D:\study\c++\path_to_c++&gt; .\queue.exe</span><br><span class="line">Enter E to enqueue ,D to dequeue,Q to quit: E</span><br><span class="line">Enter the string: apple</span><br><span class="line">the items: 1</span><br><span class="line">front: apple :rear</span><br><span class="line"></span><br><span class="line">Enter E to enqueue ,D to dequeue,Q to quit: E</span><br><span class="line">Enter the string: banana</span><br><span class="line">the items: 2</span><br><span class="line">front: apple-&gt; banana :rear</span><br><span class="line"></span><br><span class="line">Enter E to enqueue ,D to dequeue,Q to quit: E</span><br><span class="line">Enter the string: candy</span><br><span class="line">the items: 3</span><br><span class="line">front: apple-&gt; banana-&gt; candy :rear</span><br><span class="line"></span><br><span class="line">Enter E to enqueue ,D to dequeue,Q to quit: E</span><br><span class="line">Enter the string: dizzy</span><br><span class="line">the items: 4</span><br><span class="line">front: apple-&gt; banana-&gt; candy-&gt; dizzy :rear</span><br><span class="line"></span><br><span class="line">Enter E to enqueue ,D to dequeue,Q to quit: D</span><br><span class="line">the item gotten: apple</span><br><span class="line">the items: 3</span><br><span class="line">front: banana-&gt; candy-&gt; dizzy :rear</span><br><span class="line"></span><br><span class="line">Enter E to enqueue ,D to dequeue,Q to quit: D</span><br><span class="line">the item gotten: banana</span><br><span class="line">the items: 2</span><br><span class="line">front: candy-&gt; dizzy :rear</span><br><span class="line"></span><br><span class="line">Enter E to enqueue ,D to dequeue,Q to quit: Q</span><br><span class="line">Bye!: the items: 2</span><br><span class="line">front:  :rear</span><br></pre></td></tr></table></figure>
+</article><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/img/pokemon1.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/posts/CPP/10/" title=""><img class="cover" src="/img/pokemon1.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2"></div></div><div class="info-2"><div class="info-item-1">类和动态分配（一）设计一个String类  对类成员使用动态内存分配会产生一系列问题。我们需要对原有类体系进行扩充。  1. 实例：StringBad类 #include&lt;iostream&gt;#ifndef STRNGBAD_H_#define STRNGBAD_H_class StringBad&#123;private:    char * str;      //指向字符串的指针    int len;        //字符串的长度    static int num_strings;    //对象个数public:    StringBad(const char * s);   //构造函数    StringBad();                 //默认构造函数    ~StringBad();                //析构函数    //友元函数    friend std::ostream &amp; operator&lt;&lt;(std::ostream &amp; os,const StringBad &amp;...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">类和动态内存分配(二)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%9C%A8%E7%B1%BB%E4%B8%AD%E4%BD%BF%E7%94%A8%E5%8A%A8%E6%80%81%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-number">1.1.</span> <span class="toc-text">1. 在类中使用动态内存分配的注意事项</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E4%B8%AD%E4%BD%BF%E7%94%A8new"><span class="toc-number">1.1.1.</span> <span class="toc-text">1.1 构造函数中使用new</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E6%9C%89%E5%85%B3%E8%BF%94%E5%9B%9E%E5%AF%B9%E8%B1%A1%E7%9A%84%E8%AF%B4%E6%98%8E"><span class="toc-number">1.1.2.</span> <span class="toc-text">1.2 有关返回对象的说明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-%E4%BD%BF%E7%94%A8new%E5%88%9B%E5%BB%BA%E5%AF%B9%E8%B1%A1"><span class="toc-number">1.1.3.</span> <span class="toc-text">1.3 使用new创建对象</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E9%98%9F%E5%88%97%E6%A8%A1%E6%8B%9F"><span class="toc-number">1.2.</span> <span class="toc-text">2.队列模拟</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E7%B1%BB%E5%A3%B0%E6%98%8E%E4%B8%AD%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83"><span class="toc-number">1.2.1.</span> <span class="toc-text">2.1 类声明中的一些思考</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.2.2.</span> <span class="toc-text">2.2 代码实现</span></a></li></ol></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2025 By ShawnX</div><div class="footer_custom_text">Hi, welcome to my blog</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"></div><div id="rightside-config-show"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script>(() => {
+  const panguFn = () => {
+    if (typeof pangu === 'object') pangu.autoSpacingPage()
+    else {
+      btf.getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js')
+        .then(() => {
+          pangu.autoSpacingPage()
+        })
+    }
+  }
+
+  const panguInit = () => {
+    if (false){
+      GLOBAL_CONFIG_SITE.isPost && panguFn()
+    } else {
+      panguFn()
+    }
+  }
+
+  btf.addGlobalFn('pjaxComplete', panguInit, 'pangu')
+  document.addEventListener('DOMContentLoaded', panguInit)
+})()</script><div class="js-pjax"><script>(async () => {
+  const showKatex = () => {
+    document.querySelectorAll('#article-container .katex').forEach(el => el.classList.add('katex-show'))
+  }
+
+  if (!window.katex_js_css) {
+    window.katex_js_css = true
+    await btf.getCSS('https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css')
+    if (true) {
+      await btf.getScript('https://cdn.jsdelivr.net/npm/katex/dist/contrib/copy-tex.min.js')
+    }
+  }
+
+  showKatex()
+})()</script><script>(() => {
+  const runMermaid = ele => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    ele.forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const mermaidThemeConfig = `%%{init:{ 'theme':'${theme}'}}%%\n`
+      const mermaidID = `mermaid-${index}`
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+      const renderMermaid = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      // mermaid v9 and v10 compatibility
+      typeof renderFn === 'string' ? renderMermaid(renderFn) : renderFn.then(({ svg }) => renderMermaid(svg))
+    })
+  }
+
+  const codeToMermaid = () => {
+    const codeMermaidEle = document.querySelectorAll('pre > code.mermaid')
+    if (codeMermaidEle.length === 0) return
+
+    codeMermaidEle.forEach(ele => {
+      const preEle = document.createElement('pre')
+      preEle.className = 'mermaid-src'
+      preEle.hidden = true
+      preEle.textContent = ele.textContent
+      const newEle = document.createElement('div')
+      newEle.className = 'mermaid-wrap'
+      newEle.appendChild(preEle)
+      ele.parentNode.replaceWith(newEle)
+    })
+  }
+
+  const loadMermaid = () => {
+    if (false) codeToMermaid()
+    const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+    if ($mermaid.length === 0) return
+
+    const runMermaidFn = () => runMermaid($mermaid)
+    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaidFn)
+  }
+
+  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><script src="/js/custom.js"></script><div class="aplayer no-destroy" data-id="12839720510" data-server="netease" data-type="playlist" data-fixed="true"> </div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="false" data-text="coding..,debugging..,running..." data-fontsize="15px" data-random="false" async="async"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script>(() => {
+  const destroyAplayer = () => {
+    if (window.aplayers) {
+      for (let i = 0; i < window.aplayers.length; i++) {
+        if (!window.aplayers[i].options.fixed) {
+          window.aplayers[i].destroy()
+        }
+      }
+    }
+  }
+
+  const runMetingJS = () => {
+    typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+  }
+
+  btf.addGlobalFn('pjaxSend', destroyAplayer, 'destroyAplayer')
+  btf.addGlobalFn('pjaxComplete', loadMeting, 'runMetingJS')
+})()</script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>(() => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => fn())
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      pjax.loadUrl('/404.html')
+    }
+  })
+})()</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
