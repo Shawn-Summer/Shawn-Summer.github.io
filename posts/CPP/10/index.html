@@ -1,0 +1,544 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>LittleBug | LittleBug</title><meta name="author" content="ShawnX"><meta name="copyright" content="ShawnX"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="类和动态分配（一）设计一个String类  对类成员使用动态内存分配会产生一系列问题。我们需要对原有类体系进行扩充。  1. 实例：StringBad类 #include&lt;iostream&gt;#ifndef STRNGBAD_H_#define STRNGBAD_H_class StringBad&#123;private:    char * str;      &#x2F;&#x2F;指向字符串的指针">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LittleBug">
+<meta property="og:url" content="http://imxxl.top/posts/CPP/10/index.html">
+<meta property="og:site_name" content="LittleBug">
+<meta property="og:description" content="类和动态分配（一）设计一个String类  对类成员使用动态内存分配会产生一系列问题。我们需要对原有类体系进行扩充。  1. 实例：StringBad类 #include&lt;iostream&gt;#ifndef STRNGBAD_H_#define STRNGBAD_H_class StringBad&#123;private:    char * str;      &#x2F;&#x2F;指向字符串的指针">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://imxxl.top/img/avatar.jpg">
+<meta property="article:published_time" content="2025-03-15T05:35:32.721Z">
+<meta property="article:modified_time" content="2025-03-15T05:35:32.721Z">
+<meta property="article:author" content="ShawnX">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://imxxl.top/img/avatar.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "",
+  "url": "http://imxxl.top/posts/CPP/10/",
+  "image": "http://imxxl.top/img/avatar.jpg",
+  "datePublished": "2025-03-15T05:35:32.721Z",
+  "dateModified": "2025-03-15T05:35:32.721Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "ShawnX",
+      "url": "http://imxxl.top/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/avatar.jpg"><link rel="canonical" href="http://imxxl.top/posts/CPP/10/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          const hour = new Date().getHours()
+          const isNight = hour <= 6 || hour >= 18
+          if (theme === undefined) isNight ? activateDarkMode() : activateLightMode()
+          else theme === 'light' ? activateLightMode() : activateDarkMode()
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":100,"highlightFullpage":true,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'LittleBug',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-image: url(/img/pokemon2.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">29</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">12</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">12</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 全部文章</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 鏈接</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">LittleBug</span></a><a class="nav-page-title" href="/"><span class="site-name">LittleBug</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 全部文章</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 鏈接</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">无标题<a class="post-edit-link" href="https://github.com/Shawn-Summer/hexo-source/edit/main/source/_posts/CPP/10.md" title="编辑" target="_blank"><i class="fas fa-pencil-alt"></i></a></h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-03-15T05:35:32.721Z" title="发表于 2025-03-15 13:35:32">2025-03-15</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-03-15T05:35:32.721Z" title="更新于 2025-03-15 13:35:32">2025-03-15</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/CPP/">CPP</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">5.7k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>22分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1>类和动态分配（一）设计一个<code>String</code>类</h1>
+<blockquote>
+<p>对类成员使用动态内存分配会产生一系列问题。我们需要对原有类体系进行扩充。</p>
+</blockquote>
+<h2 id="1-实例：StringBad类">1. 实例：<code>StringBad</code>类</h2>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">ifndef</span> STRNGBAD_H_</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> STRNGBAD_H_</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">StringBad</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="type">char</span> * str;      <span class="comment">//指向字符串的指针</span></span><br><span class="line">    <span class="type">int</span> len;        <span class="comment">//字符串的长度</span></span><br><span class="line">    <span class="type">static</span> <span class="type">int</span> num_strings;    <span class="comment">//对象个数</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">StringBad</span>(<span class="type">const</span> <span class="type">char</span> * s);   <span class="comment">//构造函数</span></span><br><span class="line">    <span class="built_in">StringBad</span>();                 <span class="comment">//默认构造函数</span></span><br><span class="line">    ~<span class="built_in">StringBad</span>();                <span class="comment">//析构函数</span></span><br><span class="line">    <span class="comment">//友元函数</span></span><br><span class="line">    <span class="keyword">friend</span> std::ostream &amp; <span class="keyword">operator</span>&lt;&lt;(std::ostream &amp; os,<span class="type">const</span> StringBad &amp; st);</span><br><span class="line">&#125;;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span> <span class="comment">// !STRNGBAD_H_</span></span></span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;cstring&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&quot;类动态分配1.h&quot;</span></span></span><br><span class="line"><span class="keyword">using</span> std::cout;</span><br><span class="line"> </span><br><span class="line"><span class="comment">//初始化静态类成员</span></span><br><span class="line"><span class="type">int</span> StringBad::num_strings = <span class="number">0</span>;</span><br><span class="line"> </span><br><span class="line"><span class="comment">//类方法</span></span><br><span class="line"><span class="comment">//以C字符型构造StringBad</span></span><br><span class="line">StringBad::<span class="built_in">StringBad</span>(<span class="type">const</span> <span class="type">char</span> * s)</span><br><span class="line">&#123;</span><br><span class="line">    len = std::<span class="built_in">strlen</span>(s);        <span class="comment">//设置长度</span></span><br><span class="line">    str = <span class="keyword">new</span> <span class="type">char</span>[len + <span class="number">1</span>];     <span class="comment">//分配内存</span></span><br><span class="line">    std::<span class="built_in">strcpy</span>(str, s);         <span class="comment">//初始化指针</span></span><br><span class="line">    num_strings++;               <span class="comment">//设置对象数量</span></span><br><span class="line">    cout &lt;&lt; num_strings &lt;&lt; <span class="string">&quot;: \&quot;&quot;</span> &lt;&lt; str</span><br><span class="line">        &lt;&lt; <span class="string">&quot;\&quot; object created\n&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line">StringBad::<span class="built_in">StringBad</span>()            <span class="comment">//默认构造函数</span></span><br><span class="line">&#123;</span><br><span class="line">    len = <span class="number">4</span>;</span><br><span class="line">    str = <span class="keyword">new</span> <span class="type">char</span>[<span class="number">4</span>];</span><br><span class="line">    std::<span class="built_in">strcpy</span>(str, <span class="string">&quot;C++&quot;</span>);      <span class="comment">//默认字符串</span></span><br><span class="line">    num_strings++;</span><br><span class="line">    cout &lt;&lt; num_strings &lt;&lt; <span class="string">&quot;: \&quot;&quot;</span> &lt;&lt; str &lt;&lt; <span class="string">&quot;\&quot; default object created\n&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line">StringBad::~<span class="built_in">StringBad</span>()           <span class="comment">//必要的析构函数</span></span><br><span class="line">&#123;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;\&quot;&quot;</span> &lt;&lt; str &lt;&lt; <span class="string">&quot;\&quot; object deleted, &quot;</span>;</span><br><span class="line">    --num_strings;               <span class="comment">//有要求</span></span><br><span class="line">    cout &lt;&lt; num_strings &lt;&lt; <span class="string">&quot; left\n&quot;</span>;</span><br><span class="line">    <span class="keyword">delete</span>[] str;                 <span class="comment">//有要求</span></span><br><span class="line">&#125;</span><br><span class="line">std::ostream &amp; <span class="keyword">operator</span>&lt;&lt;(std::ostream &amp; os, <span class="type">const</span> StringBad &amp; st)</span><br><span class="line">&#123;</span><br><span class="line">    os &lt;&lt; st.str;</span><br><span class="line">    <span class="keyword">return</span> os;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><code>StringBad</code>是个不太完整的类。这个类并没有什么错误，但是忽略了一些不明显却必不可少的东西。<br>
+首先这个类中的<code>str</code>成员是一个指针，它指向一个内存块，这就意味著这个类本身根本没有存储字符串,而是在构造函数中使用<code>new</code>分配了一块内存，类本身保持的只是这块内存的地址和字符串的其他信息。<br>
+这里的<code>num_strings</code>成员<strong>是静态类成员</strong><br>
+<strong>静态类成员</strong>无了创建了多少个对象，程序都不会创建静态变量副本，类的所有对象共享一个静态成员。<br>
+我们发现，在类方法定义的文件中，可以对私有成员初始化，这是不可思议的，因为私有成员不能直接访问。<br>
+<code>int StringBad::num_strings = 0;</code><br>
+我们在类声明中是无法初始化静态成员变量，（<code>ISO C++ forbids in-class initialization of non-const static member 'StringBad::num_strings'static int num_strings=0;</code>），对于静态类成员，我们可以再类声明外进行初始化，而且我们发现初始化语句并没有<code>static</code>关键词。<br>
+<strong>C++允许我们在类声明中初始化成员变量，但是静态非const成员除外</strong></p>
+<p>静态数据成员在类声明中声明，在类方法中初始化。如果静态成员是const或者枚举类，则可以在类声明中初始化，（因为这种数据相当于是宏）。<br>
+<code>strlen()</code>是计算字符串长度的，但是不会加上字符串末尾的空字符，所以分配内存时,要+1。<br>
+在构造函数中，我们使用了动态内存分配，而隐式默认析构函数，是不会做任何操作的，所以我们必须自己写一个析构函数释放动态内存。<br>
+<strong>在构造函数中使用<code>new</code>分配内存时，必须在相应的析构函数中使用<code>delete</code>来释放内存。</strong><br>
+下面我们看看这个<code>StringBad</code>类的缺陷</p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> _CRT_SECURE_NO_WARNINGS</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> std::cout;</span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&quot;类动态分配1.h&quot;</span></span></span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">callme1</span><span class="params">(StringBad &amp;)</span></span>;    <span class="comment">//传递引用</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">callme2</span><span class="params">(StringBad)</span></span>;      <span class="comment">//按值传递</span></span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">using</span> std::endl;</span><br><span class="line">    &#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;Starting an inner block.\n&quot;</span>;</span><br><span class="line">        <span class="function">StringBad <span class="title">headline1</span><span class="params">(<span class="string">&quot;Celery Stalks at Midnight&quot;</span>)</span></span>;</span><br><span class="line">        <span class="function">StringBad <span class="title">headline2</span><span class="params">(<span class="string">&quot;Lettuce Prey&quot;</span>)</span></span>;</span><br><span class="line">        <span class="function">StringBad <span class="title">sports</span><span class="params">(<span class="string">&quot;Spinach Leaves Bowl for Dollars&quot;</span>)</span></span>;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;headline1: &quot;</span> &lt;&lt; headline1 &lt;&lt; endl;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;headline2: &quot;</span> &lt;&lt; headline2 &lt;&lt; endl;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;sports: &quot;</span> &lt;&lt; sports &lt;&lt; endl;</span><br><span class="line">        <span class="built_in">callme1</span>(headline1);</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;headline1: &quot;</span> &lt;&lt; headline1 &lt;&lt; endl;</span><br><span class="line">        <span class="built_in">callme2</span>(headline2);</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;headline2: &quot;</span> &lt;&lt; headline2 &lt;&lt; endl;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;Initialize one onject to another:\n&quot;</span>;</span><br><span class="line">        StringBad sailor = sports;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;sailor: &quot;</span> &lt;&lt; sailor &lt;&lt; endl;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;Assign one object to another:\n&quot;</span>;</span><br><span class="line">        StringBad knot;</span><br><span class="line">        knot = headline1;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;knot: &quot;</span> &lt;&lt; knot &lt;&lt; endl;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;Exiting the block.\n&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;End of main()\n&quot;</span>;</span><br><span class="line">    std::cin.<span class="built_in">get</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">callme1</span><span class="params">(StringBad &amp; rsb)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;String passed by reference:\n&quot;</span>;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;      \&quot;&quot;</span> &lt;&lt; rsb &lt;&lt; <span class="string">&quot;\&quot;\n&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">callme2</span><span class="params">(StringBad sb)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;String passed by value:\n&quot;</span>;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;      \&quot;&quot;</span> &lt;&lt; sb &lt;&lt; <span class="string">&quot;\&quot;\n&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>这段代码是有问题的，不同编译器编译后，运行的结果不太一样。<br>
+具体有问题的语句是<br>
+<code>callme2(headline2);</code><br>
+<code>StringBad sailor = sports;</code><br>
+<code>knot = headline1;</code><br>
+为什么会出错？实际上，类中不止有构造函数、析构函数，还有很多编译器自动写的默认成员函数，出错的地方就是编译器给的默认成员函数对动态内存分配的不配合。</p>
+</blockquote>
+<h2 id="2-特殊成员函数">2. 特殊成员函数</h2>
+<blockquote>
+<p>C++自动提供了下面这些成员函数</p>
+<ul>
+<li>默认构造函数，如果没有定义构造函数</li>
+<li>默认析构函数，如果没有定义</li>
+<li>复制构造函数，如果没有定义</li>
+<li>赋值运算符，如果没有定义</li>
+<li>地址运算符，如果没有定义</li>
+<li>移动构造函数，如果没有定义</li>
+<li>移动赋值运算符，如果没有定义</li>
+</ul>
+<p>默认构造函数和默认析构函数之前都说过，他们两啥事都不会干。重载地址运算符，就是对象的值就是这个对象的<code>this</code>指针的值，也很简单。移动构造函数和移动赋值运算符也不说了，这涉及移动语义语法，以后再说。</p>
+</blockquote>
+<h3 id="2-1-复制构造函数">2.1 复制构造函数</h3>
+<blockquote>
+<p>复制构造函数用于初始化和按照传递参数，它的原型是：<br>
+<code>Class_name(const Class_name&amp;);</code><br>
+它接受一个const对象的引用参数，例如<code>StringBad</code>类的赋值函数原型是：<br>
+<code>StringBad(const StringBad &amp; );</code></p>
+</blockquote>
+<ul>
+<li>
+<p>何时调用复制构造函数？</p>
+<p><code>StringBad ditto(motto);</code><br>
+<code>StringBad metto=motto;</code><br>
+<code>StringBad also =StringBad(metto);</code><br>
+<code>StringBad *pStringBad=new StringBad(motto);</code></p>
+</li>
+</ul>
+<blockquote>
+<p><strong>当将新对象显式初始化成现有的对象时会直接调用复制构造函数</strong>，上面这4个声明都会使用复制构造函数之间创建对象。早期的编译器，可能对中间两种声明做一些复杂的操作，但是也是会使用复制构造函数的<br>
+<strong>当程序生成了对象副本时，编译器都会使用复制构造函数</strong>。具体的，函数按值传递对象（例如 <code>callme2()</code>）或者按值返回对象时，都会使用复制构造函数。<strong>按值传递意味著创建原始变量的一个副本。</strong><br>
+<strong>编译器生成临时变量时，也会使用复制构造函数</strong>，例如将三个对象相加，编译器会生成临时变量保存中间结果。不过现在编译器很智能，临时变量的生成时越来越少了。<br>
+<strong>总之，复制构造函数的调用会出现在初始化、按值传递、对象返回、生成临时对象时</strong></p>
+</blockquote>
+<ul>
+<li>默认复制构造函数的功能</li>
+</ul>
+<blockquote>
+<p>默认的复制构造函数只会进行<strong>潜复制</strong>，即逐个复制非静态成员，复制的时成员的值。<br>
+<code>StringBad sailor=sports;</code><br>
+相当于<br>
+<code>StringBad sailor;</code><br>
+<code>sailor.str=sports.str;</code><br>
+<code>sailor.len=sports,len;</code><br>
+当然了私有成员是无法直接访问的，上面只是演示。<br>
+静态成员是不会复制的，因为静态成员都是所有对象共享的，所以不需要复制。</p>
+</blockquote>
+<ul>
+<li><code>StringBad</code>类中默认复制构造函数出错了！</li>
+</ul>
+<blockquote>
+<p><code>callme2(headline2);</code><br>
+调用时，默认复制构造函数会用来创建一个原始对象的副本，而且默认构造函数不会更新<code>num_strings</code>的值。<br>
+<strong>如果类中需要一个静态成员需要在创建对象时更新，那么一定要提供一个显式复制构造函数用来处理计数问题</strong>。<br>
+还有一个更致命的问题，当<code>callme2()</code>调用结束后，原始变量的副本就会被删除，即调用析构函数。但是副本对象的<code>str</code>成员和原始对象的<code>str</code>成员是一样的，那么如果调用析构函数删除副本，那么原始对象的动态内存也会被释放，从而导致乱码。</p>
+<p><code>StringBad sailor = sports;</code><br>
+这段代码也会直接让<code>sailor.str</code>和<code>sports.str</code>完全相同，从而调用析构函数释放<code>sports</code>时也会把，<code>sailor</code>的那块动态内存释放掉，等到退出代码块后，<code>sailor</code>和<code>sports</code>都会调用析构函数，相当于把同一块地址<code>delete[]</code>两次，从而出错。</p>
+</blockquote>
+<ul>
+<li>定义一个显式复制构造函数解决问题</li>
+</ul>
+<blockquote>
+<p>解决这一问题的关键是**深复制(deep copy)**应该定义一个复制构造函数，用来复制指向的数据，而不是指针。<br>
+可以这样编写显式复制构造函数：</p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">StringBad::<span class="built_in">StringBad</span>(<span class="type">const</span> StringBad &amp; st)</span><br><span class="line">&#123;</span><br><span class="line">    num_strings++;</span><br><span class="line">    len=st.len;</span><br><span class="line">    str=<span class="keyword">new</span> <span class="type">char</span>[len<span class="number">+1</span>];</span><br><span class="line">    std::<span class="built_in">strcpy</span>(str,st.str);</span><br><span class="line">    cout &lt;&lt; num_strings &lt;&lt; <span class="string">&quot;: \&quot;&quot;</span> &lt;&lt; str</span><br><span class="line">        &lt;&lt; <span class="string">&quot;\&quot; object created\n&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>总之，<strong>如果类中包含了使用<code>new</code>初始化的指针成员，应该定义一个复制构造函数，用来复制指向的数据，而不是指针，这就是深复制。浅复制仅复制指针信息，而不会深入挖掘指针指向的数据</strong></p>
+</blockquote>
+<h3 id="2-2-赋值运算符">2.2 赋值运算符</h3>
+<blockquote>
+<p>C++会自动给类写一个重载<code>=</code>的函数，默认赋值运算符。<br>
+它的原型是：<br>
+<code>Class_name &amp; Class_name::operator=(const Class_name&amp;);</code><br>
+例如，<code>StringBad</code>的默认赋值运算符函数原型是：<br>
+<code>StringBad &amp; StringBad::operator=(const StringBad &amp;);</code><br>
+这里返回类型是引用，因为返回的就是<code>*this</code>或者说允许连续赋值操作。（一般来说，能用引用传参或返回，优先考虑引用传参或返回，尤其是允许把传入的引用变量返回的函数。主要是，引用不能指向局部变量，所以我们有时候不得不使用按值传递。）</p>
+</blockquote>
+<ul>
+<li>赋值运算什么时候使用？</li>
+</ul>
+<blockquote>
+<p><strong>把已有的对象赋给另一个对象时，会使用赋值运算符</strong>。但是，<strong>一般来说，初始化对象时，不会调用赋值运算符</strong>，例如：<br>
+<code>StringBad sailor = sports;</code><br>
+优秀的编译器，执行上面这一步会直接调用复制构造函数。<br>
+而落后的编译器它会这样做：<br>
+调用复制构造函数，创建一个临时对象（<code>sports</code>的副本），然后调用赋值运算符，把临时对象赋值给调用对象（即把<code>sports</code>的副本赋值给<code>sailor</code>）。</p>
+</blockquote>
+<ul>
+<li>默认赋值运算符的功能</li>
+</ul>
+<blockquote>
+<p>默认赋值符的功能是，把传入的对象的逐个成员浅复制到调用对象的逐个成员。<br>
+<code>a=b;</code><br>
+相当于<br>
+<code>a.len=b.len;</code><br>
+<code>a.str=b.str;</code><br>
+当然了，它也不会复制静态成员。</p>
+</blockquote>
+<ul>
+<li>默认赋值运算符出错了！</li>
+</ul>
+<blockquote>
+<p><code>knot = headline1;</code><br>
+会使得<code>knot.str</code>和<code>headline.str</code>相同，则调用析构函数时，同一块动态内存会被释放两次。</p>
+</blockquote>
+<ul>
+<li>解决赋值问题</li>
+</ul>
+<blockquote>
+<p>解决问题的关键还是：<strong>深复制</strong><br>
+但是赋值运算符和复制构造函数有区别：</p>
+</blockquote>
+<ol>
+<li>调用对象得将原来分配的数据<code>delete</code>掉，防止内存泄漏。</li>
+<li>应该避免把自己赋值给自己；否则你已经把自己数据删除掉了，还怎么赋值。</li>
+<li>返回值是指向调用对象的引用。</li>
+</ol>
+<blockquote>
+<p>通过返回引用就可以使用连续赋值,（按值传递的其实也可以完成连续赋值，只是引用传递更高效）<br>
+<code>s0=s1=s2;</code><br>
+相当于<code>s0.operator=(s1.operator=(s2));</code></p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">StringBad &amp; StringBad::<span class="keyword">operator</span>=(<span class="type">const</span> StringBad &amp; st)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">this</span>==&amp;st)</span><br><span class="line">    <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">    <span class="keyword">delete</span>[] str;</span><br><span class="line">    len=st.len;</span><br><span class="line">    str=<span class="keyword">new</span> <span class="type">char</span>[len<span class="number">+1</span>];</span><br><span class="line">    std::<span class="built_in">strcpy</span>(str,st.str);</span><br><span class="line">    <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意这里<code>if(this==&amp;st)</code>千万不能写成<code>if(*this==st)</code>因为地址相同和内容相同概念完全不一样。<br>
+赋值操作不会创造新的对象，所以<code>num_strings</code>不需要调整。</p>
+</blockquote>
+<h2 id="3-改进后的新String类">3. 改进后的新<code>String</code>类</h2>
+<h3 id="3-1-一些新的想法">3.1 一些新的想法</h3>
+<blockquote>
+<p>我们在<code>StringBad</code>的基础上,添加一些功能,使他更像C++中的<code>string</code>类<br>
+如下:</p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//string1.h</span></span><br><span class="line"><span class="meta">#<span class="keyword">ifndef</span> STRING1_H_</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> STRING1_H_</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> std::ostream;</span><br><span class="line"><span class="keyword">using</span> std::istream;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">String</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">        <span class="type">char</span>* str;</span><br><span class="line">        <span class="type">int</span> len;</span><br><span class="line">        <span class="type">static</span> <span class="type">int</span> num_strings;<span class="comment">//对象个数</span></span><br><span class="line">        <span class="type">static</span> <span class="type">const</span> <span class="type">int</span> CINLIM=<span class="number">80</span>;<span class="comment">//cin输入限制</span></span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">        <span class="built_in">String</span> (<span class="type">const</span> <span class="type">char</span>*s);<span class="comment">//字符串常量构造函数</span></span><br><span class="line">        <span class="built_in">String</span>();<span class="comment">//默认构造函数</span></span><br><span class="line">        <span class="built_in">String</span>(<span class="type">const</span> String &amp;st);<span class="comment">//复制构造函数</span></span><br><span class="line">        ~<span class="built_in">String</span>();<span class="comment">//析构函数</span></span><br><span class="line">        <span class="function"><span class="type">int</span> <span class="title">length</span><span class="params">()</span><span class="type">const</span> </span>&#123;<span class="keyword">return</span> len;&#125;</span><br><span class="line"></span><br><span class="line">        String&amp; <span class="keyword">operator</span>=(<span class="type">const</span> String&amp;);<span class="comment">//赋值运算符</span></span><br><span class="line">        String&amp; <span class="keyword">operator</span>=(<span class="type">const</span> <span class="type">char</span>*);<span class="comment">//专门为C风格字符串常量设计的赋值运算</span></span><br><span class="line">        <span class="type">char</span>&amp; <span class="keyword">operator</span>[](<span class="type">int</span> n);<span class="comment">//中括号运算符的重载</span></span><br><span class="line">        <span class="type">const</span> <span class="type">char</span>&amp; <span class="keyword">operator</span>[](<span class="type">int</span> n)<span class="type">const</span>;<span class="comment">//专门为const string 设计的中括号运算符</span></span><br><span class="line">        <span class="keyword">friend</span> <span class="type">bool</span> <span class="built_in">operator</span>&lt;(<span class="type">const</span> String &amp; st1,<span class="type">const</span> String &amp; st2);</span><br><span class="line">        <span class="keyword">friend</span> <span class="type">bool</span> <span class="keyword">operator</span>&gt;(<span class="type">const</span> String &amp; st1,<span class="type">const</span> String &amp; st2);</span><br><span class="line">        <span class="keyword">friend</span> <span class="type">bool</span> <span class="keyword">operator</span>==(<span class="type">const</span> String &amp; st1,<span class="type">const</span> String &amp; st2);</span><br><span class="line">        <span class="keyword">friend</span> ostream &amp; <span class="keyword">operator</span>&lt;&lt;(ostream &amp;os,<span class="type">const</span> String &amp;st);</span><br><span class="line">        <span class="keyword">friend</span> istream &amp; <span class="keyword">operator</span>&gt;&gt;(istream &amp;is,String&amp; st);</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="type">static</span> <span class="type">int</span> <span class="title">HowMany</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">&#125;;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//string1.cpp</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;cstring&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&quot;string1.h&quot;</span></span></span><br><span class="line"><span class="keyword">using</span> std::cin;</span><br><span class="line"><span class="keyword">using</span> std::cout;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> String::num_strings=<span class="number">0</span>;<span class="comment">//初始化静态类成员</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">String::HowMany</span><span class="params">()</span><span class="comment">//静态类方法</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> num_strings;</span><br><span class="line">&#125;</span><br><span class="line">String::<span class="built_in">String</span> (<span class="type">const</span> <span class="type">char</span>*s)<span class="comment">//字符串常量构造函数</span></span><br><span class="line">&#123;</span><br><span class="line">    len=std::<span class="built_in">strlen</span>(s);</span><br><span class="line">    str=<span class="keyword">new</span> <span class="type">char</span>[len<span class="number">+1</span>];</span><br><span class="line">    std::<span class="built_in">strcpy</span>(str,s);</span><br><span class="line">    num_strings++;</span><br><span class="line">&#125;</span><br><span class="line">String::<span class="built_in">String</span>()<span class="comment">//默认构造函数</span></span><br><span class="line">&#123;</span><br><span class="line">    len=<span class="number">0</span>;</span><br><span class="line">    str=<span class="literal">nullptr</span>;</span><br><span class="line">    num_strings++;</span><br><span class="line">&#125;</span><br><span class="line">String::<span class="built_in">String</span>(<span class="type">const</span> String &amp;st)<span class="comment">//复制构造函数</span></span><br><span class="line">&#123;</span><br><span class="line">    len=st.len;</span><br><span class="line">    str=<span class="keyword">new</span> <span class="type">char</span>[len<span class="number">+1</span>];</span><br><span class="line">    std::<span class="built_in">strcpy</span>(str,st.str);</span><br><span class="line">    num_strings++;</span><br><span class="line">&#125;</span><br><span class="line">String::~<span class="built_in">String</span>()<span class="comment">//析构函数</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">delete</span>[] str;</span><br><span class="line">    num_strings--;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">String&amp; String::<span class="keyword">operator</span>=(<span class="type">const</span> String&amp; st)<span class="comment">//赋值运算符</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">this</span>==&amp;st)</span><br><span class="line">    <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">    <span class="keyword">delete</span>[] str;</span><br><span class="line">    len=st.len;</span><br><span class="line">    str=<span class="keyword">new</span> <span class="type">char</span>[len<span class="number">+1</span>];</span><br><span class="line">    std::<span class="built_in">strcpy</span>(str,st.str);</span><br><span class="line">    <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br><span class="line">String&amp; String::<span class="keyword">operator</span>=(<span class="type">const</span> <span class="type">char</span>* s)<span class="comment">//专门为C风格字符串常量设计的赋值运算</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">delete</span>[] str;</span><br><span class="line">    len=std::<span class="built_in">strlen</span>(s);</span><br><span class="line">    str=<span class="keyword">new</span> <span class="type">char</span>[len<span class="number">+1</span>];</span><br><span class="line">    str:<span class="built_in">strcpy</span>(str,s);</span><br><span class="line">    <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">char</span>&amp; String::<span class="keyword">operator</span>[](<span class="type">int</span> n)<span class="comment">//中括号运算符的重载</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> str[n];</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">const</span> <span class="type">char</span>&amp; String::<span class="keyword">operator</span>[](<span class="type">int</span> n)<span class="type">const</span><span class="comment">//专门为const string 设计的中括号运算符</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> str[n];</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">bool</span> <span class="keyword">operator</span>&lt;(<span class="type">const</span> String &amp; st1,<span class="type">const</span> String &amp; st2)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> (std::<span class="built_in">strcmp</span>(st<span class="number">1.</span>str,st<span class="number">2.</span>str)&lt;<span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">bool</span> <span class="keyword">operator</span>&gt;(<span class="type">const</span> String &amp; st1,<span class="type">const</span> String &amp; st2)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> st2&lt;st1;</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">bool</span> <span class="keyword">operator</span>==(<span class="type">const</span> String &amp; st1,<span class="type">const</span> String &amp; st2)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">return</span> (std::<span class="built_in">strcmp</span>(st<span class="number">1.</span>str,st<span class="number">2.</span>str)==<span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line">ostream &amp; <span class="keyword">operator</span>&lt;&lt;(ostream &amp;os,<span class="type">const</span> String &amp;st)</span><br><span class="line">&#123;</span><br><span class="line">    os&lt;&lt;st.str;</span><br><span class="line">    <span class="keyword">return</span> os;</span><br><span class="line">&#125;</span><br><span class="line">istream &amp; <span class="keyword">operator</span>&gt;&gt;(istream &amp;is,String&amp; st)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">char</span> temp[String::CINLIM];</span><br><span class="line">    is.<span class="built_in">get</span>(temp,String::CINLIM);</span><br><span class="line">    <span class="keyword">if</span>(is)</span><br><span class="line">    &#123;</span><br><span class="line">        st=temp;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">while</span> (is &amp;&amp; is.<span class="built_in">get</span>()!=<span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line">        <span class="keyword">continue</span>;</span><br><span class="line">    <span class="keyword">return</span> is;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>默认构造函数</li>
+</ul>
+<blockquote>
+<p>我们看默认构造函数:</p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">String::<span class="built_in">String</span>()<span class="comment">//默认构造函数</span></span><br><span class="line">&#123;</span><br><span class="line">    len=<span class="number">0</span>;</span><br><span class="line">    str=<span class="literal">nullptr</span>;</span><br><span class="line">    num_strings++;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>构造函数的关键就在于,它能和析构函数匹配,这里<code>str=nullptr;</code>就是把指针置空,<code>delete[]</code>是可以对空指针操作的。你可以可以写成这样子<code>str=new char[1]&#123;'\0'&#125;;</code>,相当于是给个空字符.</p>
+</blockquote>
+<ul>
+<li>比较成员函数</li>
+</ul>
+<blockquote>
+<p>我们使用<code>strcmp()</code>函数对<code>String</code>对象做比较,<code>strcmp(char*s1,char*s2)</code>函数的返回值是,如果<code>s1&gt;s2</code>即第一个参数在第二个参数后面,则返回正数;若<code>s1&lt;s2</code>,则返回负数;如果<code>s1==s2</code>两个字符串相同,则返回0.</p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="type">bool</span> <span class="keyword">operator</span>&lt;(<span class="type">const</span> String &amp; st1,<span class="type">const</span> String &amp; st2)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> (std::<span class="built_in">strcmp</span>(st<span class="number">1.</span>str,st<span class="number">2.</span>str)&lt;<span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>而且我们把比较成员函数作为友元函数,是因为<strong>友元函数重载运算符更适应类类型自动转换</strong>,我们的<code>String</code>类的构造函数<code>String::String (const char*s)</code>它只接受一个字符串常量的参数,那么对于这个<code>String</code>类,它可以将字符串常量自动类型转换成<code>String</code>类类型.而使用友元函数重载运算符就是方便<code>String</code>对象和C中字符串常量做比较.<br>
+具体来说,如果使用类成员函数来实现<code>&lt;</code>重载,则<code>&quot;name&quot;&lt;object;</code>这句话就无法执行。因为<code>&quot;name&quot;</code>不是对象它无法调用类成员函数;<br>
+如果使用友元函数实现<code>&lt;</code>重载,那么<code>&quot;name&quot;&lt;object;</code>就可以执行,因为<code>bool operator&lt;(const String &amp; st1,const String &amp; st2)</code>的第一个参数是<code>String</code>类,而<code>&quot;name&quot;</code>是字符串常量,他会调用构造函数自动转换成<br>
+<code>String</code>对象以匹配这个友元函数.</p>
+</blockquote>
+<ul>
+<li>重载<code>[]</code>运算符</li>
+</ul>
+<blockquote>
+<p><code>[]</code>也是一个运算符,它是一个二元运算符.<code>a[n]</code>中<code>a</code>是第一个操作数,<code>n</code>是第二个操作数.<br>
+我们希望,<code>String</code>对象能够像数组一样使用<code>[]</code>运算符,但是我们无法直接访问私有成员,那么得重载运算符了.我们采用的是类成员函数方式:</p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="type">char</span>&amp; String::<span class="keyword">operator</span>[](<span class="type">int</span> n)<span class="comment">//中括号运算符的重载</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> str[n];</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">const</span> <span class="type">char</span>&amp; String::<span class="keyword">operator</span>[](<span class="type">int</span> n)<span class="type">const</span><span class="comment">//专门为const string 设计的中括号运算符</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> str[n];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>可以看懂我们写了两个重载函数,这是因为我们调用<code>[]</code>时,如果是<code>const</code>对象我们不能对它的私有数据做修改,所以返回值时是<code>const</code>引用(或者采用按值传递);如果我们期待修改<code>str[n]</code>数据,我们就得返回它的引用,以确保<code>object[0]='a';</code>这样的赋值语句可以执行.<br>
+在重载解析时,会区别<code>const</code>和非<code>const</code>,以确保调用正确的成员函数.</p>
+</blockquote>
+<ul>
+<li>静态成员函数</li>
+</ul>
+<blockquote>
+<p>我们可以将成员函数声明成静态的<br>
+静态成员函数不能使用对象调用,这也就意味着它没有<code>this</code>指针.<br>
+正因它和对象无关,静态成员函数只能使用静态数据成员.</p>
+<p><strong>静态成员函数的作用:</strong> 一般来说,我们只能通过对象才能调用成员函数,但是静态成员函数是个例外,<br>
+它放在公有部分,那么可以直接用作用域解析符访问它.</p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">static</span> <span class="type">int</span> <span class="title">HowMany</span><span class="params">()</span></span>;<span class="comment">//函数原型</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">String::HowMany</span><span class="params">()</span><span class="comment">//函数定义</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> num_strings;</span><br><span class="line">&#125;</span><br><span class="line">String::<span class="built_in">HowMany</span>()<span class="comment">//函数调用</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>可以看出来,静态成员函数的一种用法:私有静态数据<code>num_strings</code>无法直接访问,那么就用公有的静态成员函数的方式来访问.还有一种用法是,使用静态成员函数设置类级标记,以控制某些接口的行为.</p>
+</blockquote>
+<ul>
+<li>进一步重载<code>=</code>运算符</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">String&amp; <span class="keyword">operator</span>=(<span class="type">const</span> String&amp;);<span class="comment">//赋值运算符</span></span><br><span class="line">String&amp; <span class="keyword">operator</span>=(<span class="type">const</span> <span class="type">char</span>*);<span class="comment">//专门为C风格字符串常量设计的赋值运算</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>可以看出来,我们使用了两个函数来重载赋值运算符,这是因为我们经常会用C风格的字符串常量来给<code>String</code>类赋值.如果只有第一个函数,那么字符串常量就会先自动类型转换成<code>String</code>类对象,然后再调用赋值运算符.<br>
+但是这样做的开销是:<br>
+首先,调用构造函数创建一个<code>String</code>临时对象.<br>
+其次,对临时对象使用重载赋值运算<br>
+最后,调用析构函数删除临时对象.</p>
+<p>所以为了减少开销,那就再写一个专门给字符串常量设计的赋值运算.</p>
+</blockquote>
+<ul>
+<li>重载<code>&gt;&gt;</code>运算符</li>
+</ul>
+<blockquote>
+<p>我们希望能够使用<code>cin&gt;&gt;s;</code>的方式直接给<code>String</code>类赋值.</p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">istream &amp; <span class="keyword">operator</span>&gt;&gt;(istream &amp;is,String&amp; st)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">char</span> temp[String::CINLIM];</span><br><span class="line">    is.<span class="built_in">get</span>(temp,String::CINLIM);</span><br><span class="line">    <span class="keyword">if</span>(is)</span><br><span class="line">    &#123;</span><br><span class="line">        st=temp;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">while</span> (is &amp;&amp; is.<span class="built_in">get</span>()!=<span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line">        <span class="keyword">continue</span>;</span><br><span class="line">    <span class="keyword">return</span> is;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>首先说明一点<code>String::CINLIM</code>,这种方式直接访问私有静态数据,<strong>友元函数和成员函数有相同的访问权限,可以用作用域解析符来直接访问私有静态数据</strong>,<code>st.CINLIM</code>的使用对象调用的方式访问静态数据也是可行的,总之<strong>静态数据由于是所有对象共享的数据,可以用作用域解析符来访问,但是私有静态数据只允许成员函数和友元访问.</strong><br>
+关于<code>cin.get(array_name, ArSize);</code>，从缓冲区读取数据，达到行尾或者读取了 ArSize - 1 个字符为止，且超过规定的字符数不会出现错误，会直接截断,并且不对此换行符进行处理，并将其留在缓冲区。如果直接输入<code>\n</code>,那么<code>array_name[0]</code>就会变成<code>\0</code>,并且换行符仍留在缓冲区.<br>
+<code>cin.get();</code>读入一个字符后结束读取,而且它会读取换行符.<code>cin.get();</code>多是用来处理换行符的.</p>
+<p>所以上面那段代码,首先读取最多<code>CINLIM-1</code>个字符,然后<code>if(is)</code>是为了判断是否直接输入空行,如果不是空行就赋值,如果是空行的话直接返回;<code>while (is &amp;&amp; is.get()!='\n')</code>是用<code>is.get()</code>吸收掉多余字符,并且它会吸收换行符.<br>
+或者这么写也行</p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">istream &amp; <span class="keyword">operator</span>&gt;&gt;(istream &amp;is,String&amp; st)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">char</span> temp[String::CINLIM];</span><br><span class="line">    is.<span class="built_in">get</span>(temp,String::CINLIM);</span><br><span class="line">    <span class="keyword">if</span>(is)</span><br><span class="line">    &#123;</span><br><span class="line">        st=temp;</span><br><span class="line">    &#125;</span><br><span class="line">    is.<span class="built_in">ignore</span>();</span><br><span class="line">    <span class="keyword">return</span> is;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>直接使用<code>is.ignore();</code>清除缓冲区所有字符.</p>
+</blockquote>
+<h3 id="3-2-一个例子">3.2 一个例子</h3>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//类_sayings1.cpp</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&quot;string1.h&quot;</span></span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> ArSize=<span class="number">10</span>;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> MaxLen=<span class="number">81</span>;</span><br><span class="line"><span class="function"><span class="type">int</span>  <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">using</span> std::cin;</span><br><span class="line">    <span class="keyword">using</span> std::cout;</span><br><span class="line">    <span class="keyword">using</span> std::endl;</span><br><span class="line">    String name;</span><br><span class="line">    cout&lt;&lt;<span class="string">&quot;Hi,what is your name?\n&gt;&gt;&quot;</span>;</span><br><span class="line">    cin&gt;&gt;name;</span><br><span class="line"></span><br><span class="line">    cout&lt;&lt;name&lt;&lt;<span class="string">&quot;, please enter up to &quot;</span>&lt;&lt;ArSize&lt;&lt;<span class="string">&quot; short sayings &lt;empty line to quit&gt;:\n&quot;</span>;</span><br><span class="line">    String sayings[ArSize];</span><br><span class="line">    <span class="type">char</span> temp[MaxLen];</span><br><span class="line">    <span class="type">int</span> i;</span><br><span class="line">    <span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;ArSize;i++)</span><br><span class="line">    &#123;</span><br><span class="line">        cout&lt;&lt;i<span class="number">+1</span>&lt;&lt;<span class="string">&quot;: &quot;</span>;</span><br><span class="line">        cin.<span class="built_in">get</span>(temp,MaxLen);</span><br><span class="line">        <span class="keyword">while</span> (cin &amp;&amp; cin.<span class="built_in">get</span>()!=<span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        <span class="keyword">if</span>(!cin)<span class="comment">//检查空行</span></span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            sayings[i]=temp;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">int</span> total=i;</span><br><span class="line">    <span class="keyword">if</span>(total&gt;<span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        cout&lt;&lt;<span class="string">&quot;Here are your sayings:\n&quot;</span>;</span><br><span class="line">        <span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;total;i++)</span><br><span class="line">            cout&lt;&lt;sayings[i][<span class="number">0</span>]&lt;&lt;<span class="string">&quot;: &quot;</span>&lt;&lt;sayings[i]&lt;&lt;endl;</span><br><span class="line">        </span><br><span class="line">        <span class="type">int</span> shortest=<span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> first=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(i=<span class="number">1</span>;i&lt;total;i++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span>(sayings[i].<span class="built_in">length</span>()&lt;sayings[shortest].<span class="built_in">length</span>())</span><br><span class="line">                shortest=i;</span><br><span class="line">            <span class="keyword">if</span>(sayings[i]&lt;sayings[first])</span><br><span class="line">                first=i;</span><br><span class="line">        &#125;</span><br><span class="line">        cout&lt;&lt;<span class="string">&quot;Shortest saying:\n&quot;</span>&lt;&lt;sayings[shortest]&lt;&lt;endl;</span><br><span class="line">        cout&lt;&lt;<span class="string">&quot;First sating:\n&quot;</span>&lt;&lt;sayings[first]&lt;&lt;endl;</span><br><span class="line">        cout&lt;&lt;<span class="string">&quot;This program used &quot;</span>&lt;&lt;String::<span class="built_in">HowMany</span>()&lt;&lt;<span class="string">&quot; String objects. Bye!\n&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        cout&lt;&lt;<span class="string">&quot;No input! Bye.\n&quot;</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">PS D:\study\c++\path_to_c++&gt; g++ -I .\include\ -o 类_sayings1 .\类_sayings1.cpp .\string1.cpp</span><br><span class="line">PS D:\study\c++\path_to_c++&gt; .\类_sayings1.exe</span><br><span class="line">Hi,what is your name?</span><br><span class="line"><span class="meta prompt_">&gt;</span><span class="language-bash">&gt;Mr. Loong</span></span><br><span class="line">Mr. Loong, please enter up to 10 short sayings &lt;empty line to quit&gt;:</span><br><span class="line">1: eeeeeee</span><br><span class="line">2: ff f f f f f f f f  f f f</span><br><span class="line">3: a    a a a a a a a a a a  a a a a a aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa  a a a aaaaaaaaa</span><br><span class="line">4: b</span><br><span class="line">5: cc</span><br><span class="line">6:                  dd   dd</span><br><span class="line">7:</span><br><span class="line">Here are your sayings:</span><br><span class="line">e: eeeeeee</span><br><span class="line">f: ff f f f f f f f f  f f f</span><br><span class="line">a: a    a a a a a a a a a a  a a a a a aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa  a a</span><br><span class="line">b: b</span><br><span class="line">c: cc</span><br><span class="line"> :                  dd   dd</span><br><span class="line">Shortest saying:</span><br><span class="line">b</span><br><span class="line">First sating:</span><br><span class="line">                 dd   dd</span><br><span class="line">This program used 11 String objects. Bye!</span><br></pre></td></tr></table></figure>
+</article><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/img/avatar.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/project/LLMhuanjue/" title=""><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2"></div></div><div class="info-2"><div class="info-item-1">赛题链接：https://www.kaggle.com/competitions/ml-olympiad-detect-hallucinations-in-llms 任务分析：这是一个文本分类任务，难点在于如何提取文本特征、建立文本关系特征，以及如何解决类别不平衡问题 运行环境、使用框架、语言 操作系统：Linux ubuntu 4.15.0-213-generic #224-Ubuntu SMP Mon Jun 19 13:30:12 UTC 2023 x86_64 x86_64 x86_64 GNU/Linux 硬件环境： Intel® Xeon® Gold 6226R CPU @ 2.90GHz +  NVIDIA GeForce RTX 3090 * 8 (CUDA Version: 12.4) 语言和运行环境：python 3.9.21 (main, Dec 11 2024, 16:24:11) + jupyter notebook 7.2.2 使用框架：pytorch...</div></div></div></a><a class="pagination-related" href="/posts/CPP/%E4%BB%8EC%E5%88%B0C++___%E7%B1%BB%E5%92%8C%E5%8A%A8%E6%80%81%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D(%E4%BA%8C)/" title=""><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2"></div></div><div class="info-2"><div class="info-item-1">类和动态内存分配(二) 1. 在类中使用动态内存分配的注意事项 1.1 构造函数中使用new  如果在构造函数中使用new来初始化指针成员,则应在析构函数中使用delete new和delete必须相互兼容,new相对delete;new[]相对delete[] 因为只有一个析构函数,所有的构造函数都必须与它兼容   注意的是:delete或者delete[]都可以对空指针操作. NULl和0和nullptr:空指针可以用0或者NULL来表示,C++11使用一个特殊的关键词:nullptr来表示空指针.    应该定义一个复制构造函数,通过深度复制将一个对象初始化成另一个对象. String::String(const String &amp;st)//复制构造函数&#123;    len=st.len;    str=new char[len+1];    std::strcpy(str,st.str);    num_strings++;&#125;   应该定义一个赋值运算符。 String&amp; String::operator=(const...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">类和动态分配（一）设计一个String类</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%AE%9E%E4%BE%8B%EF%BC%9AStringBad%E7%B1%BB"><span class="toc-number">1.1.</span> <span class="toc-text">1. 实例：StringBad类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E7%89%B9%E6%AE%8A%E6%88%90%E5%91%98%E5%87%BD%E6%95%B0"><span class="toc-number">1.2.</span> <span class="toc-text">2. 特殊成员函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E5%A4%8D%E5%88%B6%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0"><span class="toc-number">1.2.1.</span> <span class="toc-text">2.1 复制构造函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="toc-number">1.2.2.</span> <span class="toc-text">2.2 赋值运算符</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E6%94%B9%E8%BF%9B%E5%90%8E%E7%9A%84%E6%96%B0String%E7%B1%BB"><span class="toc-number">1.3.</span> <span class="toc-text">3. 改进后的新String类</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E4%B8%80%E4%BA%9B%E6%96%B0%E7%9A%84%E6%83%B3%E6%B3%95"><span class="toc-number">1.3.1.</span> <span class="toc-text">3.1 一些新的想法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E4%B8%80%E4%B8%AA%E4%BE%8B%E5%AD%90"><span class="toc-number">1.3.2.</span> <span class="toc-text">3.2 一个例子</span></a></li></ol></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2025 By ShawnX</div><div class="footer_custom_text">Hi, welcome to my blog</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"></div><div id="rightside-config-show"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(async () => {
+  const showKatex = () => {
+    document.querySelectorAll('#article-container .katex').forEach(el => el.classList.add('katex-show'))
+  }
+
+  if (!window.katex_js_css) {
+    window.katex_js_css = true
+    await btf.getCSS('https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css')
+    if (true) {
+      await btf.getScript('https://cdn.jsdelivr.net/npm/katex/dist/contrib/copy-tex.min.js')
+    }
+  }
+
+  showKatex()
+})()</script><script>(() => {
+  const runMermaid = ele => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    ele.forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const mermaidThemeConfig = `%%{init:{ 'theme':'${theme}'}}%%\n`
+      const mermaidID = `mermaid-${index}`
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+      const renderMermaid = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      // mermaid v9 and v10 compatibility
+      typeof renderFn === 'string' ? renderMermaid(renderFn) : renderFn.then(({ svg }) => renderMermaid(svg))
+    })
+  }
+
+  const codeToMermaid = () => {
+    const codeMermaidEle = document.querySelectorAll('pre > code.mermaid')
+    if (codeMermaidEle.length === 0) return
+
+    codeMermaidEle.forEach(ele => {
+      const preEle = document.createElement('pre')
+      preEle.className = 'mermaid-src'
+      preEle.hidden = true
+      preEle.textContent = ele.textContent
+      const newEle = document.createElement('div')
+      newEle.className = 'mermaid-wrap'
+      newEle.appendChild(preEle)
+      ele.parentNode.replaceWith(newEle)
+    })
+  }
+
+  const loadMermaid = () => {
+    if (false) codeToMermaid()
+    const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+    if ($mermaid.length === 0) return
+
+    const runMermaidFn = () => runMermaid($mermaid)
+    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaidFn)
+  }
+
+  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><script src="/js/custom.js"></script><div class="aplayer no-destroy" data-id="12839720510" data-server="netease" data-type="playlist" data-fixed="true"> </div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="false" data-text="coding..,debugging..,running..." data-fontsize="15px" data-random="false" async="async"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script>(() => {
+  const destroyAplayer = () => {
+    if (window.aplayers) {
+      for (let i = 0; i < window.aplayers.length; i++) {
+        if (!window.aplayers[i].options.fixed) {
+          window.aplayers[i].destroy()
+        }
+      }
+    }
+  }
+
+  const runMetingJS = () => {
+    typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+  }
+
+  btf.addGlobalFn('pjaxSend', destroyAplayer, 'destroyAplayer')
+  btf.addGlobalFn('pjaxComplete', loadMeting, 'runMetingJS')
+})()</script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>(() => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => fn())
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      const usePjax = true
+      false 
+        ? (usePjax ? pjax.loadUrl('/404.html') : window.location.href = '/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})()</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
