@@ -1,0 +1,372 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>9、类的类型转换 | LittleBug</title><meta name="author" content="ShawnX"><meta name="copyright" content="ShawnX"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="1. 将标准类型转换成类类型  有C语言基础的都知道，标准类型的是可以进行类型转换的，例如，数值类型中int和double可以互相进行隐式类型转换。int类型和int *类型就无法进行隐式转换（或称自动类型转换），int *p&#x3D;10;是错误的，但是我们可以使用显式类型转换（或称强制类型转换）,int *p&#x3D;(int *)10;是正确的。 实际上，C++允许我们给自定义类型（类）和标准类型进行互相转">
+<meta property="og:type" content="article">
+<meta property="og:title" content="9、类的类型转换">
+<meta property="og:url" content="http://imxxl.top/posts/CPP/09/index.html">
+<meta property="og:site_name" content="LittleBug">
+<meta property="og:description" content="1. 将标准类型转换成类类型  有C语言基础的都知道，标准类型的是可以进行类型转换的，例如，数值类型中int和double可以互相进行隐式类型转换。int类型和int *类型就无法进行隐式转换（或称自动类型转换），int *p&#x3D;10;是错误的，但是我们可以使用显式类型转换（或称强制类型转换）,int *p&#x3D;(int *)10;是正确的。 实际上，C++允许我们给自定义类型（类）和标准类型进行互相转">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://imxxl.top/img/avatar.jpg">
+<meta property="article:published_time" content="2024-09-30T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-03-17T14:56:16.366Z">
+<meta property="article:author" content="ShawnX">
+<meta property="article:tag" content="cpp">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://imxxl.top/img/avatar.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "9、类的类型转换",
+  "url": "http://imxxl.top/posts/CPP/09/",
+  "image": "http://imxxl.top/img/avatar.jpg",
+  "datePublished": "2024-09-30T16:00:00.000Z",
+  "dateModified": "2025-03-17T14:56:16.366Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "ShawnX",
+      "url": "http://imxxl.top/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/avatar.jpg"><link rel="canonical" href="http://imxxl.top/posts/CPP/09/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          const hour = new Date().getHours()
+          const isNight = hour <= 6 || hour >= 18
+          if (theme === undefined) isNight ? activateDarkMode() : activateLightMode()
+          else theme === 'light' ? activateLightMode() : activateDarkMode()
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":100,"highlightFullpage":true,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '9、类的类型转换',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/mouse.css"><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-image: url(/img/pokemon2.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">29</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">12</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">12</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 全部文章</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 鏈接</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">LittleBug</span></a><a class="nav-page-title" href="/"><span class="site-name">9、类的类型转换</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 全部文章</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 鏈接</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">9、类的类型转换<a class="post-edit-link" href="https://github.com/Shawn-Summer/hexo-source/edit/main/source/_posts/CPP/09.md" title="编辑" target="_blank"><i class="fas fa-pencil-alt"></i></a></h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-09-30T16:00:00.000Z" title="发表于 2024-10-01 00:00:00">2024-10-01</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-03-17T14:56:16.366Z" title="更新于 2025-03-17 22:56:16">2025-03-17</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/CPP/">CPP</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">2.3k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>9分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="1-将标准类型转换成类类型">1. 将标准类型转换成类类型</h2>
+<blockquote>
+<p>有C语言基础的都知道，标准类型的是可以进行类型转换的，例如，数值类型中<code>int</code>和<code>double</code>可以互相进行隐式类型转换。<code>int</code>类型和<code>int *</code>类型就无法进行隐式转换（或称自动类型转换），<code>int *p=10;</code>是错误的，但是我们可以使用显式类型转换（或称强制类型转换）,<code>int *p=(int *)10;</code>是正确的。<br>
+实际上，C++允许我们给自定义类型（类）和标准类型进行互相转换。<br>
+看看下面这个例子：</p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">apple</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> number;</span><br><span class="line">    std::string color;</span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">apple</span>(<span class="type">int</span> n=<span class="number">0</span>,std::string c=<span class="string">&quot;no color&quot;</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        number=n;</span><br><span class="line">        color=c;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">display</span><span class="params">()</span><span class="type">const</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        std::cout&lt;&lt;<span class="string">&quot;number: &quot;</span>&lt;&lt;number&lt;&lt;<span class="string">&quot; color: &quot;</span>&lt;&lt;color&lt;&lt;std::endl;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">compare</span><span class="params">(<span class="type">const</span> apple &amp;a)</span><span class="type">const</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(a.number&lt;number)</span><br><span class="line">            std::cout&lt;&lt;<span class="string">&quot;大&quot;</span>&lt;&lt;std::endl;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(a.number==number)</span><br><span class="line">            std::cout&lt;&lt;<span class="string">&quot;相等&quot;</span>&lt;&lt;std::endl;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            std::cout&lt;&lt;<span class="string">&quot;小于&quot;</span>&lt;&lt;std::endl;</span><br><span class="line">    &#125;</span><br><span class="line">   </span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line">    apple a;</span><br><span class="line">    a.<span class="built_in">display</span>();</span><br><span class="line">    a=&#123;<span class="number">100</span>,<span class="string">&quot;red&quot;</span>&#125;;</span><br><span class="line">    a.<span class="built_in">display</span>();</span><br><span class="line">    a=<span class="number">250</span>;</span><br><span class="line">    a.<span class="built_in">display</span>();</span><br><span class="line">    a=<span class="number">300.12312</span>;</span><br><span class="line">    a.<span class="built_in">display</span>();</span><br><span class="line">    a.<span class="built_in">compare</span>(<span class="number">123.0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">number: 0 color: no color</span><br><span class="line">number: 100 color: red</span><br><span class="line">number: 250 color: no color</span><br><span class="line">number: 300 color: no color</span><br><span class="line">大</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><code>apple</code>类使用了含有默认参数的构造函数，所以<code>apple a;</code>会创建对象a，并使用显式默认构造函数，进行默认初始化;<br>
+<strong>再之前，我们说过，构造函数只能用在对象初始化，但是实际上，它还适用于赋值语法</strong><br>
+<code>a=&#123;100,&quot;red&quot;&#125;;</code>这句话是个赋值语句，它使用C++列表赋值语法，调用了构造函数。<br>
+<code>a=250;</code>这句话也是个赋值语句，乍一看，<code>250</code>是个<code>int</code>类型，而<code>a</code>是个<code>apple</code>对象，类型不匹配啊。<br>
+<code>a=300.12312;</code>这句话就更离谱了，它将<code>double</code>类型赋给了<code>apple</code>对象。<br>
+不幸的是，上面这两句都是正确的，因为当C++编译器，发现赋值语句两边类型不匹配时，它就会试着进行隐式类型转换，例如这里的<code>250</code>,<code>300.12312</code>类型均不匹配，那么编译器，就会去调用构造函数，而且这个构造函数一定要是可以接受一个参数且类型匹配或可以转换后匹配的。那么正好，<code>apple</code>类的构造函数，由于使用了默认参数，可以接受一个<code>int</code>类型的参数，那么自然的<code>250</code>可以传参，<code>300.12312</code>隐式转换成<code>300</code>传参，从而创造出新对象，再进行对象成员赋值，完成了赋值语句。<br>
+<strong>接受一个参数的构造函数为将类型与该参数相同（或转换后相同）的值，转换成类提供了蓝图</strong><br>
+<code>a.compare(123.0)</code>更直接的点明了这一点，类方法<code>compare()</code>接受一个类对象参数，但是<code>123.0</code>的<code>double</code>类型可以进行隐式转换而完成传参。那么，你完成了一个疯狂的举动–把标准类型参数传参给自定义类型，但是编译器不会发出warning<br>
+<strong>C++允许标准类型隐式转换成类，是危险的！</strong><br>
+我们不希望这种隐式转换，这实在太危险了，最理想的状况是–<strong>如何让编译器只接受标准类型显式类型转换成自定义类？</strong></p>
+</blockquote>
+<ul>
+<li><code>explicit</code>关键词</li>
+</ul>
+<blockquote>
+<p><code>explicit</code>明确的、清晰的意思，正如这个单词的意思，我们需要一个明确的构造函数，我们不希望构造函数称为隐式类型转换的帮凶，那么我们期待的<code>explicit</code>构造函数登场了。</p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">apple</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> number;</span><br><span class="line">    std::string color;</span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">explicit</span> <span class="title">apple</span><span class="params">(<span class="type">int</span> n=<span class="number">0</span>,std::string c=<span class="string">&quot;no color&quot;</span>)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        number=n;</span><br><span class="line">        color=c;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">display</span><span class="params">()</span><span class="type">const</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        std::cout&lt;&lt;<span class="string">&quot;number: &quot;</span>&lt;&lt;number&lt;&lt;<span class="string">&quot; color: &quot;</span>&lt;&lt;color&lt;&lt;std::endl;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">compare</span><span class="params">(<span class="type">const</span> apple &amp;a)</span><span class="type">const</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(a.number&lt;number)</span><br><span class="line">            std::cout&lt;&lt;<span class="string">&quot;大&quot;</span>&lt;&lt;std::endl;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(a.number==number)</span><br><span class="line">            std::cout&lt;&lt;<span class="string">&quot;相等&quot;</span>&lt;&lt;std::endl;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            std::cout&lt;&lt;<span class="string">&quot;小于&quot;</span>&lt;&lt;std::endl;</span><br><span class="line">    &#125;</span><br><span class="line">   </span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line">    apple a;</span><br><span class="line">    a.<span class="built_in">display</span>();</span><br><span class="line">    a=(apple)&#123;<span class="number">100</span>,<span class="string">&quot;red&quot;</span>&#125;;</span><br><span class="line">    a.<span class="built_in">display</span>();</span><br><span class="line">    a=(apple)<span class="number">250</span>;</span><br><span class="line">    a.<span class="built_in">display</span>();</span><br><span class="line">    a=(apple)<span class="number">300.12312</span>;</span><br><span class="line">    a.<span class="built_in">display</span>();</span><br><span class="line">    a.<span class="built_in">compare</span>((apple)<span class="number">123.0</span>);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>看看上面这段代码，<code>explicit apple(int n=0,std::string c=&quot;no color&quot;)</code>是个明确的构造函数，它只允许显式类型转换，它告诉编译器，可以把标准类型转化成自定义类型，但是你必须进行显式转化，否则我会报错。<br>
+<strong><code>explicit</code>关键词，会提供一个明确的构造函数，只允许标准类型显式类型转化成自定义类</strong></p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">apple b;<span class="comment">//正确，显式默认初始化</span></span><br><span class="line">b=<span class="number">12</span>;<span class="comment">//错误</span></span><br><span class="line">b=(apple)<span class="number">12</span>;<span class="comment">//正确,显式类型转化</span></span><br><span class="line">b=<span class="built_in">apple</span>(<span class="number">12</span>);<span class="comment">//正确，等式右边是个构造函数的调用</span></span><br><span class="line">apple c=<span class="number">13</span>;<span class="comment">//错误,不允许采用隐式类型转化，初始化apple对象</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>类型转换与运算符重载。</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">apple</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> number;</span><br><span class="line">    std::string color;</span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">apple</span>(<span class="type">int</span> n=<span class="number">0</span>,std::string c=<span class="string">&quot;no color&quot;</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        number=n;</span><br><span class="line">        color=c;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">display</span><span class="params">()</span><span class="type">const</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        std::cout&lt;&lt;<span class="string">&quot;number: &quot;</span>&lt;&lt;number&lt;&lt;<span class="string">&quot; color: &quot;</span>&lt;&lt;color&lt;&lt;std::endl;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">compare</span><span class="params">(<span class="type">const</span> apple &amp;a)</span><span class="type">const</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(a.number&lt;number)</span><br><span class="line">            std::cout&lt;&lt;<span class="string">&quot;大&quot;</span>&lt;&lt;std::endl;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(a.number==number)</span><br><span class="line">            std::cout&lt;&lt;<span class="string">&quot;相等&quot;</span>&lt;&lt;std::endl;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            std::cout&lt;&lt;<span class="string">&quot;小于&quot;</span>&lt;&lt;std::endl;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">friend</span> apple <span class="keyword">operator</span>+(<span class="type">const</span> apple &amp;a,<span class="type">const</span> apple &amp;b)</span><br><span class="line">    &#123;</span><br><span class="line">        apple ret;</span><br><span class="line">        ret.number=a.number+b.number;</span><br><span class="line">        <span class="keyword">return</span> ret;</span><br><span class="line">    &#125;</span><br><span class="line">   </span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line">    apple a&#123;<span class="number">120</span>,<span class="string">&quot;red&quot;</span>&#125;;</span><br><span class="line">    apple b;</span><br><span class="line">    b.<span class="built_in">display</span>();</span><br><span class="line">    <span class="type">int</span> x=<span class="number">250</span>;</span><br><span class="line">    b=x+a;</span><br><span class="line">    b.<span class="built_in">display</span>();</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">number: 0 color: no color  </span><br><span class="line">number: 370 color: no color</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>上面这段代码，对<code>+</code>的重载，采用的友元函数的方式。<code>b=x+a;</code>首先<code>x</code>会调用构造函数自动转换成<code>apple</code>对象，再调用<code>+</code>的重载。但是如果我们采用的是类成员函数的方式重载<code>+</code></p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">apple apple::<span class="keyword">operator</span>+(<span class="type">const</span> apple &amp; a)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> (number+a.number);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>就会出现问题，<code>x+a</code>,中<code>x</code>是<code>int</code>类型,它无法调用类成员函数完成<code>+</code>重载。所以说，<strong>友元函数重载运算符相对来说，更适应自动类型转换</strong>,这是因为友元函数的参数比类成员函数多，所以更容易自动转换。</p>
+</blockquote>
+<h2 id="2-将类类型转化成标准类型">2.将类类型转化成标准类型</h2>
+<blockquote>
+<p><code>double n=a;</code>这里<code>a</code>是一个<code>apple</code>对象。<br>
+这句话会报错，因为<strong>构造函数只用于从某种类型到类类型的转换</strong>，如果你想进行反方向的转换，必须使用<strong>转换函数</strong>。</p>
+</blockquote>
+<ul>
+<li>转换函数</li>
+</ul>
+<p>如果编译器发现，赋值语句右边是类类型，左边是标准类型，那么就会查看程序有没有定义了相应的转换函数。<br>
+转换函数的作用是，把类类型转换成标准类型。<br>
+转换函数的原型是：<br>
+<code>operator typeName();</code></p>
+<blockquote>
+<p>注意!,<strong>转换函数必须是类方法，不能指定返回类型，不能有参数</strong><br>
+例如，你想把类类型转换成<code>double</code>类型，那么转换函数原型是:<br>
+<code>operator double();</code></p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">apple</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> number;</span><br><span class="line">    std::string color;</span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">apple</span>(<span class="type">int</span> n=<span class="number">0</span>,std::string c=<span class="string">&quot;no color&quot;</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        number=n;</span><br><span class="line">        color=c;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">display</span><span class="params">()</span><span class="type">const</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        std::cout&lt;&lt;<span class="string">&quot;number: &quot;</span>&lt;&lt;number&lt;&lt;<span class="string">&quot; color: &quot;</span>&lt;&lt;color&lt;&lt;std::endl;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">compare</span><span class="params">(<span class="type">const</span> apple &amp;a)</span><span class="type">const</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(a.number&lt;number)</span><br><span class="line">            std::cout&lt;&lt;<span class="string">&quot;大&quot;</span>&lt;&lt;std::endl;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(a.number==number)</span><br><span class="line">            std::cout&lt;&lt;<span class="string">&quot;相等&quot;</span>&lt;&lt;std::endl;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            std::cout&lt;&lt;<span class="string">&quot;小于&quot;</span>&lt;&lt;std::endl;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">operator</span> <span class="title">int</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> number*<span class="number">100</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">operator</span> <span class="title">double</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> number/<span class="number">3.14</span>;</span><br><span class="line">    &#125;</span><br><span class="line">   </span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line">    apple a&#123;<span class="number">120</span>,<span class="string">&quot;red&quot;</span>&#125;;</span><br><span class="line">    <span class="type">int</span> x=a;</span><br><span class="line">    <span class="type">double</span> y=a;</span><br><span class="line">    cout&lt;&lt;x&lt;&lt;endl;</span><br><span class="line">    cout&lt;&lt;y&lt;&lt;endl;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">12000</span><br><span class="line">38.2166</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><code>int x=a;</code>和<code>double y=a;</code>都是正确的，因为<code>apple</code>类中存在转换成<code>int</code>和<code>double</code>的转换函数。<br>
+<strong>同样的，为了强调显式类型转换的重要性，转换函数也可以使用<code>explicit</code>修饰</strong></p>
+</blockquote>
+<h2 id="3-小结">3.小结</h2>
+<ul>
+<li>接受一个参数的构造函数可以将其他类型的值转换成类类型。</li>
+<li>转换函数可以让类对象转换成其他类型的值。</li>
+<li>实际上不光是标准类型，我们甚至可以完成类与类之间的转换。总之，我们现在完成了类和任何类型的互相转换。</li>
+<li>实现运算符重载中，友元函数的方式可能更好。</li>
+<li><code>explicit</code>关键词，虽然规避了自动转换的危险性，但是可能要多敲很多代码。</li>
+<li>转换函数可能会引发重载解析失败，例如，我如果重载了<code>+</code>，并且我有转换函数<code>operator int();</code>,那么<code>apple a=b+17;</code>(<code>b</code>也是<code>apple</code>对象。)</li>
+<li>那么一种看法是：将<code>17</code>自动转换成<code>apple</code>对象，再调用类中<code>+</code>运算。</li>
+<li>另一种看法是：把<code>b</code>自动转换成<code>int</code>，然后调用<code>int</code>的加法。</li>
+</ul>
+</article><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/cpp/">cpp</a></div><div class="post-share"><div class="social-share" data-image="/img/avatar.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/CPP/08/" title="8、友元和运算符重载"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">8、友元和运算符重载</div></div><div class="info-2"><div class="info-item-1">运算符重载  C++中的运算符本质上就是函数，函数可以重载，那么运算符也是可以重载的，C++允许将运算符重载扩充到用户定义的类型，例如可以使用+将两个对象加起来。 要重载运算符，要使用运算符函数。它的形式是： operatorop(argument-list) 如果一个类重载了+，a,b,c是三个对象。则我们可以使用：  c=a+b;c=a.operator+(b);  上面这两种调用+，是等价的。  d=a+b+c;  上面代码也是可行的，因为+是从左到右结合的上面式子等价于  d=a.operator+(b+c);进一步的d=a.operator+(b.operator+(c)); 例子：重载+、-、*的类  我们设计一个类，用来表示时间的数据类型，时间的加法减法乘法可以通过重载运算符的方式。  //使用类1.h#ifndef TIME#define TIMEclass Time&#123;    private:        int hour;        int min;    public:        Time();        Time(int h,int...</div></div></div></a><a class="pagination-related" href="/posts/paperReading/collaborative%20perception/asynchrony-robust-cp-via-BEVFlow/" title="[NIPS2023] asynchrony robust collaborative perception via birds eye view flow Paper Conference"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">[NIPS2023] asynchrony robust collaborative perception via birds eye view flow Paper Conference</div></div><div class="info-2"><div class="info-item-1">1. motivation irregular asynchronous setting:  the time stamps of the collaboration messages from other agents are not aligned the time interval of two consecutive messages from the same agent is irregular   Problem formulation: max⁡P,θ∑n=1Ng(Y^ntni,Yntni)subject to Y^ntni=cθ(Xntni,{Pm→ntmj,Pm→ntmj−1,...,Pm→ntmj−k+1}m=1N)\max_{P,\theta}\sum_{n=1}^{N}g(\widehat{Y}_{n}^{t_{n}^{i}},{Y}_{n}^{t_{n}^{i}})\\ \text{subject to }\widehat{Y}_{n}^{t_{n}^{i}}=c_{\theta}(X_{n}^{t_n^i},\{P_{m\rightarrow...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%B0%86%E6%A0%87%E5%87%86%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2%E6%88%90%E7%B1%BB%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.</span> <span class="toc-text">1. 将标准类型转换成类类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%B0%86%E7%B1%BB%E7%B1%BB%E5%9E%8B%E8%BD%AC%E5%8C%96%E6%88%90%E6%A0%87%E5%87%86%E7%B1%BB%E5%9E%8B"><span class="toc-number">2.</span> <span class="toc-text">2.将类类型转化成标准类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E5%B0%8F%E7%BB%93"><span class="toc-number">3.</span> <span class="toc-text">3.小结</span></a></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2025 By ShawnX</div><div class="footer_custom_text">Hi, welcome to my blog</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"></div><div id="rightside-config-show"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(async () => {
+  const showKatex = () => {
+    document.querySelectorAll('#article-container .katex').forEach(el => el.classList.add('katex-show'))
+  }
+
+  if (!window.katex_js_css) {
+    window.katex_js_css = true
+    await btf.getCSS('https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css')
+    if (true) {
+      await btf.getScript('https://cdn.jsdelivr.net/npm/katex/dist/contrib/copy-tex.min.js')
+    }
+  }
+
+  showKatex()
+})()</script><script>(() => {
+  const runMermaid = ele => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    ele.forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const mermaidThemeConfig = `%%{init:{ 'theme':'${theme}'}}%%\n`
+      const mermaidID = `mermaid-${index}`
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+      const renderMermaid = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      // mermaid v9 and v10 compatibility
+      typeof renderFn === 'string' ? renderMermaid(renderFn) : renderFn.then(({ svg }) => renderMermaid(svg))
+    })
+  }
+
+  const codeToMermaid = () => {
+    const codeMermaidEle = document.querySelectorAll('pre > code.mermaid')
+    if (codeMermaidEle.length === 0) return
+
+    codeMermaidEle.forEach(ele => {
+      const preEle = document.createElement('pre')
+      preEle.className = 'mermaid-src'
+      preEle.hidden = true
+      preEle.textContent = ele.textContent
+      const newEle = document.createElement('div')
+      newEle.className = 'mermaid-wrap'
+      newEle.appendChild(preEle)
+      ele.parentNode.replaceWith(newEle)
+    })
+  }
+
+  const loadMermaid = () => {
+    if (false) codeToMermaid()
+    const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+    if ($mermaid.length === 0) return
+
+    const runMermaidFn = () => runMermaid($mermaid)
+    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaidFn)
+  }
+
+  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><script src="js/sakura.js"></script> - <script src="/js/custom.js"></script> - <div class="aplayer no-destroy" data-id="12839720510" data-server="netease" data-type="playlist" data-fixed="true"> </div><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="false" data-text="coding..,debugging..,running..." data-fontsize="15px" data-random="false" async="async"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script>(() => {
+  const destroyAplayer = () => {
+    if (window.aplayers) {
+      for (let i = 0; i < window.aplayers.length; i++) {
+        if (!window.aplayers[i].options.fixed) {
+          window.aplayers[i].destroy()
+        }
+      }
+    }
+  }
+
+  const runMetingJS = () => {
+    typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+  }
+
+  btf.addGlobalFn('pjaxSend', destroyAplayer, 'destroyAplayer')
+  btf.addGlobalFn('pjaxComplete', loadMeting, 'runMetingJS')
+})()</script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>(() => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => fn())
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      const usePjax = true
+      false 
+        ? (usePjax ? pjax.loadUrl('/404.html') : window.location.href = '/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})()</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

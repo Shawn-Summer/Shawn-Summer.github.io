@@ -1,0 +1,421 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>5、名称空间 | LittleBug</title><meta name="author" content="ShawnX"><meta name="copyright" content="ShawnX"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="背景  声明区域（declaration region）:可以进行声明的区域。 全局变量的声明区是整个文件，函数内声明的变量的声明区是代码块。  潜在作用域（potential scope）:声明位置开始到声明区截止。 作用域（scope）:变量对程序的可见范围。 变量的作用域是潜在作用域的子集。 例如，在函数中声明的局部变量会隐藏同名的全局变量，导致全局变量的作用域缺少一部分。  名称空间（na">
+<meta property="og:type" content="article">
+<meta property="og:title" content="5、名称空间">
+<meta property="og:url" content="http://imxxl.top/posts/CPP/05/index.html">
+<meta property="og:site_name" content="LittleBug">
+<meta property="og:description" content="背景  声明区域（declaration region）:可以进行声明的区域。 全局变量的声明区是整个文件，函数内声明的变量的声明区是代码块。  潜在作用域（potential scope）:声明位置开始到声明区截止。 作用域（scope）:变量对程序的可见范围。 变量的作用域是潜在作用域的子集。 例如，在函数中声明的局部变量会隐藏同名的全局变量，导致全局变量的作用域缺少一部分。  名称空间（na">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://imxxl.top/img/avatar.jpg">
+<meta property="article:published_time" content="2024-09-30T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-03-17T14:56:16.360Z">
+<meta property="article:author" content="ShawnX">
+<meta property="article:tag" content="cpp">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://imxxl.top/img/avatar.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "5、名称空间",
+  "url": "http://imxxl.top/posts/CPP/05/",
+  "image": "http://imxxl.top/img/avatar.jpg",
+  "datePublished": "2024-09-30T16:00:00.000Z",
+  "dateModified": "2025-03-17T14:56:16.360Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "ShawnX",
+      "url": "http://imxxl.top/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/avatar.jpg"><link rel="canonical" href="http://imxxl.top/posts/CPP/05/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          const hour = new Date().getHours()
+          const isNight = hour <= 6 || hour >= 18
+          if (theme === undefined) isNight ? activateDarkMode() : activateLightMode()
+          else theme === 'light' ? activateLightMode() : activateDarkMode()
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":100,"highlightFullpage":true,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '5、名称空间',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/mouse.css"><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-image: url(/img/pokemon2.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">29</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">12</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">12</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 全部文章</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 鏈接</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">LittleBug</span></a><a class="nav-page-title" href="/"><span class="site-name">5、名称空间</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 全部文章</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 鏈接</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">5、名称空间<a class="post-edit-link" href="https://github.com/Shawn-Summer/hexo-source/edit/main/source/_posts/CPP/05.md" title="编辑" target="_blank"><i class="fas fa-pencil-alt"></i></a></h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-09-30T16:00:00.000Z" title="发表于 2024-10-01 00:00:00">2024-10-01</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-03-17T14:56:16.360Z" title="更新于 2025-03-17 22:56:16">2025-03-17</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/CPP/">CPP</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">2.7k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>11分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="背景">背景</h2>
+<blockquote>
+<p><strong>声明区域（declaration region）</strong>:可以进行声明的区域。<br>
+全局变量的声明区是整个文件，函数内声明的变量的声明区是代码块。<br>
+<img src="/posts/CPP/05/1.jpg" width="500"><br>
+<strong>潜在作用域（potential scope）</strong>:声明位置开始到声明区截止。<br>
+<strong>作用域（scope）</strong>:变量对程序的可见范围。<br>
+变量的作用域是潜在作用域的子集。<br>
+例如，在函数中声明的局部变量会隐藏同名的全局变量，导致全局变量的作用域缺少一部分。<br>
+<img src="/posts/CPP/05/2.jpg" width="500"><br>
+<strong>名称空间（namespace）</strong>：每个声明区都可以声明名称，并且这些名称独立于其他声明区的名称。（例如：一个函数中的局部变量不会和另一个函数的局部变量发生冲突。）所以说，每个声明区就是一个名称空间。<br>
+C++允许我们自己创造名称空间。为了统一概念，我们不再把代码块当成名称空间，<strong>所以名称空间只有两种：全局名称空间 用户创造的名称空间</strong></p>
+</blockquote>
+<h2 id="名称空间">名称空间</h2>
+<blockquote>
+<p>我们创造两个名称空间<code>Jack</code>和<code>Jill</code></p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> Hill;</span><br><span class="line"><span class="keyword">namespace</span> Jack&#123;</span><br><span class="line">    <span class="type">double</span> pail;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">fetch</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="type">int</span> pal;</span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">well</span>&#123;...&#125;;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">namespace</span> Jill&#123;</span><br><span class="line">    <span class="function"><span class="type">double</span> <span class="title">bucket</span><span class="params">(<span class="type">double</span> n)</span></span>;</span><br><span class="line">    <span class="type">double</span> fetch;</span><br><span class="line">    <span class="type">int</span> pal;</span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">Hill</span>&#123;...&#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="名称空间的法则">名称空间的法则</h3>
+<blockquote>
+<ol start="0">
+<li><strong>名称空间只有两种：全局名称空间 和 用户创造的名称空间</strong></li>
+<li><strong>全局名称空间</strong>是最基本的名称空间。全局名称空间就是整个文件。</li>
+</ol>
+</blockquote>
+<ol start="2">
+<li><strong>名称空间要么是全局名称空间，要么就是嵌套在另一个名称空间中，但是不能位于代码块中。</strong></li>
+</ol>
+<blockquote>
+<ol start="3">
+<li><strong>任何名称空间中的名称不会和其他名称空间中的名称发生冲突</strong>，例如，Jack中的fetch不会和Jill中的fetch发生冲突，Jill中的Hill不会和全局变量Hill发生冲突。</li>
+<li><strong>默认情况下，名称空间中的名称具有外部链接性和静态持续性</strong>。当然了，在全局名称空间中，我们有局部变量、全局变量、静态局部变量（内部链接性的静态变量），那么我们也可以在用户创造的名称空间中设置相应的变量。</li>
+<li><strong>用户创造的名称空间的一切声明和定义法则和全局名称空间一样</strong>。例如，我们也可以像全局名称空间那样，给jack名称空间，添加变量，添加函数定义，等等所有操作</li>
+</ol>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">namespace</span> Jack&#123;</span><br><span class="line">    <span class="type">int</span> extra;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">namespace</span> Jack&#123;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">fetch</span><span class="params">()</span></span>&#123;</span><br><span class="line">        std::cout&lt;&lt;<span class="string">&quot;hello\n&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>那么，既然名称空间这么多，我们如何在一个名称空间中使用其他名称空间中的名称呢？<strong>作用域解析符——<code>::</code></strong>,正如上面这段代码中所示，我们使用了std空间中的cout名称。</p>
+</blockquote>
+<h3 id="语法细谈">语法细谈</h3>
+<h4 id="using声明"><code>using声明</code></h4>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">namespace</span> Jill&#123;</span><br><span class="line">    <span class="function"><span class="type">double</span> <span class="title">bucket</span><span class="params">(<span class="type">double</span> n)</span></span>;</span><br><span class="line">    <span class="type">double</span> fetch=<span class="number">0</span>;</span><br><span class="line">    <span class="type">int</span> pal;</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">double</span> fetch=<span class="number">2.222</span>;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">foo</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">using</span> Jill::fetch;</span><br><span class="line">    <span class="built_in">foo</span>();</span><br><span class="line">    std::cout&lt;&lt;<span class="string">&quot;in main fetch : &quot;</span>&lt;&lt;fetch&lt;&lt;std::endl;</span><br><span class="line">    std::cout&lt;&lt;<span class="string">&quot;global fetch : &quot;</span>&lt;&lt;::fetch&lt;&lt;std::endl;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">foo</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">using</span> Jill::fetch;</span><br><span class="line">    fetch=<span class="number">1.111</span>;</span><br><span class="line">    std::cout&lt;&lt;<span class="string">&quot;in foo fetch : &quot;</span>&lt;&lt;fetch&lt;&lt;std::endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="keyword">in</span> foo fetch : 1.111</span><br><span class="line"><span class="keyword">in</span> main fetch : 1.111</span><br><span class="line">global fetch : 2.222</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>这里的<code>using Jill::fetch;</code>就是我们所谓的 <code>using声明</code>，他使得main函数中的一切<code>fetch</code>名称都视为是<code>Jill::fetch</code>。<strong>这里的<code>fetch</code>会覆盖同名的全局变量</strong>,如果我们想要调用全局变量,只需要添加作用域解析符，<code>::fetch</code>就是全局变量，我们还验证了一个法则，默认情况下，Jill名称空间中的名称的持续性都是静态的，因为在foo函数中对<code>fetch</code>的修改，会影响main函数中的<code>fetch</code>的值。</p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">namespace</span> Jill&#123;</span><br><span class="line">    <span class="function"><span class="type">double</span> <span class="title">bucket</span><span class="params">(<span class="type">double</span> n)</span></span>;</span><br><span class="line">    <span class="type">double</span> fetch=<span class="number">0</span>;</span><br><span class="line">    <span class="type">int</span> pal;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">using</span> Jill::fetch;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">foo</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">foo</span>();</span><br><span class="line">    std::cout&lt;&lt;<span class="string">&quot;in main fetch : &quot;</span>&lt;&lt;fetch&lt;&lt;std::endl;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">foo</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">using</span> Jill::fetch;</span><br><span class="line">    fetch=<span class="number">1.111</span>;</span><br><span class="line">    std::cout&lt;&lt;<span class="string">&quot;in foo fetch : &quot;</span>&lt;&lt;fetch&lt;&lt;std::endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>上面这段代码是正确的，我们把<code>using声明</code>放到了全局名称空间中，这样子全局名称空间的main函数中使用的<code>fetch</code>就是<code>Jill::fetch</code>。</p>
+</blockquote>
+<h4 id="using编译指令"><code>using编译指令</code></h4>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    cout&lt;&lt;<span class="string">&quot;hello world!\n&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>上面这段代码就是最简单的C++程序，这里的<code>#include&lt;iostream&gt;</code>会把头文件<code>iostream</code>放到std名称空间中，<code>using namespace std;</code>就是所谓的 <code>using编译指令</code>，上面那段代码会使得 std名称空间的所有名称在全局名称空间中可用。</p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line">    cout&lt;&lt;<span class="string">&quot;hello world!\n&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>有的程序员喜欢上面这段代码，因为他使得 std名称空间中的所有名称在main()函数中可用，这种写法更加安全。</p>
+</blockquote>
+<ul>
+<li><code>using声明</code>使一个名称可用，而<code>using编译指令</code>使得所有的名称都可用。</li>
+<li><code>using编译指令</code>增加了名称冲突的可能性</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">namespace</span> Jack&#123;</span><br><span class="line">    <span class="type">double</span> pail;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">fetch</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="type">int</span> pal;</span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">well</span>&#123;...&#125;;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">namespace</span> Jill&#123;</span><br><span class="line">    <span class="function"><span class="type">double</span> <span class="title">bucket</span><span class="params">(<span class="type">double</span> n)</span></span>;</span><br><span class="line">    <span class="type">double</span> fetch;</span><br><span class="line">    <span class="type">int</span> pal;</span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">Hill</span>&#123;...&#125;;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> Jack;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> Jill;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>上面这段代码会报错，因为他会将Jack和Jill中的所有名称导出到全局名称空间，从而引发<code>fetch</code>和<code>pal</code>名称的冲突。</p>
+</blockquote>
+<h4 id="using声明和using编译指令的比较"><code>using声明</code>和<code>using编译指令</code>的比较</h4>
+<blockquote>
+<p>假设名称空间和声明区域定义了相同的名称。如果使用<code>using声明</code>，将名称空间中的名称导入声明区域，会导致两个名称发生冲突，从而报错。如果使用<code>using编译指令</code>将名称空间中的所有名称导入声明区域，不会报错也不会发出警告，因为局部名称会隐藏名称空间中的名称。</p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">namespace</span> Jill&#123;</span><br><span class="line">    <span class="function"><span class="type">double</span> <span class="title">bucket</span><span class="params">(<span class="type">double</span> n)</span></span>;</span><br><span class="line">    <span class="type">double</span> fetch=<span class="number">0</span>;</span><br><span class="line">    <span class="type">int</span> pal;</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">double</span> fetch=<span class="number">1.11</span>;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">foo</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">using</span> <span class="keyword">namespace</span> Jill;</span><br><span class="line">    <span class="type">char</span> fetch[<span class="number">10</span>]=<span class="string">&quot;hello&quot;</span>;</span><br><span class="line">    std::cout&lt;&lt;fetch&lt;&lt;std::endl;</span><br><span class="line">    std::cout&lt;&lt;Jill::fetch&lt;&lt;std::endl;</span><br><span class="line">    std::cout&lt;&lt;::fetch&lt;&lt;std::endl;</span><br><span class="line">    <span class="built_in">foo</span>();</span><br><span class="line"> </span><br><span class="line">   </span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">foo</span><span class="params">()</span></span>&#123;</span><br><span class="line">    std::cout&lt;&lt;<span class="string">&quot;in foo fetch : &quot;</span>&lt;&lt;fetch&lt;&lt;std::endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">hello</span><br><span class="line"><span class="number">0</span></span><br><span class="line"><span class="number">1.11</span></span><br><span class="line">in foo fetch : <span class="number">1.11</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>仔细看上面这段代码，很神奇是不是，它不会报错，这里有3个<code>fetch</code>:全局<code>fetch</code>,Jill名称空间中的<code>fetch</code>和局部变量<code>fetch</code>,在mian函数中使用<code>using namespace Jill;</code>不会报错，因为这里局部名称会隐藏名称空间名称和全局名称。如果把<code>using namespace Jill;</code>改成<code>using Jill::fetch</code>就会报错。</p>
+</blockquote>
+<ul>
+<li><code>using声明</code>像是声明了一个名称，它会与同名的局部名称发生冲突。</li>
+<li><code>using编译指令</code>更像是名称解析，它导入大量的名称，如果存在同名局部名称，则局部名称会覆盖名称空间名称。</li>
+</ul>
+<blockquote>
+<p><strong><code>using声明</code>比<code>using编译指令</code>更安全</strong></p>
+</blockquote>
+<h4 id="名称空间的嵌套">名称空间的嵌套</h4>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">namespace</span> Jill&#123;</span><br><span class="line">    <span class="function"><span class="type">double</span> <span class="title">bucket</span><span class="params">(<span class="type">double</span> n)</span></span>;</span><br><span class="line">    <span class="type">double</span> fetch=<span class="number">0</span>;</span><br><span class="line">    <span class="type">int</span> pal;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">namespace</span> elements&#123;</span><br><span class="line">    <span class="keyword">namespace</span> fire&#123;</span><br><span class="line">        <span class="type">int</span> flame;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">namespace</span> myth&#123;</span><br><span class="line">    <span class="keyword">using</span> <span class="keyword">namespace</span> elements;</span><br><span class="line">    <span class="keyword">using</span> std::cin;</span><br><span class="line">    <span class="keyword">using</span> std::cout;</span><br><span class="line">    <span class="keyword">using</span> Jill::fetch;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>名称空间中仍然可以创造名称空间，使用using声明和using编译指令。</p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> myth;</span><br><span class="line">cin&gt;&gt;fetch;</span><br><span class="line">cin&gt;&gt;fire::flame;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>而且using编译指令具有传递性，所以<code>using namespace myth;</code>也会把elements名称空间中的所有名称导入全局名称空间。<br>
+所以<code>cin&gt;&gt;fire::flame;</code>也是合法的。<br>
+也可以给名称空间创造别名<br>
+<code>namespace favorite=elements::fire;</code><br>
+<code>using favorite::flame;</code></p>
+</blockquote>
+<h4 id="未命名的名称空间">未命名的名称空间</h4>
+<blockquote>
+<p>未命名的名称空间中的变量是静态全局变量的替代品；</p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="type">static</span> <span class="type">int</span> count;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">foo</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line">    <span class="built_in">foo</span>();</span><br><span class="line">    cout&lt;&lt;<span class="string">&quot;now :&quot;</span>&lt;&lt;count&lt;&lt;endl;</span><br><span class="line">    <span class="built_in">foo</span>();</span><br><span class="line">    cout&lt;&lt;<span class="string">&quot;now :&quot;</span>&lt;&lt;count&lt;&lt;endl;</span><br><span class="line">    <span class="built_in">foo</span>();</span><br><span class="line">    cout&lt;&lt;<span class="string">&quot;now :&quot;</span>&lt;&lt;count&lt;&lt;endl;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">foo</span><span class="params">()</span></span>&#123;</span><br><span class="line">    count++;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">now :1</span><br><span class="line">now :2</span><br><span class="line">now :3</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>上面这段代码等价于下面这段代码：</p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">namespace</span>&#123;</span><br><span class="line">    <span class="type">int</span> count;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">foo</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line">    <span class="built_in">foo</span>();</span><br><span class="line">    cout&lt;&lt;<span class="string">&quot;now :&quot;</span>&lt;&lt;count&lt;&lt;endl;</span><br><span class="line">    <span class="built_in">foo</span>();</span><br><span class="line">    cout&lt;&lt;<span class="string">&quot;now :&quot;</span>&lt;&lt;count&lt;&lt;endl;</span><br><span class="line">    <span class="built_in">foo</span>();</span><br><span class="line">    cout&lt;&lt;<span class="string">&quot;now :&quot;</span>&lt;&lt;count&lt;&lt;endl;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">foo</span><span class="params">()</span></span>&#123;</span><br><span class="line">    count++;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><code>namespace&#123;int count;&#125;</code>就好像后面跟着一条using编译指令一样，由于名称空间没有名字，所以在其他文件中使用using编译指令或者using声明。</p>
+</blockquote>
+<h2 id="一些建议">一些建议</h2>
+<blockquote>
+<p>名称空间的诞生是因为大型编程项目难于管理。如果你只写一些简单的程序请忽视下列建议。</p>
+</blockquote>
+<ol>
+<li>使用已命名的名称空间中声明的变量代替全局变量</li>
+<li>使用未命名的名称空间中声明的变量代替静态全局变量</li>
+<li>将函数库类库放在一个名称空间中</li>
+<li>少用using编译指令</li>
+<li>避免在头文件中使用using编译指令。</li>
+<li>导入名称时，首选using声明和作用域解析符</li>
+<li>首选在局部使用using声明</li>
+</ol>
+<h2 id="一个例子">一个例子</h2>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//名称空间6.h</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> std::cin;</span><br><span class="line"><span class="keyword">using</span> std::cout;</span><br><span class="line"><span class="keyword">using</span> std::endl;</span><br><span class="line"><span class="keyword">using</span> std::string;</span><br><span class="line"><span class="keyword">namespace</span> pers&#123;</span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">Person</span></span><br><span class="line">    &#123;</span><br><span class="line">        string fname;</span><br><span class="line">        string lname;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">getPerson</span><span class="params">(Person&amp;)</span></span>;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">showPerson</span><span class="params">(<span class="type">const</span> Person&amp;)</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">namespace</span> debts&#123;</span><br><span class="line">    <span class="keyword">using</span> <span class="keyword">namespace</span> pers;</span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">Debt</span></span><br><span class="line">    &#123;</span><br><span class="line">        Person name;</span><br><span class="line">        <span class="type">double</span> amount;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">getDebt</span><span class="params">(Debt &amp;)</span></span>;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">showDebt</span><span class="params">(<span class="type">const</span> Debt &amp;)</span></span>;</span><br><span class="line">    <span class="function"><span class="type">double</span> <span class="title">sumDebts</span><span class="params">(<span class="type">const</span> Debt ar[],<span class="type">int</span> n)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//名称空间6.cpp</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&quot;名称空间6.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> pers&#123;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">getPerson</span><span class="params">(Person &amp;rp)</span></span>&#123;</span><br><span class="line">        cout&lt;&lt;<span class="string">&quot;enter first name: &quot;</span>;</span><br><span class="line">        cin&gt;&gt;rp.fname;</span><br><span class="line">        cout&lt;&lt;<span class="string">&quot;enter last name: &quot;</span>;</span><br><span class="line">        cin&gt;&gt;rp.lname;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">showPerson</span><span class="params">(<span class="type">const</span> Person&amp; rp)</span></span>&#123;</span><br><span class="line">        cout&lt;&lt;rp.fname&lt;&lt;<span class="string">&quot; &quot;</span>&lt;&lt;rp.lname;</span><br><span class="line">    &#125;</span><br><span class="line">&#125; <span class="comment">// namespace pers</span></span><br><span class="line"><span class="keyword">namespace</span> debts&#123;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">getDebt</span><span class="params">(Debt &amp;rd)</span></span>&#123;</span><br><span class="line">        <span class="built_in">getPerson</span>(rd.name);</span><br><span class="line">        cout&lt;&lt;<span class="string">&quot;enter debt: &quot;</span>;</span><br><span class="line">        cin&gt;&gt;rd.amount;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">showDebt</span><span class="params">(<span class="type">const</span> Debt &amp; rd)</span></span>&#123;</span><br><span class="line">        <span class="built_in">showPerson</span>(rd.name);</span><br><span class="line">        cout&lt;&lt;<span class="string">&quot;: $&quot;</span>&lt;&lt;rd.amount&lt;&lt;endl;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="type">double</span> <span class="title">sumDebts</span><span class="params">(<span class="type">const</span> Debt ar[],<span class="type">int</span> n)</span></span>&#123;</span><br><span class="line">        <span class="type">double</span> total=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;n;i++)&#123;</span><br><span class="line">            total+=ar[i].amount;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> total;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//名称空间6main.cpp</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&quot;名称空间6.h&quot;</span></span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">other</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">another</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">using</span> debts::Debt;</span><br><span class="line">    <span class="keyword">using</span> debts::showDebt;</span><br><span class="line">    Debt golf=&#123;&#123;<span class="string">&quot;Benny&quot;</span>,<span class="string">&quot;Goatsniff&quot;</span>&#125;,<span class="number">120.0</span>&#125;;</span><br><span class="line">    <span class="built_in">showDebt</span>(golf);</span><br><span class="line">    <span class="built_in">other</span>();</span><br><span class="line">    <span class="built_in">another</span>();</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">other</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">using</span> <span class="keyword">namespace</span> debts;</span><br><span class="line">    Person dg=&#123;<span class="string">&quot;Doodles&quot;</span>,<span class="string">&quot;Glister&quot;</span>&#125;;</span><br><span class="line">    <span class="built_in">showPerson</span>(dg);</span><br><span class="line">    cout&lt;&lt;endl;</span><br><span class="line">    Debt zippy[<span class="number">3</span>];</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;<span class="number">3</span>;i++)&#123;</span><br><span class="line">        <span class="built_in">getDebt</span>(zippy[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;<span class="number">3</span>;i++)</span><br><span class="line">        <span class="built_in">showDebt</span>(zippy[i]);</span><br><span class="line">    </span><br><span class="line">    cout&lt;&lt;<span class="string">&quot;Total debt: $&quot;</span>&lt;&lt;<span class="built_in">sumDebts</span>(zippy,<span class="number">3</span>)&lt;&lt;endl;</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">another</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">using</span> pers::Person;</span><br><span class="line">    Person collector=&#123;<span class="string">&quot;Milo&quot;</span>,<span class="string">&quot;Rightshift&quot;</span>&#125;;</span><br><span class="line">    pers::<span class="built_in">showPerson</span>(collector);</span><br><span class="line">    cout&lt;&lt; endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">PS D:\study\c++&gt; g++ -I .\path_to_c++\include\ -o <span class="built_in">test</span> .\path_to_c++\名称空间6main.cpp .\path_to_c++\名称空间6.cpp</span><br><span class="line">PS D:\study\c++&gt; .\test.exe</span><br><span class="line">Benny Goatsniff: <span class="variable">$120</span></span><br><span class="line">Doodles Glister</span><br><span class="line">enter first name: Ann   </span><br><span class="line">enter last name: Cherry</span><br><span class="line">enter debt: 200</span><br><span class="line">enter first name: Ban </span><br><span class="line">enter last name: Tank</span><br><span class="line">enter debt: 230</span><br><span class="line">enter first name: Sam</span><br><span class="line">enter last name: Captain</span><br><span class="line">enter debt: 300</span><br><span class="line">Ann Cherry: <span class="variable">$200</span></span><br><span class="line">Ban Tank: <span class="variable">$230</span></span><br><span class="line">Sam Captain: <span class="variable">$300</span></span><br><span class="line">Total debt: <span class="variable">$730</span></span><br><span class="line">Milo Rightshift</span><br></pre></td></tr></table></figure>
+</article><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/cpp/">cpp</a></div><div class="post-share"><div class="social-share" data-image="/img/avatar.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/CPP/04/" title="4、内存模型"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">4、内存模型</div></div><div class="info-2"><div class="info-item-1"> C++11使用4种方案来存储数据，这4种方案的区别主要是数据保留在内存的时间，即4种存储持续性（duration）  自动存储 静态存储 线程存储 动态存储  作用域（scope）：描述了名称在文件的多大范围内可见 链接性（linkage）: 描述了名称在不同文件种的共享的方式  外部链接性 内部链接性 无链接性   自动存储（局部变量）  自动存储的变量是最简单的，就是在代码段中int a=1类似的这种变量，也可以使用关键词register来显式表示他是自动存储的变量，register int...</div></div></div></a><a class="pagination-related" href="/posts/CPP/06/" title="6、对象和类（上）"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">6、对象和类（上）</div></div><div class="info-2"><div class="info-item-1">...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%83%8C%E6%99%AF"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%8D%E7%A7%B0%E7%A9%BA%E9%97%B4"><span class="toc-number">2.</span> <span class="toc-text">名称空间</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%8D%E7%A7%B0%E7%A9%BA%E9%97%B4%E7%9A%84%E6%B3%95%E5%88%99"><span class="toc-number">2.1.</span> <span class="toc-text">名称空间的法则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%AD%E6%B3%95%E7%BB%86%E8%B0%88"><span class="toc-number">2.2.</span> <span class="toc-text">语法细谈</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#using%E5%A3%B0%E6%98%8E"><span class="toc-number">2.2.1.</span> <span class="toc-text">using声明</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#using%E7%BC%96%E8%AF%91%E6%8C%87%E4%BB%A4"><span class="toc-number">2.2.2.</span> <span class="toc-text">using编译指令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#using%E5%A3%B0%E6%98%8E%E5%92%8Cusing%E7%BC%96%E8%AF%91%E6%8C%87%E4%BB%A4%E7%9A%84%E6%AF%94%E8%BE%83"><span class="toc-number">2.2.3.</span> <span class="toc-text">using声明和using编译指令的比较</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%90%8D%E7%A7%B0%E7%A9%BA%E9%97%B4%E7%9A%84%E5%B5%8C%E5%A5%97"><span class="toc-number">2.2.4.</span> <span class="toc-text">名称空间的嵌套</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9C%AA%E5%91%BD%E5%90%8D%E7%9A%84%E5%90%8D%E7%A7%B0%E7%A9%BA%E9%97%B4"><span class="toc-number">2.2.5.</span> <span class="toc-text">未命名的名称空间</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E5%BB%BA%E8%AE%AE"><span class="toc-number">3.</span> <span class="toc-text">一些建议</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E4%B8%AA%E4%BE%8B%E5%AD%90"><span class="toc-number">4.</span> <span class="toc-text">一个例子</span></a></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2025 By ShawnX</div><div class="footer_custom_text">Hi, welcome to my blog</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"></div><div id="rightside-config-show"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(async () => {
+  const showKatex = () => {
+    document.querySelectorAll('#article-container .katex').forEach(el => el.classList.add('katex-show'))
+  }
+
+  if (!window.katex_js_css) {
+    window.katex_js_css = true
+    await btf.getCSS('https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css')
+    if (true) {
+      await btf.getScript('https://cdn.jsdelivr.net/npm/katex/dist/contrib/copy-tex.min.js')
+    }
+  }
+
+  showKatex()
+})()</script><script>(() => {
+  const runMermaid = ele => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    ele.forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const mermaidThemeConfig = `%%{init:{ 'theme':'${theme}'}}%%\n`
+      const mermaidID = `mermaid-${index}`
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+      const renderMermaid = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      // mermaid v9 and v10 compatibility
+      typeof renderFn === 'string' ? renderMermaid(renderFn) : renderFn.then(({ svg }) => renderMermaid(svg))
+    })
+  }
+
+  const codeToMermaid = () => {
+    const codeMermaidEle = document.querySelectorAll('pre > code.mermaid')
+    if (codeMermaidEle.length === 0) return
+
+    codeMermaidEle.forEach(ele => {
+      const preEle = document.createElement('pre')
+      preEle.className = 'mermaid-src'
+      preEle.hidden = true
+      preEle.textContent = ele.textContent
+      const newEle = document.createElement('div')
+      newEle.className = 'mermaid-wrap'
+      newEle.appendChild(preEle)
+      ele.parentNode.replaceWith(newEle)
+    })
+  }
+
+  const loadMermaid = () => {
+    if (false) codeToMermaid()
+    const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+    if ($mermaid.length === 0) return
+
+    const runMermaidFn = () => runMermaid($mermaid)
+    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaidFn)
+  }
+
+  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><script src="js/sakura.js"></script> - <script src="/js/custom.js"></script> - <div class="aplayer no-destroy" data-id="12839720510" data-server="netease" data-type="playlist" data-fixed="true"> </div><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="false" data-text="coding..,debugging..,running..." data-fontsize="15px" data-random="false" async="async"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script>(() => {
+  const destroyAplayer = () => {
+    if (window.aplayers) {
+      for (let i = 0; i < window.aplayers.length; i++) {
+        if (!window.aplayers[i].options.fixed) {
+          window.aplayers[i].destroy()
+        }
+      }
+    }
+  }
+
+  const runMetingJS = () => {
+    typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+  }
+
+  btf.addGlobalFn('pjaxSend', destroyAplayer, 'destroyAplayer')
+  btf.addGlobalFn('pjaxComplete', loadMeting, 'runMetingJS')
+})()</script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>(() => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => fn())
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      const usePjax = true
+      false 
+        ? (usePjax ? pjax.loadUrl('/404.html') : window.location.href = '/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})()</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

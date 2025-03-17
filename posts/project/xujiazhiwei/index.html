@@ -1,0 +1,399 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>DataFountain-虚假职位招聘预测 | LittleBug</title><meta name="author" content="ShawnX"><meta name="copyright" content="ShawnX"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="赛题链接：https:&#x2F;&#x2F;www.datafountain.cn&#x2F;competitions&#x2F;448 任务分析：这是一个分类任务，难点在于，第一，数据集难以处理，第二，类别不平衡，负类样本占比达到95% 运行环境、使用框架、语言 操作系统：Linux ubuntu 4.15.0-213-generic #224-Ubuntu SMP Mon Jun 19 13:30:12 UTC 2023 x86_">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DataFountain-虚假职位招聘预测">
+<meta property="og:url" content="http://imxxl.top/posts/project/xujiazhiwei/index.html">
+<meta property="og:site_name" content="LittleBug">
+<meta property="og:description" content="赛题链接：https:&#x2F;&#x2F;www.datafountain.cn&#x2F;competitions&#x2F;448 任务分析：这是一个分类任务，难点在于，第一，数据集难以处理，第二，类别不平衡，负类样本占比达到95% 运行环境、使用框架、语言 操作系统：Linux ubuntu 4.15.0-213-generic #224-Ubuntu SMP Mon Jun 19 13:30:12 UTC 2023 x86_">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://imxxl.top/img/avatar.jpg">
+<meta property="article:published_time" content="2025-01-22T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-03-17T14:56:16.421Z">
+<meta property="article:author" content="ShawnX">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://imxxl.top/img/avatar.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "DataFountain-虚假职位招聘预测",
+  "url": "http://imxxl.top/posts/project/xujiazhiwei/",
+  "image": "http://imxxl.top/img/avatar.jpg",
+  "datePublished": "2025-01-22T16:00:00.000Z",
+  "dateModified": "2025-03-17T14:56:16.421Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "ShawnX",
+      "url": "http://imxxl.top/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/avatar.jpg"><link rel="canonical" href="http://imxxl.top/posts/project/xujiazhiwei/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          const hour = new Date().getHours()
+          const isNight = hour <= 6 || hour >= 18
+          if (theme === undefined) isNight ? activateDarkMode() : activateLightMode()
+          else theme === 'light' ? activateLightMode() : activateDarkMode()
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":100,"highlightFullpage":true,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'DataFountain-虚假职位招聘预测',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/mouse.css"><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-image: url(/img/pokemon2.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">29</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">12</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">12</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 全部文章</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 鏈接</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">LittleBug</span></a><a class="nav-page-title" href="/"><span class="site-name">DataFountain-虚假职位招聘预测</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 全部文章</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 鏈接</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">DataFountain-虚假职位招聘预测<a class="post-edit-link" href="https://github.com/Shawn-Summer/hexo-source/edit/main/source/_posts/project/xujiazhiwei.md" title="编辑" target="_blank"><i class="fas fa-pencil-alt"></i></a></h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-01-22T16:00:00.000Z" title="发表于 2025-01-23 00:00:00">2025-01-23</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-03-17T14:56:16.421Z" title="更新于 2025-03-17 22:56:16">2025-03-17</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/project/">project</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">3.3k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>14分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>赛题链接：<a target="_blank" rel="noopener" href="https://www.datafountain.cn/competitions/448">https://www.datafountain.cn/competitions/448</a></p>
+<p>任务分析：这是一个分类任务，难点在于，第一，数据集难以处理，第二，类别不平衡，负类样本占比达到95%</p>
+<h2 id="运行环境、使用框架、语言">运行环境、使用框架、语言</h2>
+<p>操作系统：Linux ubuntu 4.15.0-213-generic #224-Ubuntu SMP Mon Jun 19 13:30:12 UTC 2023 x86_64 x86_64 x86_64 GNU/Linux</p>
+<p>硬件环境： Intel® Xeon® Gold 6226R CPU @ 2.90GHz +  NVIDIA GeForce RTX 3090 * 1 (CUDA Version: 12.4)</p>
+<p>语言和运行环境：python 3.9.21 (main, Dec 11 2024, 16:24:11) + jupyter notebook 7.2.2</p>
+<p>使用框架：pytorch 2.5.1+cu124</p>
+<h2 id="数据分析、特征设计、抽取、处理">数据分析、特征设计、抽取、处理</h2>
+<p>数据处理部分的代码在<code>data_processing.ipynb</code>中，处理好的数据存储在 <code>train_data.csv</code>和<code>test_data.csv</code>。</p>
+<p>特征一览，总共16个特征（不包括 job_id 和 fraudulent ）：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">   			 Feature  Unique Values Count Value Type  NaN Values Count</span><br><span class="line">              title                 6851     object                 0</span><br><span class="line">           location                 2284     object               198</span><br><span class="line">         department                  944     object              6388</span><br><span class="line">       salary_range                  608     object              8393</span><br><span class="line">    company_profile                 1397     object              1885</span><br><span class="line">        description                 8663     object                 0</span><br><span class="line">       requirements                 6965     object              1566</span><br><span class="line">           benefits                 3861     object              4084</span><br><span class="line">      telecommuting                    2      int64                 0</span><br><span class="line">   has_company_logo                    2      int64                 0</span><br><span class="line">      has_questions                    2      int64                 0</span><br><span class="line">    employment_type                    5     object              1992</span><br><span class="line">required_experience                    7     object              3960</span><br><span class="line"> required_education                   13     object              4548</span><br><span class="line">           industry                  125     object              2781</span><br><span class="line">           function                   37     object              3654</span><br><span class="line">         fraudulent                    2      int64                 0  (label)</span><br></pre></td></tr></table></figure>
+<p>将特征划分为4种：</p>
+<ul>
+<li>categorical feature (种类特征) ：<code>telecommuting 、has_company_logo 、has_questions、employment_type、required_experience 、required_education、required_education 、industry 、function</code></li>
+<li>Continuous feature （连续特征）：无</li>
+<li>text feature（文本特征）：<code>title、company_profile 、description、requirements、 benefits</code></li>
+<li>complex feature（复杂特征）：<code> location、department、salary_range</code></li>
+</ul>
+<p>其中前两种特征好处理，后两种特征难以处理，我的思路是： 将文本特征和复杂特征抽取为种类特征和连续特征，然后统一处理数据。</p>
+<h3 id="将-department-和-location-转化为种类特征">将 department 和 location 转化为种类特征</h3>
+<p>我们看看department的最高的50项频次，如下图所示，可以看出sales出现的次数最多，其次是engineering。</p>
+<img src="/posts/project/xujiazhiwei/1.jpg" alt="image-20250122215650129" style="zoom: 67%;">
+<p>将department feature中 频次小于等于4的值都设置为<code>others</code>，即出现概率小于千分之一的值都设为others，这样处理以后department 中不同值的种类就变少了，就可以转化为种类特征。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">department_counts = data[<span class="string">&#x27;department&#x27;</span>].value_counts()</span><br><span class="line">low_frequency_departments = department_counts[department_counts &lt;= <span class="number">4</span>].index</span><br><span class="line">data[<span class="string">&#x27;department&#x27;</span>] = data[<span class="string">&#x27;department&#x27;</span>].replace(low_frequency_departments, <span class="string">&#x27;others&#x27;</span>)</span><br><span class="line">cat_features+=[<span class="string">&#x27;department&#x27;</span>]</span><br></pre></td></tr></table></figure>
+<p>同理，对于location feature，我将频次小于等于10的值都设置为<code>others</code>，即出现概率小于千分之一的值都设置为others，然后就将location转化为种类特征。</p>
+<img src="/posts/project/xujiazhiwei/2.jpg" alt="image-20250122221945408" style="zoom: 67%;">
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">location_counts = data[<span class="string">&#x27;location&#x27;</span>].value_counts()</span><br><span class="line">low_frequency_locations = location_counts[location_counts &lt;= <span class="number">10</span>].index</span><br><span class="line">data[<span class="string">&#x27;location&#x27;</span>] = data[<span class="string">&#x27;location&#x27;</span>].replace(low_frequency_locations, <span class="string">&#x27;others&#x27;</span>)</span><br><span class="line">cat_features+=[<span class="string">&#x27;location&#x27;</span>]</span><br></pre></td></tr></table></figure>
+<p>这样处理后，location中不同值的个数为144，department中不同值的个数为107</p>
+<h3 id="将salary-range转化为连续特征">将salary_range转化为连续特征</h3>
+<p>连续特征一般是数值特征，我们知道工资是数字，它是连续特征，于是我将salary_range分解为’min_salary’和’max_salary’，分别对应最低工资和最高工资，两个连续特征。对于不合法数据则设置为NaN。</p>
+<p>代码如下：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">salary_range = data.salary_range.copy()</span><br><span class="line">salary_range_seg = <span class="built_in">list</span>(salary_range.<span class="built_in">str</span>.split(<span class="string">&#x27;-&#x27;</span>).values)</span><br><span class="line"><span class="keyword">for</span> ind, seg <span class="keyword">in</span> <span class="built_in">enumerate</span>(salary_range_seg):</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">isinstance</span>(seg, <span class="built_in">list</span>) <span class="keyword">and</span> <span class="built_in">len</span>(seg) == <span class="number">2</span>:  <span class="comment"># 确保是一个两元素的列表</span></span><br><span class="line">        sal_min, sal_max = seg</span><br><span class="line">        <span class="comment"># 检查最小值和最大值是否为数字</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> sal_min.isdigit() <span class="keyword">or</span> <span class="keyword">not</span> sal_max.isdigit():</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f&quot;Invalid range at index <span class="subst">&#123;ind&#125;</span>: <span class="subst">&#123;seg&#125;</span>&quot;</span>)</span><br><span class="line">            salary_range_seg[ind] = [np.nan, np.nan]  <span class="comment"># 设置为 NaN</span></span><br><span class="line">        <span class="keyword">elif</span> sal_min==<span class="string">&#x27;0&#x27;</span> <span class="keyword">and</span> sal_max==<span class="string">&#x27;0&#x27;</span>:</span><br><span class="line">            salary_range_seg[ind] = [np.nan, np.nan]</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        salary_range_seg[ind] = [np.nan, np.nan]  <span class="comment"># 设置为 NaN</span></span><br><span class="line"></span><br><span class="line">salary_range_df = pd.DataFrame(salary_range_seg, columns=[<span class="string">&#x27;min_salary&#x27;</span>, <span class="string">&#x27;max_salary&#x27;</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment"># 确保无法转换的值变为 NaN</span></span><br><span class="line">salary_range_df[<span class="string">&#x27;min_salary&#x27;</span>] = pd.to_numeric(salary_range_df[<span class="string">&#x27;min_salary&#x27;</span>], errors=<span class="string">&#x27;coerce&#x27;</span>)</span><br><span class="line">salary_range_df[<span class="string">&#x27;max_salary&#x27;</span>] = pd.to_numeric(salary_range_df[<span class="string">&#x27;max_salary&#x27;</span>], errors=<span class="string">&#x27;coerce&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用 Int64 类型（允许 NaN）</span></span><br><span class="line">salary_range_df = salary_range_df.astype(&#123;<span class="string">&#x27;min_salary&#x27;</span>: <span class="string">&#x27;Int64&#x27;</span>, <span class="string">&#x27;max_salary&#x27;</span>: <span class="string">&#x27;Int64&#x27;</span>&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 合并拆分后的数据到原 DataFrame，并删除原 salary_range 列</span></span><br><span class="line">data = pd.concat([data, salary_range_df], axis=<span class="number">1</span>)</span><br><span class="line">data.drop(<span class="string">&#x27;salary_range&#x27;</span>, axis=<span class="number">1</span>, inplace=<span class="literal">True</span>)</span><br><span class="line">Contin_feature+=[<span class="string">&#x27;min_salary&#x27;</span>, <span class="string">&#x27;max_salary&#x27;</span>]</span><br></pre></td></tr></table></figure>
+<h3 id="将文本特征转化为连续特征">将文本特征转化为连续特征</h3>
+<p>在处理文本特征前，先计算文本中单词数量，将其作为一个额外连续特征，加入数据集中。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">data[text_features] = data[text_features].fillna(<span class="string">&#x27;&#x27;</span>)</span><br><span class="line"><span class="keyword">for</span> feature <span class="keyword">in</span> text_features: <span class="comment">#将文本特征 计算字数 作为一个新特征</span></span><br><span class="line">    feature_count_words=<span class="string">f&#x27;<span class="subst">&#123;feature&#125;</span>_count_words&#x27;</span></span><br><span class="line">    data[feature_count_words]=data[feature].astype(<span class="built_in">str</span>).<span class="built_in">str</span>.split(<span class="string">&#x27; &#x27;</span>).apply(<span class="built_in">len</span>) </span><br><span class="line">    Contin_features +=[feature_count_words] </span><br></pre></td></tr></table></figure>
+<p>如何将文本特征转化为连续特征?</p>
+<p>我的思路是，首先将title、company_profile 、description、requirements、 benefits中的文本合并，作为<code>combined_text</code>，然后使用<code>TfidfVectorizer</code>提取文本中的高频词汇，包括高频unigram,bigram,trigram，将这些高频项（gram）作为新的特征。每个特征都是一个连续特征，表示该项出现的次数。例如，一个样本的<code>combine_text</code>中出现了10次 <code>machine learning</code>，则该样本的特征 bigram :<code>machine learning</code>的值就是10.</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">from</span> sklearn.feature_extraction.text <span class="keyword">import</span> TfidfVectorizer</span><br><span class="line"><span class="keyword">from</span> scipy.sparse <span class="keyword">import</span> hstack</span><br><span class="line"></span><br><span class="line">data[<span class="string">&#x27;combined_text&#x27;</span>] = data[text_features].apply(<span class="keyword">lambda</span> row: <span class="string">&#x27; &#x27;</span>.join(row.astype(<span class="built_in">str</span>)), axis=<span class="number">1</span>) <span class="comment">#合并文本,不同文本特征之间使用 &#x27; &#x27;连接</span></span><br><span class="line">data = data.drop(columns=text_features) <span class="comment">#删除原来的文本特征</span></span><br><span class="line">vectorizer_unigrams = TfidfVectorizer(stop_words=<span class="string">&#x27;english&#x27;</span>, ngram_range=(<span class="number">1</span>, <span class="number">1</span>), max_features=<span class="number">200</span>) <span class="comment">#选择最高频的 200个 unigrams</span></span><br><span class="line">vectorizer_bigrams = TfidfVectorizer(stop_words=<span class="string">&#x27;english&#x27;</span>, ngram_range=(<span class="number">2</span>, <span class="number">2</span>), max_features=<span class="number">100</span>) <span class="comment"># 选择最高频的 100个 bigrams</span></span><br><span class="line">vectorizer_trigrams = TfidfVectorizer(stop_words=<span class="string">&#x27;english&#x27;</span>, ngram_range=(<span class="number">3</span>, <span class="number">3</span>), max_features=<span class="number">50</span>) <span class="comment"># 选择最高频的 50个 trigrams</span></span><br><span class="line">X_unigrams = vectorizer_unigrams.fit_transform(data[<span class="string">&#x27;combined_text&#x27;</span>])</span><br><span class="line">X_bigrams = vectorizer_bigrams.fit_transform(data[<span class="string">&#x27;combined_text&#x27;</span>])</span><br><span class="line">X_trigrams = vectorizer_trigrams.fit_transform(data[<span class="string">&#x27;combined_text&#x27;</span>])</span><br><span class="line"><span class="comment"># 合并 unigrams ，bigrams和 trigrams 的特征</span></span><br><span class="line">X_combined = hstack([X_unigrams, X_bigrams,X_trigrams])</span><br><span class="line"><span class="comment"># 生成新的列名</span></span><br><span class="line">unigram_features = [<span class="string">f&quot;text_freq_unigrams_<span class="subst">&#123;feat&#125;</span>&quot;</span> <span class="keyword">for</span> feat <span class="keyword">in</span> vectorizer_unigrams.get_feature_names_out()]</span><br><span class="line">bigram_features = [<span class="string">f&quot;text_freq_bigrams_<span class="subst">&#123;feat&#125;</span>&quot;</span> <span class="keyword">for</span> feat <span class="keyword">in</span> vectorizer_bigrams.get_feature_names_out()]</span><br><span class="line">trigram_features = [<span class="string">f&quot;text_freq_trigrams_<span class="subst">&#123;feat&#125;</span>&quot;</span> <span class="keyword">for</span> feat <span class="keyword">in</span> vectorizer_trigrams.get_feature_names_out()]</span><br><span class="line">combined_features = unigram_features + bigram_features+trigram_features</span><br><span class="line"></span><br><span class="line">Contin_features+=combined_features <span class="comment">#将新的特征加入连续特征</span></span><br><span class="line"></span><br><span class="line">tfidf_df = pd.DataFrame(X_combined.toarray(), columns=combined_features)</span><br><span class="line">data = data.drop(columns=[<span class="string">&#x27;combined_text&#x27;</span>])</span><br><span class="line">data = pd.concat([data.reset_index(drop=<span class="literal">True</span>), tfidf_df.reset_index(drop=<span class="literal">True</span>)], axis=<span class="number">1</span>) <span class="comment">#更新后的数据集</span></span><br></pre></td></tr></table></figure>
+<h3 id="处理连续特征">处理连续特征</h3>
+<p>连续特征都是数值特征，就做一下变换，变成均值为0方差为1的数值，就行了，nan值填入均值0</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> StandardScaler</span><br><span class="line"><span class="keyword">from</span> sklearn.impute <span class="keyword">import</span> SimpleImputer</span><br><span class="line"></span><br><span class="line"><span class="comment"># 处理连续特征</span></span><br><span class="line"></span><br><span class="line">imputer = SimpleImputer(strategy=<span class="string">&#x27;mean&#x27;</span>) <span class="comment">#使用均值填充nan值</span></span><br><span class="line">data[Contin_features] = imputer.fit_transform(data[Contin_features])</span><br><span class="line">scaler = StandardScaler()</span><br><span class="line">data[Contin_features] = scaler.fit_transform(data[Contin_features]) </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="处理种类特征">处理种类特征</h3>
+<p>使用one-hot编码即可</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">data= pd.get_dummies(data, columns=cat_features,dummy_na=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="生成训练集和测试集">生成训练集和测试集</h3>
+<p>根据实验要求，划分10%的数据作为测试集合，这里采用分层采样，确保训练集和测试集中fraudulent的值比例一致。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br><span class="line"></span><br><span class="line">data = data[[col <span class="keyword">for</span> col <span class="keyword">in</span> data.columns <span class="keyword">if</span> col != <span class="string">&#x27;fraudulent&#x27;</span>] + [<span class="string">&#x27;fraudulent&#x27;</span>]]</span><br><span class="line">X = data.iloc[:, :-<span class="number">1</span>]  <span class="comment"># 特征</span></span><br><span class="line">y = data.iloc[:, -<span class="number">1</span>]   <span class="comment"># 标签</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 划分训练集和测试集，比例为 9:1，分层采样</span></span><br><span class="line">X_train, X_test, y_train, y_test = train_test_split(</span><br><span class="line">    X, y, test_size=<span class="number">0.1</span>, stratify=y, random_state=<span class="number">42</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">train_data = pd.concat([X_train.astype(<span class="string">&#x27;float&#x27;</span>), y_train], axis=<span class="number">1</span>)</span><br><span class="line">test_data = pd.concat([X_test.astype(<span class="string">&#x27;float&#x27;</span>),y_test],axis=<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">train_data.to_csv(<span class="string">&#x27;train_data.csv&#x27;</span>, index=<span class="literal">False</span>)</span><br><span class="line">test_data.to_csv(<span class="string">&#x27;test_data.csv&#x27;</span>, index=<span class="literal">False</span>)</span><br></pre></td></tr></table></figure>
+<p>最后生成的数据集信息如下</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;class &#x27;pandas.core.frame.DataFrame&#x27;&gt;</span><br><span class="line">Index: 8999 entries, 3990 to 5488</span><br><span class="line">Columns: 812 entries, min_salary to fraudulent</span><br><span class="line">dtypes: float64(811), int64(1)</span><br><span class="line">memory usage: 55.8 MB</span><br><span class="line">&lt;class &#x27;pandas.core.frame.DataFrame&#x27;&gt;</span><br><span class="line">Index: 1000 entries, 4359 to 3820</span><br><span class="line">Columns: 812 entries, min_salary to fraudulent</span><br><span class="line">dtypes: float64(811), int64(1)</span><br><span class="line">memory usage: 6.2 MB</span><br></pre></td></tr></table></figure>
+<p>可以看到训练集和测试集的维度（列数）是812</p>
+<h2 id="应对：类别不平衡">应对：类别不平衡</h2>
+<p>这个任务中fraudulent标签中正例和负例是相当不平衡的，正例远小于负例，如下图所示</p>
+<img src="/posts/project/xujiazhiwei/3.jpg" alt="image-20250123151032315" style="zoom:67%;">
+<p>面对训练集的类型不平衡，我采用两种策略应对</p>
+<ol>
+<li>过采样训练集中的正类样本</li>
+<li>使用focal loss，增大正类样本被预测为负类的惩罚</li>
+</ol>
+<h3 id="过采样">过采样</h3>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">train_data = pd.read_csv(<span class="string">&#x27;train_data.csv&#x27;</span>)</span><br><span class="line">test_data = pd.read_csv(<span class="string">&#x27;test_data.csv&#x27;</span>)</span><br><span class="line"></span><br><span class="line">X_test = torch.tensor(test_data.iloc[:,:-<span class="number">1</span>].values, dtype=torch.float32)</span><br><span class="line">y_test = torch.tensor(test_data.iloc[:,-<span class="number">1</span>].values, dtype=torch.long)</span><br><span class="line"></span><br><span class="line">X_train,y_train = train_data.iloc[:, :-<span class="number">1</span>].values,train_data.iloc[:, -<span class="number">1</span>].values</span><br><span class="line">ros = RandomOverSampler(sampling_strategy=&#123;<span class="number">1</span>: <span class="built_in">int</span>(<span class="number">0.33</span>*<span class="built_in">len</span>(y_train[y_train == <span class="number">0</span>]))&#125;) <span class="comment">#过采样 训练集中 标签为1的样本，直到样本数量达到 标签为0的样本的1/3</span></span><br><span class="line">X_train, y_train = ros.fit_resample(X_train, y_train) </span><br><span class="line">X_train = torch.tensor(test_data.iloc[:,:-<span class="number">1</span>].values, dtype=torch.float32)</span><br><span class="line">y_train = torch.tensor(test_data.iloc[:,-<span class="number">1</span>].values, dtype=torch.long)</span><br></pre></td></tr></table></figure>
+<p>如上面代码中所示 ，将训练集中的标签为1的样本，多次采样，直到达到 训练集中 标签为0的样本 数量的1/3。</p>
+<h3 id="focal-loss">focal loss</h3>
+<p>Focal Loss 是一种专门为解决类别不平衡问题设计的损失函数，最早由 Facebook 的研究人员在论文《Focal Loss for Dense Object Detection》中提出。它常用于目标检测任务（例如 RetinaNet），以缓解正负样本比例失衡对模型训练的影响。</p>
+<p>Focal Loss 的数学公式如下：</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>F</mi><mi>L</mi><mo stretchy="false">(</mo><msub><mi>p</mi><mi>t</mi></msub><mo stretchy="false">)</mo><mo>=</mo><mo>−</mo><msub><mi>α</mi><mi>t</mi></msub><mo stretchy="false">(</mo><mn>1</mn><mo>−</mo><msub><mi>p</mi><mi>t</mi></msub><msup><mo stretchy="false">)</mo><mi>γ</mi></msup><mi>log</mi><mo>⁡</mo><mo stretchy="false">(</mo><msub><mi>p</mi><mi>t</mi></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">FL(p_t) = -\alpha_t (1 - p_t)^\gamma \log(p_t)
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">F</span><span class="mord mathnormal">L</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">−</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0037em;">α</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:-0.0037em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7144em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.05556em;">γ</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span></p>
+<ul>
+<li>
+<p><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mi>t</mi></msub></mrow><annotation encoding="application/x-tex">p_t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>: 样本的预测概率，表示模型预测的正确类别的概率。</p>
+<p><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mi>t</mi></msub><mo>=</mo><mrow><mo fence="true">{</mo><mtable rowspacing="0.36em" columnalign="left left" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>p</mi><mo separator="true">,</mo></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mtext>如果标签为正样本</mtext></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mn>1</mn><mo>−</mo><mi>p</mi><mo separator="true">,</mo></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mtext>如果标签为负样本</mtext></mstyle></mtd></mtr></mtable></mrow></mrow><annotation encoding="application/x-tex">p_t = \begin{cases} p, &amp; \text{如果标签为正样本} \\ 1-p, &amp; \text{如果标签为负样本} \end{cases}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:3em;vertical-align:-1.25em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size4">{</span></span><span class="mord"><span class="mtable"><span class="col-align-l"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.69em;"><span style="top:-3.69em;"><span class="pstrut" style="height:3.008em;"></span><span class="mord"><span class="mord mathnormal">p</span><span class="mpunct">,</span></span></span><span style="top:-2.25em;"><span class="pstrut" style="height:3.008em;"></span><span class="mord"><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal">p</span><span class="mpunct">,</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.19em;"><span></span></span></span></span></span><span class="arraycolsep" style="width:1em;"></span><span class="col-align-l"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.69em;"><span style="top:-3.69em;"><span class="pstrut" style="height:3.008em;"></span><span class="mord"><span class="mord text"><span class="mord cjk_fallback">如果标签为正样本</span></span></span></span><span style="top:-2.25em;"><span class="pstrut" style="height:3.008em;"></span><span class="mord"><span class="mord text"><span class="mord cjk_fallback">如果标签为负样本</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.19em;"><span></span></span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></p>
+<p>其中 p 是正类别的预测概率。</p>
+</li>
+<li>
+<p><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>α</mi><mi>t</mi></msub></mrow><annotation encoding="application/x-tex">\alpha_t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0037em;">α</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:-0.0037em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>: 平衡因子，用于平衡正负样本的影响（可选）。</p>
+</li>
+<li>
+<p><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>γ</mi></mrow><annotation encoding="application/x-tex">\gamma</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.05556em;">γ</span></span></span></span>: 调节因子（Focusing Parameter），控制易分类样本的损失衰减速度。当 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>γ</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\gamma=0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.05556em;">γ</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span> 时，Focal Loss 等价于交叉熵损失。</p>
+</li>
+<li>
+<p><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mn>1</mn><mo>−</mo><msub><mi>p</mi><mi>t</mi></msub><msup><mo stretchy="false">)</mo><mi>γ</mi></msup></mrow><annotation encoding="application/x-tex">(1-p_t)^\gamma</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6644em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.05556em;">γ</span></span></span></span></span></span></span></span></span></span></span>: 难度加权项。对于易分类的样本（<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mi>t</mi></msub></mrow><annotation encoding="application/x-tex">p_t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 大），这一项接近 0，从而减少其对损失的贡献；对于难分类的样本（<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mi>t</mi></msub></mrow><annotation encoding="application/x-tex">p_t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 小），这一项较大，从而增加其对损失的贡献。</p>
+</li>
+</ul>
+<p>在我的设计中选择<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>α</mi><mn>0</mn></msub><mo>=</mo><mn>1</mn><mo separator="true">,</mo><msub><mi>α</mi><mn>1</mn></msub><mo>=</mo><mn>5</mn><mo separator="true">,</mo><mi>γ</mi><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">\alpha_0=1,\alpha_1=5,\gamma=2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0037em;">α</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0037em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0037em;">α</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0037em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">5</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.05556em;">γ</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">2</span></span></span></span>，增加正例被判为负例的惩罚。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">FocalLoss</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, alpha, gamma=<span class="number">2</span>, reduction=<span class="string">&#x27;mean&#x27;</span></span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        alpha: tensor数组 (num_label,1)</span></span><br><span class="line"><span class="string">        gamma: 难易样本调节因子。</span></span><br><span class="line"><span class="string">        reduction: 损失的聚合方式，支持 &#x27;mean&#x27;, &#x27;sum&#x27;, or &#x27;none&#x27;。</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="built_in">super</span>(FocalLoss, <span class="variable language_">self</span>).__init__()</span><br><span class="line">        <span class="variable language_">self</span>.alpha = alpha.to(device)</span><br><span class="line">        <span class="variable language_">self</span>.gamma = gamma</span><br><span class="line">        <span class="variable language_">self</span>.reduction = reduction</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, pred, target</span>):</span><br><span class="line">        <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">        pred: tensor数组 (batch_size,num_labels) 每个种类的预测概率 </span></span><br><span class="line"><span class="string">        target: tensor数组 (batch_size,) 真实标签</span></span><br><span class="line"><span class="string">        &#x27;&#x27;&#x27;</span></span><br><span class="line">        pred=pred.gather(<span class="number">1</span>, target.unsqueeze(<span class="number">1</span>)) <span class="comment">#根据真实标签选择 概率 pred ,shape (batch_size,1) </span></span><br><span class="line">        pred=-(<span class="number">1</span> - pred) ** <span class="variable language_">self</span>.gamma * torch.log(pred) <span class="comment"># -(1-p)^gamma log(p)</span></span><br><span class="line">        selected_alpha=torch.matmul(F.one_hot(target,num_classes=<span class="number">2</span>).<span class="built_in">float</span>(), <span class="variable language_">self</span>.alpha) <span class="comment"># (batch_size,1) 计算每个pred 对应的alpha</span></span><br><span class="line">        loss=pred*selected_alpha</span><br><span class="line">        <span class="keyword">if</span> <span class="variable language_">self</span>.reduction == <span class="string">&#x27;mean&#x27;</span>:</span><br><span class="line">            <span class="keyword">return</span> torch.mean(loss)</span><br><span class="line">        <span class="keyword">elif</span> <span class="variable language_">self</span>.reduction == <span class="string">&#x27;sum&#x27;</span>:</span><br><span class="line">            <span class="keyword">return</span> torch.<span class="built_in">sum</span>(loss)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> loss</span><br><span class="line">      </span><br><span class="line">loss_fn =FocalLoss(alpha)</span><br></pre></td></tr></table></figure>
+<h2 id="模型设计">模型设计</h2>
+<p>这其实就是一个回归任务，使用几个全连接层就行了，为了防止过拟合，加入了dropout层。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">myNN</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, input_dim, output_dim,dropout=<span class="number">0.2</span></span>):</span><br><span class="line">        <span class="built_in">super</span>(myNN, <span class="variable language_">self</span>).__init__()</span><br><span class="line">        <span class="variable language_">self</span>.fc1 = nn.Linear(input_dim, <span class="number">2</span>*input_dim)  <span class="comment"># 第一层</span></span><br><span class="line">        <span class="variable language_">self</span>.fc2 = nn.Linear(<span class="number">2</span>*input_dim, <span class="built_in">int</span>(<span class="number">0.5</span>*input_dim))         <span class="comment"># 第二层</span></span><br><span class="line">        <span class="variable language_">self</span>.fc3 = nn.Linear(<span class="built_in">int</span>(<span class="number">0.5</span>*input_dim), output_dim)  <span class="comment"># 输出层</span></span><br><span class="line">        <span class="variable language_">self</span>.relu = nn.ReLU()</span><br><span class="line">        <span class="variable language_">self</span>.softmax = nn.Softmax(dim=<span class="number">1</span>)</span><br><span class="line">        <span class="variable language_">self</span>.dropout = nn.Dropout(dropout)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line">        x = <span class="variable language_">self</span>.relu(<span class="variable language_">self</span>.fc1(x))</span><br><span class="line">        x = <span class="variable language_">self</span>.dropout(x)</span><br><span class="line">        x = <span class="variable language_">self</span>.relu(<span class="variable language_">self</span>.fc2(x))</span><br><span class="line">        x = <span class="variable language_">self</span>.dropout(x)</span><br><span class="line">        x = <span class="variable language_">self</span>.fc3(x)</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.softmax(x)</span><br><span class="line">    </span><br><span class="line">net=myNN(X_train.shape[<span class="number">1</span>],<span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="评价指标AUC">评价指标AUC</h2>
+<p>AUC(Area under Curve)：Roc曲线下的面积，介于0.1和1之间。Auc作为数值可以直观的评价分类器的好坏，值越大越好。详情见赛题链接：<a target="_blank" rel="noopener" href="https://www.datafountain.cn/competitions/448%E3%80%82">https://www.datafountain.cn/competitions/448。</a></p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">calculate_auc</span>(<span class="params">preds,labels</span>):</span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    - preds: 预测的概率 numpy数组 (num_samples,2) </span></span><br><span class="line"><span class="string">    - labels: 真实标签 numpy数组 (num_samples,) </span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> roc_curve, auc</span><br><span class="line">    y_pred_proba=preds[:,-<span class="number">1</span>] <span class="comment"># 正类标签的预测概率</span></span><br><span class="line">    fpr, tpr, thresholds = roc_curve(labels, y_pred_proba)</span><br><span class="line">    roc_auc = auc(fpr, tpr)</span><br><span class="line">    <span class="keyword">return</span> roc_auc</span><br></pre></td></tr></table></figure>
+<h2 id="实验结果分析">实验结果分析</h2>
+<p>训练时采用单张NVIDIA GeForce RTX 3090 ，batch_size=200, num_epochs=15, 学习率为0.001，优化器使用adam，为了防止过拟合，设置权重衰减率为0.01.</p>
+<p>训练代码如下：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">train</span>(<span class="params">device, net, X_train, y_train, X_test, y_test, batch_size=<span class="number">200</span>, num_epochs=<span class="number">15</span>, lr=<span class="number">0.001</span>, weight_decay=<span class="number">0.01</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    - device: 设备</span></span><br><span class="line"><span class="string">    - net: 神经网络模型</span></span><br><span class="line"><span class="string">    - X_train: 训练集的特征 (tensor 数组) (num_train,dimension)</span></span><br><span class="line"><span class="string">    - y_train: 训练集的标签 (tensor 数组) (num_train,)</span></span><br><span class="line"><span class="string">    - X_test: 测试集的特征 (tensor 数组) (num_test,dimension)</span></span><br><span class="line"><span class="string">    - y_test: 测试集的标签 (tensor 数组) (num_test,)</span></span><br><span class="line"><span class="string">    - batch_size: </span></span><br><span class="line"><span class="string">    - num_epochs: </span></span><br><span class="line"><span class="string">    - lr: learning rate</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="comment"># 创建训练集的 DataLoader</span></span><br><span class="line">    train_dataset = TensorDataset(X_train, y_train)</span><br><span class="line">    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line">    net = net.to(device)</span><br><span class="line">    optimizer = optim.Adam(net.parameters(), lr=lr, weight_decay = weight_decay) <span class="comment">#使用adam优化器</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> epoch <span class="keyword">in</span> <span class="built_in">range</span>(num_epochs):</span><br><span class="line">        net.train() <span class="comment">#训练模式</span></span><br><span class="line">        ls=<span class="number">0.00</span></span><br><span class="line">        <span class="keyword">for</span> inputs, labels <span class="keyword">in</span> train_loader:</span><br><span class="line">            inputs, labels = inputs.to(device), labels.to(device) </span><br><span class="line"></span><br><span class="line">            optimizer.zero_grad()</span><br><span class="line">            outputs = net(inputs)</span><br><span class="line">            loss = loss_fn(outputs, labels)</span><br><span class="line">            loss.backward()</span><br><span class="line">            optimizer.step()</span><br><span class="line">            ls+=loss</span><br><span class="line">        </span><br><span class="line">        net.<span class="built_in">eval</span>() <span class="comment">#评估模式</span></span><br><span class="line">        <span class="keyword">with</span> torch.no_grad():</span><br><span class="line">            <span class="comment"># 计算平均训练误差</span></span><br><span class="line">            train_loss= ls/<span class="built_in">len</span>(train_loader)</span><br><span class="line">            <span class="comment"># 计算测试误差，测试集精确度和测试集 auc</span></span><br><span class="line">            X_test = X_test.to(device)</span><br><span class="line">            y_test = y_test.to(device)</span><br><span class="line">            test_outputs=net(X_test)</span><br><span class="line">            test_loss=loss_fn(test_outputs,y_test).item() <span class="comment">#测试误差</span></span><br><span class="line">            _, test_predicted = torch.<span class="built_in">max</span>(test_outputs,<span class="number">1</span>)</span><br><span class="line">            test_accuracy = (test_predicted == y_test).<span class="built_in">float</span>().mean().item() <span class="comment">#测试集 精确度</span></span><br><span class="line">            test_auc=calculate_auc(test_outputs.cpu().numpy(),y_test.cpu().numpy()) <span class="comment">#测试集 auc</span></span><br><span class="line"></span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f&quot;Epoch [<span class="subst">&#123;epoch+<span class="number">1</span>&#125;</span>], train_loss: <span class="subst">&#123;train_loss:<span class="number">.4</span>f&#125;</span>, \</span></span><br><span class="line"><span class="string">            test_loss: <span class="subst">&#123;test_loss:<span class="number">.4</span>f&#125;</span>, test_accuracy: <span class="subst">&#123;test_accuracy:<span class="number">.4</span>f&#125;</span>, test_auc: <span class="subst">&#123;test_auc:<span class="number">.4</span>f&#125;</span>&quot;</span>)</span><br><span class="line">    <span class="keyword">return</span> net</span><br></pre></td></tr></table></figure>
+<p>训练结果如下图所示：</p>
+<img src="/posts/project/xujiazhiwei/4.jpg" alt="image-20250123233019282" style="zoom: 80%;">
+<p>可以看到在训练3个epoch后就能达到很好的效果，在epoch 8 以后收敛。</p>
+<p>还是有点震惊的：<strong>测试集的准确率为100%，auc=1。</strong></p>
+<p>声明：</p>
+<ol>
+<li>训练集和测试集互斥</li>
+<li>数据处理时，计算均值方差和频次时，使用了测试集的相关特征</li>
+<li>数据处理过程中对于label是不可见的，不存在测试集标签泄露</li>
+</ol>
+<h2 id="参考文献">参考文献</h2>
+<p>无</p>
+</article><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/img/avatar.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/paperReading/end2end/Is-Ego-Status-All-You-Need-for-open/" title="[CVPR2024] Is Ego Status All You Need for Open-Loop End-to-End Autonomous Driving?"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">[CVPR2024] Is Ego Status All You Need for Open-Loop End-to-End Autonomous Driving?</div></div><div class="info-2"><div class="info-item-1"> conclusion The planning performance of existing open-loop autonomous driving models based on nuScenes is highly affected by ego status (velocity, acceleration, yaw angle). With ego status involved, the model’s final predicted trajectories are basically dominated by it, resulting in a diminished use of sensory information. Methods utilizing ego status are not directly comparable and conclusions should not be drawn from such comparisons 目前存在的开环（端到端）自动驾驶模型的测试performance（数据集为...</div></div></div></a><a class="pagination-related" href="/posts/project/LLMhuanjue/" title="kaggle Detect hallucinations in LLMs"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">kaggle Detect hallucinations in LLMs</div></div><div class="info-2"><div class="info-item-1">赛题链接：https://www.kaggle.com/competitions/ml-olympiad-detect-hallucinations-in-llms 任务分析：这是一个文本分类任务，难点在于如何提取文本特征、建立文本关系特征，以及如何解决类别不平衡问题 运行环境、使用框架、语言 操作系统：Linux ubuntu 4.15.0-213-generic #224-Ubuntu SMP Mon Jun 19 13:30:12 UTC 2023 x86_64 x86_64 x86_64 GNU/Linux 硬件环境： Intel® Xeon® Gold 6226R CPU @ 2.90GHz +  NVIDIA GeForce RTX 3090 * 8 (CUDA Version: 12.4) 语言和运行环境：python 3.9.21 (main, Dec 11 2024, 16:24:11) + jupyter notebook 7.2.2 使用框架：pytorch...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%90%E8%A1%8C%E7%8E%AF%E5%A2%83%E3%80%81%E4%BD%BF%E7%94%A8%E6%A1%86%E6%9E%B6%E3%80%81%E8%AF%AD%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">运行环境、使用框架、语言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E3%80%81%E7%89%B9%E5%BE%81%E8%AE%BE%E8%AE%A1%E3%80%81%E6%8A%BD%E5%8F%96%E3%80%81%E5%A4%84%E7%90%86"><span class="toc-number">2.</span> <span class="toc-text">数据分析、特征设计、抽取、处理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%86-department-%E5%92%8C-location-%E8%BD%AC%E5%8C%96%E4%B8%BA%E7%A7%8D%E7%B1%BB%E7%89%B9%E5%BE%81"><span class="toc-number">2.1.</span> <span class="toc-text">将 department 和 location 转化为种类特征</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%86salary-range%E8%BD%AC%E5%8C%96%E4%B8%BA%E8%BF%9E%E7%BB%AD%E7%89%B9%E5%BE%81"><span class="toc-number">2.2.</span> <span class="toc-text">将salary_range转化为连续特征</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%86%E6%96%87%E6%9C%AC%E7%89%B9%E5%BE%81%E8%BD%AC%E5%8C%96%E4%B8%BA%E8%BF%9E%E7%BB%AD%E7%89%B9%E5%BE%81"><span class="toc-number">2.3.</span> <span class="toc-text">将文本特征转化为连续特征</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%84%E7%90%86%E8%BF%9E%E7%BB%AD%E7%89%B9%E5%BE%81"><span class="toc-number">2.4.</span> <span class="toc-text">处理连续特征</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%84%E7%90%86%E7%A7%8D%E7%B1%BB%E7%89%B9%E5%BE%81"><span class="toc-number">2.5.</span> <span class="toc-text">处理种类特征</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E8%AE%AD%E7%BB%83%E9%9B%86%E5%92%8C%E6%B5%8B%E8%AF%95%E9%9B%86"><span class="toc-number">2.6.</span> <span class="toc-text">生成训练集和测试集</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BA%94%E5%AF%B9%EF%BC%9A%E7%B1%BB%E5%88%AB%E4%B8%8D%E5%B9%B3%E8%A1%A1"><span class="toc-number">3.</span> <span class="toc-text">应对：类别不平衡</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%87%E9%87%87%E6%A0%B7"><span class="toc-number">3.1.</span> <span class="toc-text">过采样</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#focal-loss"><span class="toc-number">3.2.</span> <span class="toc-text">focal loss</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E5%9E%8B%E8%AE%BE%E8%AE%A1"><span class="toc-number">4.</span> <span class="toc-text">模型设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87AUC"><span class="toc-number">5.</span> <span class="toc-text">评价指标AUC</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C%E5%88%86%E6%9E%90"><span class="toc-number">6.</span> <span class="toc-text">实验结果分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="toc-number">7.</span> <span class="toc-text">参考文献</span></a></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2025 By ShawnX</div><div class="footer_custom_text">Hi, welcome to my blog</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"></div><div id="rightside-config-show"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(async () => {
+  const showKatex = () => {
+    document.querySelectorAll('#article-container .katex').forEach(el => el.classList.add('katex-show'))
+  }
+
+  if (!window.katex_js_css) {
+    window.katex_js_css = true
+    await btf.getCSS('https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css')
+    if (true) {
+      await btf.getScript('https://cdn.jsdelivr.net/npm/katex/dist/contrib/copy-tex.min.js')
+    }
+  }
+
+  showKatex()
+})()</script><script>(() => {
+  const runMermaid = ele => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    ele.forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const mermaidThemeConfig = `%%{init:{ 'theme':'${theme}'}}%%\n`
+      const mermaidID = `mermaid-${index}`
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+      const renderMermaid = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      // mermaid v9 and v10 compatibility
+      typeof renderFn === 'string' ? renderMermaid(renderFn) : renderFn.then(({ svg }) => renderMermaid(svg))
+    })
+  }
+
+  const codeToMermaid = () => {
+    const codeMermaidEle = document.querySelectorAll('pre > code.mermaid')
+    if (codeMermaidEle.length === 0) return
+
+    codeMermaidEle.forEach(ele => {
+      const preEle = document.createElement('pre')
+      preEle.className = 'mermaid-src'
+      preEle.hidden = true
+      preEle.textContent = ele.textContent
+      const newEle = document.createElement('div')
+      newEle.className = 'mermaid-wrap'
+      newEle.appendChild(preEle)
+      ele.parentNode.replaceWith(newEle)
+    })
+  }
+
+  const loadMermaid = () => {
+    if (false) codeToMermaid()
+    const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+    if ($mermaid.length === 0) return
+
+    const runMermaidFn = () => runMermaid($mermaid)
+    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaidFn)
+  }
+
+  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><script src="js/sakura.js"></script> - <script src="/js/custom.js"></script> - <div class="aplayer no-destroy" data-id="12839720510" data-server="netease" data-type="playlist" data-fixed="true"> </div><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="false" data-text="coding..,debugging..,running..." data-fontsize="15px" data-random="false" async="async"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script>(() => {
+  const destroyAplayer = () => {
+    if (window.aplayers) {
+      for (let i = 0; i < window.aplayers.length; i++) {
+        if (!window.aplayers[i].options.fixed) {
+          window.aplayers[i].destroy()
+        }
+      }
+    }
+  }
+
+  const runMetingJS = () => {
+    typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+  }
+
+  btf.addGlobalFn('pjaxSend', destroyAplayer, 'destroyAplayer')
+  btf.addGlobalFn('pjaxComplete', loadMeting, 'runMetingJS')
+})()</script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>(() => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => fn())
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      const usePjax = true
+      false 
+        ? (usePjax ? pjax.loadUrl('/404.html') : window.location.href = '/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})()</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
