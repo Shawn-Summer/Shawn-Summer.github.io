@@ -1,0 +1,509 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>6、对象和类（上） | LittleBug</title><meta name="author" content="ShawnX"><meta name="copyright" content="ShawnX"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="过程性编程和面向对象编程  过程性编程：首先考虑要遵循的步骤，然后考虑如何让表示这些数据。 面向对象编程（OOP）：首先从用户的角度考虑对象（包括数据和操作），然后考虑接口（用户和程序的桥梁）和数据存储，最后使用新的设计方案创键出程序。   举个栗子  如果你是一位OOP程序员，你收到一个项目–设计一个程序表示股票。那么你作为一个资深OOP程序员，你的脑回路应该是这样的。  股票的种类那么多，怎么">
+<meta property="og:type" content="article">
+<meta property="og:title" content="6、对象和类（上）">
+<meta property="og:url" content="http://imxxl.top/posts/CPP/06/index.html">
+<meta property="og:site_name" content="LittleBug">
+<meta property="og:description" content="过程性编程和面向对象编程  过程性编程：首先考虑要遵循的步骤，然后考虑如何让表示这些数据。 面向对象编程（OOP）：首先从用户的角度考虑对象（包括数据和操作），然后考虑接口（用户和程序的桥梁）和数据存储，最后使用新的设计方案创键出程序。   举个栗子  如果你是一位OOP程序员，你收到一个项目–设计一个程序表示股票。那么你作为一个资深OOP程序员，你的脑回路应该是这样的。  股票的种类那么多，怎么">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://imxxl.top/img/avatar.jpg">
+<meta property="article:published_time" content="2024-09-30T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-03-26T05:42:22.708Z">
+<meta property="article:author" content="ShawnX">
+<meta property="article:tag" content="cpp">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://imxxl.top/img/avatar.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "6、对象和类（上）",
+  "url": "http://imxxl.top/posts/CPP/06/",
+  "image": "http://imxxl.top/img/avatar.jpg",
+  "datePublished": "2024-09-30T16:00:00.000Z",
+  "dateModified": "2025-03-26T05:42:22.708Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "ShawnX",
+      "url": "http://imxxl.top/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/avatar.jpg"><link rel="canonical" href="http://imxxl.top/posts/CPP/06/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          const hour = new Date().getHours()
+          const isNight = hour <= 6 || hour >= 18
+          if (theme === undefined) isNight ? activateDarkMode() : activateLightMode()
+          else theme === 'light' ? activateLightMode() : activateDarkMode()
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":100,"highlightFullpage":true,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '6、对象和类（上）',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/mouse.css"><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-image: url(/img/pokemon2.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">30</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">12</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">13</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 全部文章</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 鏈接</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">LittleBug</span></a><a class="nav-page-title" href="/"><span class="site-name">6、对象和类（上）</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 全部文章</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 鏈接</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">6、对象和类（上）<a class="post-edit-link" href="https://github.com/Shawn-Summer/hexo-source/edit/main/source/_posts/CPP/06.md" title="编辑" target="_blank"><i class="fas fa-pencil-alt"></i></a></h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-09-30T16:00:00.000Z" title="发表于 2024-10-01 00:00:00">2024-10-01</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-03-26T05:42:22.708Z" title="更新于 2025-03-26 13:42:22">2025-03-26</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/CPP/">CPP</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">4.6k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>17分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="过程性编程和面向对象编程">过程性编程和面向对象编程</h2>
+<blockquote>
+<p><strong>过程性编程</strong>：首先考虑要遵循的步骤，然后考虑如何让表示这些数据。<br>
+<strong>面向对象编程（OOP）</strong>：首先从用户的角度考虑对象（包括数据和操作），然后考虑接口（用户和程序的桥梁）和数据存储，最后使用新的设计方案创键出程序。</p>
+</blockquote>
+<ul>
+<li>举个栗子</li>
+</ul>
+<p>如果你是一位OOP程序员，你收到一个项目–设计一个程序表示股票。那么你作为一个资深OOP程序员，你的脑回路应该是这样的。</p>
+<ol>
+<li>股票的种类那么多，怎么表示股票？我们可以用一个<strong>类</strong>表示股票的类型，每一种股票就是一个<strong>对象</strong>。</li>
+<li>作为一家公司老总，我们对股票有哪些操作？
+<ul>
+<li>获得股票</li>
+<li>增持</li>
+<li>卖出股票</li>
+<li>更新股票价格</li>
+<li>显示股票信息</li>
+</ul>
+</li>
+<li>实现这些操作后，股票要具备哪些数据？
+<ul>
+<li>公司名称</li>
+<li>所持股票数量</li>
+<li>每股价格</li>
+<li>股票总价</li>
+</ul>
+</li>
+<li>设计方案</li>
+</ol>
+<blockquote>
+<p>总之，面向对象编程就是从用户的角度来出发，来设计程序。这里的用户可以是人，也可以是程序。</p>
+</blockquote>
+<h2 id="C-中的类">C++中的类</h2>
+<blockquote>
+<p>什么是类？类就是一种抽象的类型，就像上面的股票类型<br>
+什么是对象？对象就是类中一个具体实例，就像上面的具体的一种股票。</p>
+</blockquote>
+<ul>
+<li>如何定义类？</li>
+</ul>
+<blockquote>
+<p>类一般由两个部分组成：<br>
+类声明：类似于函数原型。描述数据成员和函数成员，公有部分和私有部分。<br>
+类方法定义：类似于函数定义。具体实现函数成员的定义。</p>
+</blockquote>
+<h3 id="类声明">类声明</h3>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//类1.h</span></span><br><span class="line"><span class="meta">#<span class="keyword">ifndef</span> aa</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> aa</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Stock</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">        std::string company;<span class="comment">//公司名</span></span><br><span class="line">        <span class="type">long</span> shares;<span class="comment">//所持股票数量</span></span><br><span class="line">        <span class="type">double</span> share_val;<span class="comment">//每股价格</span></span><br><span class="line">        <span class="type">double</span> total_val;<span class="comment">//股票总价</span></span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">set_tot</span><span class="params">()</span></span></span><br><span class="line"><span class="function">        </span>&#123;</span><br><span class="line">            total_val=shares*share_val;</span><br><span class="line">        &#125;</span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">acquire</span><span class="params">(<span class="type">const</span> std::string &amp;co,<span class="type">long</span> n,<span class="type">double</span> pr)</span></span>;<span class="comment">//获得股票</span></span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">buy</span><span class="params">(<span class="type">long</span> num,<span class="type">double</span> price)</span></span>;<span class="comment">//增持</span></span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">sell</span><span class="params">(<span class="type">long</span> num,<span class="type">double</span> price)</span></span>;<span class="comment">//卖出股票</span></span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">update</span><span class="params">(<span class="type">double</span> price)</span></span>;<span class="comment">//更新股票价格</span></span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">show</span><span class="params">()</span></span>;<span class="comment">//显示信息</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>可以看出来这里有几个关键词<code>class</code>,<code>private</code>,<code>public</code>.<br>
+<code>class</code>:用来声明类。<br>
+<code>private</code>:类的私有部分（<code>private</code>关键词也可以省略）<br>
+<code>public</code>:类的公有部分<br>
+<strong>数据项通常放在私有部分，接口的类成员函数通常放在公有部分</strong></p>
+<p>将数据和方法组成一个单元是类最吸引人的特性。不管是公有部分，还是私有部分，成员可以是数据也可以是函数。<br>
+数据隐藏是OOP的一种伟大思想，类划分了公有部分和私有部分，对象可以访问公有部分，不能直接访问私有部分，但是可以通过公有成员函数(或者友元函数)来访问私有部分。<strong>公有成员函数是用户和对象的私有数据沟通的桥梁</strong>，这也是我们所说的公有接口。只有在定义类的时候可以直接访问类的私有部分。</p>
+</blockquote>
+<ul>
+<li>实际上，你如果C语言学的很好，你会发现，类和结构非常相似。</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Stock</span></span><br><span class="line">&#123;</span><br><span class="line">        std::string company;<span class="comment">//公司名</span></span><br><span class="line">        <span class="type">long</span> shares;<span class="comment">//所持股票数量</span></span><br><span class="line">        <span class="type">double</span> share_val;<span class="comment">//每股价格</span></span><br><span class="line">        <span class="type">double</span> total_val;<span class="comment">//股票总价</span></span><br><span class="line">        <span class="built_in">void</span> (*set_tot)()</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">void</span> (*acquire)(<span class="type">const</span> std::string &amp;co,<span class="type">long</span> n,<span class="type">double</span> pr);<span class="comment">//获得股票</span></span><br><span class="line">        <span class="built_in">void</span> (*buy)(<span class="type">long</span> num,<span class="type">double</span> price);<span class="comment">//增持</span></span><br><span class="line">        <span class="built_in">void</span> (*sell)(<span class="type">long</span> num,<span class="type">double</span> price);<span class="comment">//卖出股票</span></span><br><span class="line">        <span class="built_in">void</span> (*update)(<span class="type">double</span> price);<span class="comment">//更新股票价格</span></span><br><span class="line">        <span class="built_in">void</span> (*show)();<span class="comment">//显示信息</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>看看上面这段代码，我们使用结构体和函数指针就可以实现，股票结构体的数据和操作。当我们有一个结构对象<code>a</code>时，我们可以使用<code>a.acqure(....)</code>来获得股票。所以说，将数据和方法组成一个单元并非类的专属。<br>
+但是，<strong>结构体无法区分公有部分和私有部分</strong>，所以说<strong>类是加强版的结构体</strong></p>
+</blockquote>
+<h3 id="类方法定义">类方法定义</h3>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//类1.cpp</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&quot;类1.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Stock::acquire</span><span class="params">(<span class="type">const</span> std::string &amp;co,<span class="type">long</span> n,<span class="type">double</span> pr)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    company=co;</span><br><span class="line">    <span class="keyword">if</span>(n&lt;<span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        std::cout&lt;&lt;<span class="string">&quot;数量不能是负数&quot;</span></span><br><span class="line">        &lt;&lt;company&lt;&lt;<span class="string">&quot;的股票数量将设置成0\n&quot;</span>;</span><br><span class="line">        shares=<span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        shares=n;</span><br><span class="line">    &#125;</span><br><span class="line">    share_val=pr;</span><br><span class="line">    <span class="built_in">set_tot</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Stock::buy</span><span class="params">(<span class="type">long</span> num,<span class="type">double</span> price)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(num&lt;<span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        std::cout&lt;&lt;<span class="string">&quot;数量不能是负数。交易失败。\n&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        shares+=num;</span><br><span class="line">        share_val=price;</span><br><span class="line">        <span class="built_in">set_tot</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Stock::sell</span><span class="params">(<span class="type">long</span> num,<span class="type">double</span> price)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">using</span> std::cout;</span><br><span class="line">    <span class="keyword">if</span>(num&lt;<span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        cout&lt;&lt;<span class="string">&quot;数量不能是负数.\n&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(num&gt;shares)</span><br><span class="line">    &#123;</span><br><span class="line">        cout&lt;&lt;<span class="string">&quot;卖出数量大于持有数量。交易失败。\n&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        shares-=num;</span><br><span class="line">        share_val=price;</span><br><span class="line">        <span class="built_in">set_tot</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Stock::show</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">using</span> std::cout;</span><br><span class="line">    <span class="keyword">using</span> std::endl;</span><br><span class="line">    <span class="keyword">using</span> std::ios_base;</span><br><span class="line">    ios_base::fmtflags orig=cout.<span class="built_in">setf</span>(ios_base::fixed,ios_base::floatfield);</span><br><span class="line">    std::streamsize prec =cout.<span class="built_in">precision</span>(<span class="number">3</span>);</span><br><span class="line"></span><br><span class="line">    cout&lt;&lt;<span class="string">&quot;公司：&quot;</span>&lt;&lt;company&lt;&lt;<span class="string">&quot; 股票数量：&quot;</span>&lt;&lt;shares&lt;&lt;endl</span><br><span class="line">        &lt;&lt;<span class="string">&quot;每股价格：$&quot;</span>&lt;&lt;share_val;</span><br><span class="line">    </span><br><span class="line">    cout.<span class="built_in">precision</span>(<span class="number">2</span>);</span><br><span class="line">    cout&lt;&lt;<span class="string">&quot; 总价值：$&quot;</span>&lt;&lt;total_val&lt;&lt;endl;</span><br><span class="line"></span><br><span class="line">    cout.<span class="built_in">setf</span>(orig,ios_base::floatfield);</span><br><span class="line">    cout.<span class="built_in">precision</span>(prec);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>类方法定义就是实现类成员函数。成员函数的定义与常规函数的定义非常相似。但是成员函数的定义有3个特征：</p>
+<ol>
+<li>要使用作用域解析符<code>::</code></li>
+<li>可以直接访问类的私有成员</li>
+<li>在类成员函数中，不必使用作用域解析符，就可以直接使用类成员数据和调用类成员函数。（因为它们同属一个类，所以成员都是可见的）</li>
+</ol>
+</blockquote>
+<ul>
+<li>内联方法</li>
+</ul>
+<blockquote>
+<p>在类声明中，有一个私有成员函数<code>set_tot()</code>，由于它是私有的，只有编写这个类的时候，可以调用它，而用户不能调用它，使用私有成员函数主要是省去一些重复代码的输入。<br>
+除了这个特征以外，我们发现，<code>set_tot()</code>函数，在声明的时候直接给出了定义。<strong>类声明常将短小的成员函数作为内联函数</strong>,所以这个函数实际上会被编译器变成内联函数。</p>
+</blockquote>
+<ul>
+<li>方法使用哪个对象</li>
+</ul>
+<blockquote>
+<p>实际上，每个对象都有它的存储空间，用于存储其内部变量和类成员；但同一个类的所有对象共享同一组类方法。</p>
+</blockquote>
+<h3 id="使用类">使用类</h3>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//类1main.cpp</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&quot;类1.h&quot;</span></span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Stock x;</span><br><span class="line">    x.<span class="built_in">acquire</span>(<span class="string">&quot;USTC&quot;</span>,<span class="number">20</span>,<span class="number">12.50</span>);</span><br><span class="line">    x.<span class="built_in">show</span>();</span><br><span class="line">    x.<span class="built_in">buy</span>(<span class="number">15</span>,<span class="number">18.125</span>);</span><br><span class="line">    x.<span class="built_in">show</span>();</span><br><span class="line">    x.<span class="built_in">sell</span>(<span class="number">400</span>,<span class="number">20.00</span>);</span><br><span class="line">    x.<span class="built_in">show</span>();</span><br><span class="line">    x.<span class="built_in">buy</span>(<span class="number">300000</span>,<span class="number">40.125</span>);</span><br><span class="line">    x.<span class="built_in">show</span>();</span><br><span class="line">    x.<span class="built_in">sell</span>(<span class="number">300000</span>,<span class="number">0.125</span>);</span><br><span class="line">    x.<span class="built_in">show</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">PS D:\study\c++\path_to_c++&gt; g++ -I .\include\ .\类1.cpp .\类1main.cpp -o 类1</span><br><span class="line">PS D:\study\c++\path_to_c++&gt; .\类1.exe</span><br><span class="line">公司：USTC 股票数量：20</span><br><span class="line">每股价格：<span class="variable">$12</span>.500 总价值：<span class="variable">$250</span>.00</span><br><span class="line">公司：USTC 股票数量：35</span><br><span class="line">每股价格：<span class="variable">$18</span>.125 总价值：<span class="variable">$634</span>.38</span><br><span class="line">卖出数量大于持有数量。交易失败。</span><br><span class="line">公司：USTC 股票数量：35</span><br><span class="line">每股价格：<span class="variable">$18</span>.125 总价值：<span class="variable">$634</span>.38</span><br><span class="line">公司：USTC 股票数量：300035</span><br><span class="line">每股价格：<span class="variable">$40</span>.125 总价值：<span class="variable">$12038904</span>.38</span><br><span class="line">公司：USTC 股票数量：35</span><br><span class="line">每股价格：<span class="variable">$0</span>.125 总价值：<span class="variable">$4</span>.38</span><br></pre></td></tr></table></figure>
+<h2 id="构造函数">构造函数</h2>
+<blockquote>
+<p>我们发现我们无法像结构体那样<code>Stock hot=&#123;&quot;Cam&quot;,100,50.25&#125;;</code>这样初始化对象，这是因为类的数据成员都是私有的，所以我们无法直接访问数据成员。当然了，如果<code>Stock</code>类的数据成员都是公有的，我们自然能像结构体那样直接初始化对象。<br>
+实际上，我们发现我们<code>Stock::acquire()</code>函数，就是扮演着初始化的对象的角色。<br>
+C++给类提供了一个构造函数，专门用来创造和初始化对象的。</p>
+</blockquote>
+<h3 id="声明和定义构造函数">声明和定义构造函数</h3>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Stock</span>(<span class="type">const</span> std::string &amp;co,<span class="type">long</span> n=<span class="number">0</span>,<span class="type">double</span> pr=<span class="number">0.0</span>);<span class="comment">//构造函数</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>上面这个就是构造函数的声明，这里使用了默认参数，我们发现构造函数的声明和成员函数的声明很像，但是<strong>注意，没有返回类型、构造函数的名称和类名称相同、构造函数是公有部分中的</strong></p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">Stock::<span class="built_in">Stock</span>(<span class="type">const</span> std::string &amp;co,<span class="type">long</span> n,<span class="type">double</span> pr)</span><br><span class="line">&#123;</span><br><span class="line">    company=co;</span><br><span class="line">    <span class="keyword">if</span>(n&lt;<span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        std::cout&lt;&lt;<span class="string">&quot;数量不能是负数&quot;</span></span><br><span class="line">        &lt;&lt;company&lt;&lt;<span class="string">&quot;的股票数量将设置成0\n&quot;</span>;</span><br><span class="line">        shares=<span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        shares=n;</span><br><span class="line">    &#125;</span><br><span class="line">    share_val=pr;</span><br><span class="line">    <span class="built_in">set_tot</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>上面这个就是构造函数的定义，这段代码和<code>acquire()</code>的代码是一致的。</p>
+</blockquote>
+<h3 id="使用构造函数">使用构造函数</h3>
+<blockquote>
+<p>C++提供了两种调用构造函数的方式。</p>
+<ol>
+<li>显式调用<br>
+<code>Stock food = Stock(&quot;World&quot;,250,1.25);</code><br>
+有没有发现啊？实际上这里利用了重载的技术，前面那个<code>Stock</code>是一个类，后面那个<code>Stock</code>是一个构造函数，而且我们发现构造函数的返回类型其实就是<code>Stock</code>类。</li>
+<li>隐式调用<br>
+<code>Stock food(&quot;World&quot;,250,1.25);</code></li>
+</ol>
+<p>我们也可以使用动态内存分配的方式创建类对象<br>
+<code>Stock *pfood =new Stock(&quot;World&quot;,250,1.25);</code><br>
+但是有一点请注意：<br>
+构造函数不同于一般的成员函数，它不能使用诸如<code>food.Stock(&quot;World&quot;,250,1.25)</code>的方式调用构造函数。</p>
+</blockquote>
+<h3 id="默认构造函数">默认构造函数</h3>
+<blockquote>
+<p><strong>默认构造函数和非默认构造函数的差别巨大</strong>，而且<strong>默认构造函数和非默认构造函数一样重要</strong>。</p>
+</blockquote>
+<ul>
+<li>什么是默认构造函数？
+<blockquote>
+<p>上一节所说的构造函数都是非默认构造函数，非默认构造函数的功能时提供对象初始化。<br>
+默认构造函数的功能是，当对象未初始化时，给它进行默认初始化。</p>
+</blockquote>
+</li>
+<li>为什么要有默认构造函数？
+<blockquote>
+<p>C++禁止创建未初始化的对象。如果你只提供了非默认构造函数，那么<code>Stock food;</code>语句会直接报错，因为对象未初始化。但是如果你不提供非默认构造函数，那么<code>Stock food;</code>将不会报错，因为C++会提供隐式默认构造函数，自动给对象初始化。</p>
+</blockquote>
+</li>
+<li>有两种默认构造函数
+<blockquote>
+<p><strong>隐式默认构造函数</strong><br>
+如果没有提供任何构造函数，C++将自动提供隐式默认构造函数，它的定义可能是<br>
+<code>Stock::Stock()&#123;&#125;</code><br>
+隐式默认构造函数不做任何操作，它只是告诉编译器，“你看，对象初始化过了！”<br>
+<strong>显式默认构造函数</strong><br>
+我们可以自己定义一个默认构造函数，这个就叫做显式默认构造函数<br>
+一种简单的方法是，直接给非默认构造函数提供所有的默认参数，<br>
+<code>Stock(const std::string &amp;co=&quot;Error!&quot;,long n=0,double pr=0.0);</code><br>
+另一种方法是，利用构造函数的重载，显式默认构造函数原型：<br>
+<code>Stock();</code>可以发现默认构造函数不接受任何参数。<br>
+显式默认构造函数定义：<br>
+<code>Stock::Stock()&#123;company=&quot;no name&quot;;shares=0;share_val=0.0;total_val=0.0;&#125;</code><br>
+当然了，为了重载解析成功，你只能二选一，两种方法仁者见仁，智者见智慧。</p>
+</blockquote>
+</li>
+</ul>
+<blockquote>
+<p><strong>一般来说，类声明中，应该同时提供非默认构造函数和显式默认构造函数</strong><br>
+<strong>这节所说的一切，本质上是函数重载</strong>，因为非默认构造函数和显式默认构造函数函数名相同，你调用哪个取决于语法。</p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">Stock a;</span><br><span class="line"><span class="function">Stock <span class="title">b</span><span class="params">(<span class="string">&quot;world&quot;</span>,<span class="number">250</span>,<span class="number">2.50</span>)</span></span>;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>上述代码中，对象<code>a</code>采用的是显式默认构造函数，对象<code>b</code>采用的是非默认构造函数。</p>
+</blockquote>
+<h2 id="析构函数">析构函数</h2>
+<blockquote>
+<p>析构函数完成清理工作，因此非常有用。<br>
+如果构造函数中使用<code>new</code>来创建数据，那么你<strong>必须</strong>写一个析构函数，用来<code>delete</code>各种数据项。当然了，如果你的构造函数中不使用动态内存分配，那么你完全不需要写析构函数。但是就算你不写析构函数，编译器也会自动给你生成一个什么也不干的隐式的默认析构函数。</p>
+</blockquote>
+<ul>
+<li>
+<p>析构函数什么时候被调用？</p>
+<blockquote>
+<p>如果是静态对象，程序结束时，自动调用。<br>
+如果是自动对象，代码段结束时，自动调用。<br>
+如果是用<code>new</code>创建的对象,使用<code>delete</code>时自动调用。<br>
+<strong>总之，析构函数是自动调用的</strong></p>
+</blockquote>
+</li>
+<li>
+<p>析构函数的原型和实现<br>
+<code>~Stock();</code>可以看出来析构函数没有返回类型，而且不接受任何参数,<strong>析构函数的函数名是类名前加一个<code>~</code></strong></p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">Stock::~<span class="built_in">Stock</span>()&#123;</span><br><span class="line">  cout&lt;&lt;<span class="string">&quot;Bye!&quot;</span>&lt;&lt;company&lt;&lt;endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="改进Stock类">改进<code>Stock</code>类</h2>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//类2.h</span></span><br><span class="line"><span class="meta">#<span class="keyword">ifndef</span> aa</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> aa</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Stock</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">        std::string company;<span class="comment">//公司名</span></span><br><span class="line">        <span class="type">long</span> shares;<span class="comment">//所持股票数量</span></span><br><span class="line">        <span class="type">double</span> share_val;<span class="comment">//每股价格</span></span><br><span class="line">        <span class="type">double</span> total_val;<span class="comment">//股票总价</span></span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">set_tot</span><span class="params">()</span></span></span><br><span class="line"><span class="function">        </span>&#123;</span><br><span class="line">            total_val=shares*share_val;</span><br><span class="line">        &#125;</span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">        <span class="built_in">Stock</span>();<span class="comment">//默认构造函数</span></span><br><span class="line">        <span class="built_in">Stock</span>(<span class="type">const</span> std::string &amp;co,<span class="type">long</span> n=<span class="number">0</span>,<span class="type">double</span> pr=<span class="number">0.0</span>);<span class="comment">//构造函数</span></span><br><span class="line">        ~<span class="built_in">Stock</span>();<span class="comment">//析构函数</span></span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">buy</span><span class="params">(<span class="type">long</span> num,<span class="type">double</span> price)</span></span>;<span class="comment">//增持</span></span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">sell</span><span class="params">(<span class="type">long</span> num,<span class="type">double</span> price)</span></span>;<span class="comment">//卖出股票</span></span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">update</span><span class="params">(<span class="type">double</span> price)</span></span>;<span class="comment">//更新股票价格</span></span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">show</span><span class="params">()</span></span>;<span class="comment">//显示信息</span></span><br><span class="line"></span><br><span class="line">&#125;;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//类2.cpp</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&quot;类2.h&quot;</span></span></span><br><span class="line">Stock::<span class="built_in">Stock</span>()</span><br><span class="line">&#123;</span><br><span class="line">    company=<span class="string">&quot;no name&quot;</span>;</span><br><span class="line">    shares=<span class="number">0</span>;</span><br><span class="line">    share_val=<span class="number">0.0</span>;</span><br><span class="line">    total_val=<span class="number">0.0</span>;</span><br><span class="line">    std::cout&lt;&lt;<span class="string">&quot;注意！默认初始化!\n&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line">Stock::<span class="built_in">Stock</span>(<span class="type">const</span> std::string &amp;co,<span class="type">long</span> n,<span class="type">double</span> pr)</span><br><span class="line">&#123;   std::cout&lt;&lt;<span class="string">&quot;注意！使用构造函数初始化,&quot;</span>&lt;&lt;co&lt;&lt;std::endl;</span><br><span class="line">    company=co;</span><br><span class="line">    <span class="keyword">if</span>(n&lt;<span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        std::cout&lt;&lt;<span class="string">&quot;数量不能是负数&quot;</span></span><br><span class="line">        &lt;&lt;company&lt;&lt;<span class="string">&quot;的股票数量将设置成0\n&quot;</span>;</span><br><span class="line">        shares=<span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        shares=n;</span><br><span class="line">    &#125;</span><br><span class="line">    share_val=pr;</span><br><span class="line">    <span class="built_in">set_tot</span>();</span><br><span class="line">&#125;</span><br><span class="line">Stock::~<span class="built_in">Stock</span>()</span><br><span class="line">&#123;</span><br><span class="line">    std::cout&lt;&lt;<span class="string">&quot;注意！再见，&quot;</span>&lt;&lt;company&lt;&lt;std::endl;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Stock::buy</span><span class="params">(<span class="type">long</span> num,<span class="type">double</span> price)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(num&lt;<span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        std::cout&lt;&lt;<span class="string">&quot;数量不能是负数。交易失败。\n&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        shares+=num;</span><br><span class="line">        share_val=price;</span><br><span class="line">        <span class="built_in">set_tot</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Stock::sell</span><span class="params">(<span class="type">long</span> num,<span class="type">double</span> price)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">using</span> std::cout;</span><br><span class="line">    <span class="keyword">if</span>(num&lt;<span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        cout&lt;&lt;<span class="string">&quot;数量不能是负数.\n&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(num&gt;shares)</span><br><span class="line">    &#123;</span><br><span class="line">        cout&lt;&lt;<span class="string">&quot;卖出数量大于持有数量。交易失败。\n&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        shares-=num;</span><br><span class="line">        share_val=price;</span><br><span class="line">        <span class="built_in">set_tot</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Stock::update</span><span class="params">(<span class="type">double</span> price)</span></span>&#123;</span><br><span class="line">    share_val=price;</span><br><span class="line">    <span class="built_in">set_tot</span>();</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Stock::show</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">using</span> std::cout;</span><br><span class="line">    <span class="keyword">using</span> std::endl;</span><br><span class="line">    <span class="keyword">using</span> std::ios_base;</span><br><span class="line">    ios_base::fmtflags orig=cout.<span class="built_in">setf</span>(ios_base::fixed,ios_base::floatfield);</span><br><span class="line">    std::streamsize prec =cout.<span class="built_in">precision</span>(<span class="number">3</span>);</span><br><span class="line"></span><br><span class="line">    cout&lt;&lt;<span class="string">&quot;公司：&quot;</span>&lt;&lt;company&lt;&lt;<span class="string">&quot; 股票数量：&quot;</span>&lt;&lt;shares&lt;&lt;endl</span><br><span class="line">        &lt;&lt;<span class="string">&quot;每股价格：$&quot;</span>&lt;&lt;share_val;</span><br><span class="line">    </span><br><span class="line">    cout.<span class="built_in">precision</span>(<span class="number">2</span>);</span><br><span class="line">    cout&lt;&lt;<span class="string">&quot; 总价值：$&quot;</span>&lt;&lt;total_val&lt;&lt;endl;</span><br><span class="line"></span><br><span class="line">    cout.<span class="built_in">setf</span>(orig,ios_base::floatfield);</span><br><span class="line">    cout.<span class="built_in">precision</span>(prec);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//类2main.cpp</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&quot;类2.h&quot;</span></span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">using</span> std::cout;</span><br><span class="line">        <span class="keyword">using</span> std::endl;</span><br><span class="line">        cout&lt;&lt;<span class="string">&quot;使用构造函数创建两个对象&quot;</span>&lt;&lt;endl;</span><br><span class="line">        <span class="function">Stock <span class="title">stock1</span><span class="params">(<span class="string">&quot;公司1&quot;</span>,<span class="number">12</span>,<span class="number">20.0</span>)</span></span>;</span><br><span class="line">        stock<span class="number">1.</span><span class="built_in">show</span>();</span><br><span class="line">        Stock stock2=<span class="built_in">Stock</span>(<span class="string">&quot;公司2&quot;</span>,<span class="number">2</span>,<span class="number">2.0</span>);</span><br><span class="line">        stock<span class="number">2.</span><span class="built_in">show</span>();</span><br><span class="line">        </span><br><span class="line">        cout&lt;&lt;<span class="string">&quot;把stock1赋值给stock2&quot;</span>&lt;&lt;endl;</span><br><span class="line">        stock2=stock1;</span><br><span class="line">        cout&lt;&lt;<span class="string">&quot;显示stock1和stock2&quot;</span>&lt;&lt;endl;</span><br><span class="line">        stock<span class="number">1.</span><span class="built_in">show</span>();</span><br><span class="line">        stock<span class="number">2.</span><span class="built_in">show</span>();</span><br><span class="line"></span><br><span class="line">        cout&lt;&lt;<span class="string">&quot;使用构造函数给对象重新初始化&quot;</span>&lt;&lt;endl;</span><br><span class="line">        stock1=<span class="built_in">Stock</span>(<span class="string">&quot;公司3&quot;</span>,<span class="number">10</span>,<span class="number">50.0</span>);</span><br><span class="line">        cout&lt;&lt;<span class="string">&quot;重新显示stock1&quot;</span>&lt;&lt;endl;</span><br><span class="line">        stock<span class="number">1.</span><span class="built_in">show</span>();</span><br><span class="line">        cout&lt;&lt;<span class="string">&quot;完成！&quot;</span>&lt;&lt;endl;</span><br><span class="line">    &#125;</span><br><span class="line">    std::cout&lt;&lt;<span class="string">&quot;代码段结束\n&quot;</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">PS D:\study\c++\path_to_c++&gt; g++ -I .\include\ -o 类2 .\类2.cpp .\类2main.cpp</span><br><span class="line">PS D:\study\c++\path_to_c++&gt; .\类2.exe</span><br><span class="line">使用构造函数创建两个对象</span><br><span class="line">注意！使用构造函数初始化,公司1</span><br><span class="line">公司：公司1 股票数量：12</span><br><span class="line">每股价格：$20.000 总价值：$240.00</span><br><span class="line">注意！使用构造函数初始化,公司2</span><br><span class="line">公司：公司2 股票数量：2</span><br><span class="line">每股价格：$2.000 总价值：$4.00</span><br><span class="line">把stock1赋值给stock2</span><br><span class="line">显示stock1和stock2</span><br><span class="line">公司：公司1 股票数量：12</span><br><span class="line">每股价格：$20.000 总价值：$240.00</span><br><span class="line">公司：公司1 股票数量：12</span><br><span class="line">每股价格：$20.000 总价值：$240.00</span><br><span class="line">使用构造函数给对象重新初始化</span><br><span class="line">注意！使用构造函数初始化,公司3</span><br><span class="line">注意！再见，公司3</span><br><span class="line">重新显示stock1</span><br><span class="line">公司：公司3 股票数量：10</span><br><span class="line">每股价格：$50.000 总价值：$500.00</span><br><span class="line">完成！</span><br><span class="line">注意！再见，公司1</span><br><span class="line">注意！再见，公司3</span><br><span class="line">代码段结束</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>可以试着跑一下上面的程序，可能结果有不同，因为不同编译器对<code>Stock stock2=Stock(&quot;公司2&quot;,2,2.0);</code>的处理不同，这句话可能创建临时对象。<br>
+<code>stock1=Stock(&quot;公司3&quot;,10,50.0);</code>这句是赋值语句是一定会创建临时对象的。<br>
+所以说，通常来说，<strong>初始化比赋值更高效</strong>。</p>
+</blockquote>
+<p>下面看看一些有趣的对象初始化：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//类3.cpp</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&quot;类2.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&quot;类2.cpp&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    Stock a=&#123;<span class="string">&quot;腾讯&quot;</span>,<span class="number">100</span>,<span class="number">45.0</span>&#125;;</span><br><span class="line">    a.<span class="built_in">show</span>();</span><br><span class="line">    Stock b&#123;&#125;;</span><br><span class="line">    b.<span class="built_in">show</span>();</span><br><span class="line">    <span class="type">const</span> Stock c&#123;<span class="string">&quot;网易&quot;</span>,<span class="number">200</span>,<span class="number">25.00</span>&#125;;</span><br><span class="line">    <span class="comment">//c.show();</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">注意！使用构造函数初始化,腾讯</span><br><span class="line">公司：腾讯 股票数量：100</span><br><span class="line">每股价格：$45.000 总价值：$4500.00</span><br><span class="line">注意！默认初始化!</span><br><span class="line">公司：no name 股票数量：0</span><br><span class="line">每股价格：$0.000 总价值：$0.00</span><br><span class="line">注意！使用构造函数初始化,网易</span><br><span class="line">注意！再见，网易</span><br><span class="line">注意！再见，no name</span><br><span class="line">注意！再见，腾讯</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>可以看出来，<strong>列表初始化语法同样适用于类</strong>。<br>
+但是我这边注释掉了一段代码<code>//c.show();</code>,这段代码运行会出错。<br>
+因为，<code>c</code>是一个<code>const</code>对象，<code>c.show()</code>无法确保<code>c</code>的数据成员不被修改，所以编译器会报错。<br>
+那么，我们想到的方法肯定是–<code>const</code>形参,但是，正如你所见，<code>show()</code>函数，没有形参，该怎么办？<br>
+<strong><code>const</code>成员函数</strong><br>
+C++允许我们这样声明、定义<code>const</code>成员函数：<br>
+<code>void show() const;</code></p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">Stock::show</span><span class="params">()</span> <span class="type">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>实际上，C++的初始化语句非常多，源于运算符的重载。<br>
+下面看一个神奇的例子。<br>
+如果一个类的构造函数是<code>Bozo(int a);</code>，它的构造函数只接受一个参数，那么初始化语句可以这样写<code>Bozo x=6;</code>。<br>
+<strong>接受一个参数的构造函数允许使用赋值语法将对象初始化：</strong><br>
+<code>classname object = value;</code><br>
+这种语法有危险！。</p>
+</blockquote>
+</article><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/cpp/">cpp</a></div><div class="post-share"><div class="social-share" data-image="/img/avatar.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/CPP/05/" title="5、名称空间"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">5、名称空间</div></div><div class="info-2"><div class="info-item-1">背景  声明区域（declaration region）:可以进行声明的区域。 全局变量的声明区是整个文件，函数内声明的变量的声明区是代码块。  潜在作用域（potential scope）:声明位置开始到声明区截止。 作用域（scope）:变量对程序的可见范围。 变量的作用域是潜在作用域的子集。 例如，在函数中声明的局部变量会隐藏同名的全局变量，导致全局变量的作用域缺少一部分。  名称空间（namespace）：每个声明区都可以声明名称，并且这些名称独立于其他声明区的名称。（例如：一个函数中的局部变量不会和另一个函数的局部变量发生冲突。）所以说，每个声明区就是一个名称空间。 C++允许我们自己创造名称空间。为了统一概念，我们不再把代码块当成名称空间，所以名称空间只有两种：全局名称空间 用户创造的名称空间  名称空间  我们创造两个名称空间Jack和Jill  int Hill;namespace Jack&#123;    double pail;    void fetch();    int pal;    struct...</div></div></div></a><a class="pagination-related" href="/posts/CPP/07/" title="6、对象和类（下）"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">6、对象和类（下）</div></div><div class="info-2"><div class="info-item-1">this指针  到目前为止，每个类成员函数只涉及一个对象，即调用它的对象。但是我们有时候需要涉及多个对象，在这种情况下，必须使用this指针。 例如，我们要求一个函数实现比较两个股票的总价值，并选出大的那个股票。 那么这个成员函数的原型肯定是： const Stock &amp; topval(const Stock &amp;s)const; 首先这肯定是const成员函数，其次它的肯定要接收一个Stock对象,返回值也必须是一个Stock对象。 那么，调用这个成员函数时， top=stock1.topval(stock2)和top=stock2.topval(stock1)是等价的。 下面我们来看看函数如何定义？  const Stock &amp; Stock::topval(const Stock&amp; s)const&#123;  if(s.total_val&gt;total_val)  &#123;    return s;  &#125;  else    return...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%87%E7%A8%8B%E6%80%A7%E7%BC%96%E7%A8%8B%E5%92%8C%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%BC%96%E7%A8%8B"><span class="toc-number">1.</span> <span class="toc-text">过程性编程和面向对象编程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#C-%E4%B8%AD%E7%9A%84%E7%B1%BB"><span class="toc-number">2.</span> <span class="toc-text">C++中的类</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B1%BB%E5%A3%B0%E6%98%8E"><span class="toc-number">2.1.</span> <span class="toc-text">类声明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B1%BB%E6%96%B9%E6%B3%95%E5%AE%9A%E4%B9%89"><span class="toc-number">2.2.</span> <span class="toc-text">类方法定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E7%B1%BB"><span class="toc-number">2.3.</span> <span class="toc-text">使用类</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0"><span class="toc-number">3.</span> <span class="toc-text">构造函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A3%B0%E6%98%8E%E5%92%8C%E5%AE%9A%E4%B9%89%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0"><span class="toc-number">3.1.</span> <span class="toc-text">声明和定义构造函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0"><span class="toc-number">3.2.</span> <span class="toc-text">使用构造函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%BB%98%E8%AE%A4%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0"><span class="toc-number">3.3.</span> <span class="toc-text">默认构造函数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9E%90%E6%9E%84%E5%87%BD%E6%95%B0"><span class="toc-number">4.</span> <span class="toc-text">析构函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%94%B9%E8%BF%9BStock%E7%B1%BB"><span class="toc-number">5.</span> <span class="toc-text">改进Stock类</span></a></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2025 By ShawnX</div><div class="footer_custom_text">Hi, welcome to my blog</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"></div><div id="rightside-config-show"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(async () => {
+  const showKatex = () => {
+    document.querySelectorAll('#article-container .katex').forEach(el => el.classList.add('katex-show'))
+  }
+
+  if (!window.katex_js_css) {
+    window.katex_js_css = true
+    await btf.getCSS('https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css')
+    if (true) {
+      await btf.getScript('https://cdn.jsdelivr.net/npm/katex/dist/contrib/copy-tex.min.js')
+    }
+  }
+
+  showKatex()
+})()</script><script>(() => {
+  const runMermaid = ele => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    ele.forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const mermaidThemeConfig = `%%{init:{ 'theme':'${theme}'}}%%\n`
+      const mermaidID = `mermaid-${index}`
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+      const renderMermaid = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      // mermaid v9 and v10 compatibility
+      typeof renderFn === 'string' ? renderMermaid(renderFn) : renderFn.then(({ svg }) => renderMermaid(svg))
+    })
+  }
+
+  const codeToMermaid = () => {
+    const codeMermaidEle = document.querySelectorAll('pre > code.mermaid')
+    if (codeMermaidEle.length === 0) return
+
+    codeMermaidEle.forEach(ele => {
+      const preEle = document.createElement('pre')
+      preEle.className = 'mermaid-src'
+      preEle.hidden = true
+      preEle.textContent = ele.textContent
+      const newEle = document.createElement('div')
+      newEle.className = 'mermaid-wrap'
+      newEle.appendChild(preEle)
+      ele.parentNode.replaceWith(newEle)
+    })
+  }
+
+  const loadMermaid = () => {
+    if (false) codeToMermaid()
+    const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+    if ($mermaid.length === 0) return
+
+    const runMermaidFn = () => runMermaid($mermaid)
+    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaidFn)
+  }
+
+  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><script src="js/sakura.js"></script> - <script src="/js/custom.js"></script> - <div class="aplayer no-destroy" data-id="12839720510" data-server="netease" data-type="playlist" data-fixed="true"> </div><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="false" data-text="coding..,debugging..,running..." data-fontsize="15px" data-random="false" async="async"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script>(() => {
+  const destroyAplayer = () => {
+    if (window.aplayers) {
+      for (let i = 0; i < window.aplayers.length; i++) {
+        if (!window.aplayers[i].options.fixed) {
+          window.aplayers[i].destroy()
+        }
+      }
+    }
+  }
+
+  const runMetingJS = () => {
+    typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+  }
+
+  btf.addGlobalFn('pjaxSend', destroyAplayer, 'destroyAplayer')
+  btf.addGlobalFn('pjaxComplete', loadMeting, 'runMetingJS')
+})()</script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>(() => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => fn())
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      const usePjax = true
+      false 
+        ? (usePjax ? pjax.loadUrl('/404.html') : window.location.href = '/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})()</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
