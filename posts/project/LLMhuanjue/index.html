@@ -1,0 +1,396 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>kaggle Detect hallucinations in LLMs | LittleBug</title><meta name="author" content="ShawnX"><meta name="copyright" content="ShawnX"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="赛题链接：https:&#x2F;&#x2F;www.kaggle.com&#x2F;competitions&#x2F;ml-olympiad-detect-hallucinations-in-llms 任务分析：这是一个文本分类任务，难点在于如何提取文本特征、建立文本关系特征，以及如何解决类别不平衡问题 运行环境、使用框架、语言 操作系统：Linux ubuntu 4.15.0-213-generic #224-Ubuntu SMP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="kaggle Detect hallucinations in LLMs">
+<meta property="og:url" content="http://imxxl.top/posts/project/LLMhuanjue/index.html">
+<meta property="og:site_name" content="LittleBug">
+<meta property="og:description" content="赛题链接：https:&#x2F;&#x2F;www.kaggle.com&#x2F;competitions&#x2F;ml-olympiad-detect-hallucinations-in-llms 任务分析：这是一个文本分类任务，难点在于如何提取文本特征、建立文本关系特征，以及如何解决类别不平衡问题 运行环境、使用框架、语言 操作系统：Linux ubuntu 4.15.0-213-generic #224-Ubuntu SMP">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://imxxl.top/img/avatar.jpg">
+<meta property="article:published_time" content="2025-01-28T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-05-14T12:03:30.986Z">
+<meta property="article:author" content="ShawnX">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://imxxl.top/img/avatar.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "kaggle Detect hallucinations in LLMs",
+  "url": "http://imxxl.top/posts/project/LLMhuanjue/",
+  "image": "http://imxxl.top/img/avatar.jpg",
+  "datePublished": "2025-01-28T16:00:00.000Z",
+  "dateModified": "2025-05-14T12:03:30.986Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "ShawnX",
+      "url": "http://imxxl.top/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/avatar.jpg"><link rel="canonical" href="http://imxxl.top/posts/project/LLMhuanjue/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          const hour = new Date().getHours()
+          const isNight = hour <= 6 || hour >= 18
+          if (theme === undefined) isNight ? activateDarkMode() : activateLightMode()
+          else theme === 'light' ? activateLightMode() : activateDarkMode()
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":100,"highlightFullpage":true,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'kaggle Detect hallucinations in LLMs',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/mouse.css"><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-image: url(/img/pokemon2.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">31</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">12</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">13</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 全部文章</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 鏈接</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">LittleBug</span></a><a class="nav-page-title" href="/"><span class="site-name">kaggle Detect hallucinations in LLMs</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 全部文章</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 鏈接</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">kaggle Detect hallucinations in LLMs<a class="post-edit-link" href="https://github.com/Shawn-Summer/hexo-source/edit/main/source/_posts/project/LLMhuanjue.md" title="编辑" target="_blank"><i class="fas fa-pencil-alt"></i></a></h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-01-28T16:00:00.000Z" title="发表于 2025-01-29 00:00:00">2025-01-29</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-05-14T12:03:30.986Z" title="更新于 2025-05-14 20:03:30">2025-05-14</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/project/">project</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">3.5k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>15分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>赛题链接：<a target="_blank" rel="noopener" href="https://www.kaggle.com/competitions/ml-olympiad-detect-hallucinations-in-llms">https://www.kaggle.com/competitions/ml-olympiad-detect-hallucinations-in-llms</a></p>
+<p>任务分析：这是一个文本分类任务，难点在于如何提取文本特征、建立文本关系特征，以及如何解决类别不平衡问题</p>
+<h2 id="运行环境、使用框架、语言">运行环境、使用框架、语言</h2>
+<p>操作系统：Linux ubuntu 4.15.0-213-generic #224-Ubuntu SMP Mon Jun 19 13:30:12 UTC 2023 x86_64 x86_64 x86_64 GNU/Linux</p>
+<p>硬件环境： Intel® Xeon® Gold 6226R CPU @ 2.90GHz +  NVIDIA GeForce RTX 3090 * 8 (CUDA Version: 12.4)</p>
+<p>语言和运行环境：python 3.9.21 (main, Dec 11 2024, 16:24:11) + jupyter notebook 7.2.2</p>
+<p>使用框架：pytorch 2.5.1+cu124</p>
+<p>lab2文件夹下，有6个文件：</p>
+<ul>
+<li><code>data_process.ipynb</code>：数据处理源代码</li>
+<li><code>StratifiedKFold.ipynb</code>：交叉验证，选择合理超参数源代码</li>
+<li><code>idea_model.ipynb</code>：训练模型，生成测试结果源代码</li>
+<li><code>submissions.csv</code>：测试结果</li>
+<li><code>lab2_report.pdf</code>：实验报告</li>
+</ul>
+<p>由于训练集和测试集文件太大，以下文件没有放入</p>
+<ul>
+<li><code>test.csv</code>：测试集</li>
+<li><code>train.csv</code>：训练集</li>
+<li><code>train_data.csv</code>：处理后的训练集</li>
+<li><code>test_data.csv</code>：处理后的测试集</li>
+<li><code>trained_model.pth</code>：模型权重</li>
+</ul>
+<h2 id="数据分析、特征设计、抽取、处理">数据分析、特征设计、抽取、处理</h2>
+<p>将训练集和测试集放到一块做特征处理，抛开<code>Target</code>和<code>Id</code>以外，特征有：<code>Prompt</code>和<code>Answer</code>。这两个特征都是长文本特征，所以说这个任务的关键就在于，如何处理文本。</p>
+<h3 id="简单文本特征抽取">简单文本特征抽取</h3>
+<p>新增3列基础特征，分别表示 Prompt长度，Answer长度 以及 Answer是否为空</p>
+<p>代码如下：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">feature_engineering</span>(<span class="params">df_in</span>): <span class="comment">#处理数据 新增3列特征：表示 Prompt长度，Answer长度 以及 Answer是否为空</span></span><br><span class="line">    df = df_in.copy()</span><br><span class="line">    df[<span class="string">&quot;Prompt_n&quot;</span>] = df[<span class="string">&quot;Prompt&quot;</span>].apply(<span class="keyword">lambda</span> x : <span class="built_in">len</span>(x.split())) <span class="comment">#新增两行 将表示 promp和 answer中词的个数</span></span><br><span class="line">    df[<span class="string">&quot;Answer_n&quot;</span>] = df[<span class="string">&quot;Answer&quot;</span>].apply(<span class="keyword">lambda</span> x : <span class="built_in">len</span>(<span class="built_in">str</span>(x).split()))</span><br><span class="line">    df[<span class="string">&quot;isna&quot;</span>] = <span class="number">0</span> <span class="comment">#新增一行 表示 Answer是否为NAN 是为1 不是为0</span></span><br><span class="line">    df.loc[df[<span class="string">&quot;Answer&quot;</span>].isna(), <span class="string">&quot;isna&quot;</span>] = <span class="number">1</span></span><br><span class="line">    df.loc[df[<span class="string">&quot;Answer&quot;</span>].isna(), <span class="string">&quot;Answer_n&quot;</span>] = <span class="number">0</span></span><br><span class="line">    df.loc[df[<span class="string">&quot;Answer&quot;</span>].isna(), <span class="string">&quot;Answer&quot;</span>] = <span class="string">&quot;NAN&quot;</span> <span class="comment">#将为nan的值替换为 NAN</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 对 &#x27;Prompt_n&#x27; 和 &#x27;Answer_n&#x27; 进行标准化：均值为 0，方差为 1</span></span><br><span class="line">    df[<span class="string">&#x27;Prompt_n&#x27;</span>] = (df[<span class="string">&#x27;Prompt_n&#x27;</span>] - df[<span class="string">&#x27;Prompt_n&#x27;</span>].mean()) / df[<span class="string">&#x27;Prompt_n&#x27;</span>].std()</span><br><span class="line">    df[<span class="string">&#x27;Answer_n&#x27;</span>] = (df[<span class="string">&#x27;Answer_n&#x27;</span>] - df[<span class="string">&#x27;Answer_n&#x27;</span>].mean()) / df[<span class="string">&#x27;Answer_n&#x27;</span>].std()</span><br><span class="line">    <span class="keyword">return</span> df</span><br></pre></td></tr></table></figure>
+<h3 id="tokenizer">tokenizer</h3>
+<p>tokenizer将句子分割成词元序列，建立一个字典，给每个词一个整型id，这一既能保持时序特征，又方便计算机处理。</p>
+<p>首先看一下，Prompt的句长和Answer的句长，可以发现长度大于512的Prompt和长度大于256的Answer都很少，所以在做tokenizer时，我们设置prompt的最大长度为512，Answer的最大长度为256。</p>
+<img src="/posts/project/LLMhuanjue/1.jpg" alt="image-20250129032011675" style="zoom: 50%;">
+<p>代码如下：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> transformers <span class="keyword">import</span> BertTokenizer</span><br><span class="line"></span><br><span class="line">max_len_prompt=<span class="number">512</span> <span class="comment">#prompt最长不超过 512</span></span><br><span class="line">max_len_answer=<span class="number">256</span> <span class="comment">#answer最长不超过 256</span></span><br><span class="line"><span class="comment"># 初始化 tokenizer</span></span><br><span class="line">model_name = <span class="string">&quot;huawei-noah/TinyBERT_General_4L_312D&quot;</span></span><br><span class="line">tokenizer = BertTokenizer.from_pretrained(model_name)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 对 df_train 中的每一行进行 tokenization</span></span><br><span class="line">prompt_encodings = tokenizer(df_data[<span class="string">&#x27;Prompt&#x27;</span>].tolist(), padding=<span class="literal">True</span>, truncation=<span class="literal">True</span>, return_tensors=<span class="string">&#x27;pt&#x27;</span>,max_length=max_len_prompt)</span><br><span class="line">answer_encodings = tokenizer(df_data[<span class="string">&#x27;Answer&#x27;</span>].tolist(), padding=<span class="literal">True</span>, truncation=<span class="literal">True</span>, return_tensors=<span class="string">&#x27;pt&#x27;</span>,max_length=max_len_answer)</span><br></pre></td></tr></table></figure>
+<h3 id="生成训练集和测试集">生成训练集和测试集</h3>
+<p>在源码文件<code>data_process.ipynb</code>中，将数据处理完之后，存储为<code>train_data.csv</code>和<code>test_data.csv</code>，分别为训练集和测试集</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;class &#x27;pandas.core.frame.DataFrame&#x27;&gt;</span><br><span class="line">RangeIndex: 16687 entries, 0 to 16686</span><br><span class="line">Columns: 1541 entries, Id to labels</span><br><span class="line">dtypes: float64(2), int32(1), int64(1538)</span><br><span class="line">memory usage: 196.1 MB</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;class &#x27;pandas.core.frame.DataFrame&#x27;&gt;</span><br><span class="line">RangeIndex: 11125 entries, 16687 to 27811</span><br><span class="line">Columns: 1540 entries, Id to Answer_attention_mask_255</span><br><span class="line">dtypes: float64(2), int64(1538)</span><br><span class="line">memory usage: 130.7 MB</span><br></pre></td></tr></table></figure>
+<p>训练集中最后一列为<code>label</code>，即<code>Target</code>，所以比测试集列数大1。</p>
+<p>其余的列，训练集和测试集是一样的，具体表示为：Id，Prompt_n, Answer_n, is_na, 后面紧跟prompt对应的token和mask_attention，这两者的宽度都为<code>max_len_prompt</code>,后面再紧跟answer对应的token和mask_attention，这两者的宽度都为<code>max_len_answer</code>。</p>
+<h2 id="应对：类别不平衡-–-focal-loss">应对：类别不平衡 – focal_loss</h2>
+<img src="/posts/project/LLMhuanjue/2.jpg" alt="image-20250129034315483" style="zoom:67%;">
+<p>可见标签1的占比远小于标签0。计算一下具体比值为5793 /894=17.6655480984。</p>
+<p>我使用focal loss来解决这一类别不平衡问题：</p>
+<p>Focal Loss 是一种专门为解决类别不平衡问题设计的损失函数，最早由 Facebook 的研究人员在论文《Focal Loss for Dense Object Detection》中提出。它常用于目标检测任务（例如 RetinaNet），以缓解正负样本比例失衡对模型训练的影响。</p>
+<p>Focal Loss 的数学公式如下：</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>F</mi><mi>L</mi><mo stretchy="false">(</mo><msub><mi>p</mi><mi>t</mi></msub><mo stretchy="false">)</mo><mo>=</mo><mo>−</mo><msub><mi>α</mi><mi>t</mi></msub><mo stretchy="false">(</mo><mn>1</mn><mo>−</mo><msub><mi>p</mi><mi>t</mi></msub><msup><mo stretchy="false">)</mo><mi>γ</mi></msup><mi>log</mi><mo>⁡</mo><mo stretchy="false">(</mo><msub><mi>p</mi><mi>t</mi></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">FL(p_t) = -\alpha_t (1 - p_t)^\gamma \log(p_t)
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">F</span><span class="mord mathnormal">L</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">−</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0037em;">α</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:-0.0037em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7144em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.05556em;">γ</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span></p>
+<ul>
+<li>
+<p><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mi>t</mi></msub></mrow><annotation encoding="application/x-tex">p_t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>: 样本的预测概率，表示模型预测的正确类别的概率。</p>
+<p>$ p_t = \begin{cases} p, &amp; \text{如果标签为正样本} \ 1-p, &amp; \text{如果标签为负样本} \end{cases} $</p>
+<p>其中 p 是正类别的预测概率。</p>
+</li>
+<li>
+<p><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>α</mi><mi>t</mi></msub></mrow><annotation encoding="application/x-tex">\alpha_t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0037em;">α</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:-0.0037em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>: 平衡因子，用于平衡正负样本的影响（可选）。</p>
+</li>
+<li>
+<p><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>γ</mi></mrow><annotation encoding="application/x-tex">\gamma</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.05556em;">γ</span></span></span></span>: 调节因子（Focusing Parameter），控制易分类样本的损失衰减速度。当 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>γ</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\gamma=0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.05556em;">γ</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span> 时，Focal Loss 等价于交叉熵损失。</p>
+</li>
+<li>
+<p><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mn>1</mn><mo>−</mo><msub><mi>p</mi><mi>t</mi></msub><msup><mo stretchy="false">)</mo><mi>γ</mi></msup></mrow><annotation encoding="application/x-tex">(1-p_t)^\gamma</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6644em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.05556em;">γ</span></span></span></span></span></span></span></span></span></span></span>: 难度加权项。对于易分类的样本（<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mi>t</mi></msub></mrow><annotation encoding="application/x-tex">p_t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 大），这一项接近 0，从而减少其对损失的贡献；对于难分类的样本（<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mi>t</mi></msub></mrow><annotation encoding="application/x-tex">p_t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 小），这一项较大，从而增加其对损失的贡献。</p>
+</li>
+</ul>
+<p>代码如下：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">FocalLoss</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, alpha, gamma=<span class="number">2</span>, reduction=<span class="string">&#x27;mean&#x27;</span></span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        alpha: tensor数组 (num_label,1)</span></span><br><span class="line"><span class="string">        gamma: 难易样本调节因子。</span></span><br><span class="line"><span class="string">        reduction: 损失的聚合方式，支持 &#x27;mean&#x27;, &#x27;sum&#x27;, or &#x27;none&#x27;。</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="built_in">super</span>(FocalLoss, <span class="variable language_">self</span>).__init__()</span><br><span class="line">        <span class="variable language_">self</span>.alpha = alpha</span><br><span class="line">        <span class="variable language_">self</span>.gamma = gamma</span><br><span class="line">        <span class="variable language_">self</span>.reduction = reduction</span><br><span class="line">            </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, pred, target</span>):</span><br><span class="line">        <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">        pred: tensor数组 (batch_size,num_labels) 每个种类的预测概率 （不一定softmax）</span></span><br><span class="line"><span class="string">        target: tensor数组 (batch_size,) 真实标签</span></span><br><span class="line"><span class="string">        &#x27;&#x27;&#x27;</span></span><br><span class="line">        device = target.device  <span class="comment"># 使用 logits_prompt 的设备，或者根据需要选择一个设备</span></span><br><span class="line">        <span class="comment"># 确保 target 和 self.alpha 都在同一个设备上</span></span><br><span class="line">        <span class="variable language_">self</span>.alpha = <span class="variable language_">self</span>.alpha.to(device)</span><br><span class="line">        </span><br><span class="line">        pred = F.softmax(pred, dim=<span class="number">1</span>)  <span class="comment"># 应用 softmax</span></span><br><span class="line">        pred=pred.gather(<span class="number">1</span>, target.unsqueeze(<span class="number">1</span>))  <span class="comment"># 使用 target 索引 pred，每个元素选择其对应类别的概率 (batch_size,1)</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># Focal Loss 计算公式</span></span><br><span class="line">        loss = -(<span class="number">1</span> - pred) ** <span class="variable language_">self</span>.gamma * torch.log(pred)  <span class="comment"># -(1-p)^gamma * log(p) (batch_size,1)</span></span><br><span class="line">        selected_alpha = torch.matmul(F.one_hot(target, num_classes=<span class="number">2</span>).<span class="built_in">float</span>(), <span class="variable language_">self</span>.alpha)  <span class="comment"># 计算每个pred对应的alpha (batch_size,1)</span></span><br><span class="line">        loss = loss * selected_alpha</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> <span class="variable language_">self</span>.reduction == <span class="string">&#x27;mean&#x27;</span>:</span><br><span class="line">            <span class="keyword">return</span> torch.mean(loss)</span><br><span class="line">        <span class="keyword">elif</span> <span class="variable language_">self</span>.reduction == <span class="string">&#x27;sum&#x27;</span>:</span><br><span class="line">            <span class="keyword">return</span> torch.<span class="built_in">sum</span>(loss)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> loss</span><br></pre></td></tr></table></figure>
+<h2 id="模型设计">模型设计</h2>
+<p>如下图所示，给定prompt，大语言模型（LLM）可以生成answer和hallucinations，所以我认为，hallucinations直接由Prompt和LLM决定，而answer和hallucination之间应该是互相验证的关系。</p>
+<img src="/posts/project/LLMhuanjue/3.jpg" alt="Untitled Diagram.drawio" style="zoom: 80%;">
+<p>基于以上思想，我设计了如下模型结构：</p>
+<img src="/posts/project/LLMhuanjue/Diagram.png" alt="Untitled Diagram.drawio (1)" style="zoom:80%;">
+<p>loss函数由两个分类器的损失组成，一个是直接基于prompt生成的分类器，另一个是prompt结合answer后生成的分类器。这是因为，我觉得hallucination是直接由prompt决定的，所以直接训练一个基于prompt的分类器，为了加强这个分类器，将prompt混合answer信息，再训练一个分类器，即可。最终我们可以使用左上角的分类器做文本分类。</p>
+<p>代码如下：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">CustomModel</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, model_name, num_labels</span>):</span><br><span class="line">        <span class="built_in">super</span>(CustomModel, <span class="variable language_">self</span>).__init__()</span><br><span class="line">        <span class="variable language_">self</span>.bert_1= BertModel.from_pretrained(model_name)</span><br><span class="line">        <span class="variable language_">self</span>.bert_2= BertModel.from_pretrained(model_name)</span><br><span class="line">        <span class="variable language_">self</span>.cross_attention = CrossAttention(<span class="variable language_">self</span>.bert_1.config.hidden_size)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Extend classifiers to handle concatenated features</span></span><br><span class="line">        <span class="variable language_">self</span>.classifier_prompt = nn.Linear(<span class="variable language_">self</span>.bert_1.config.hidden_size + <span class="number">1</span>, num_labels)  <span class="comment"># +1 for prompt_length_feature</span></span><br><span class="line">        <span class="variable language_">self</span>.classifier_mixed = nn.Linear(<span class="variable language_">self</span>.bert_2.config.hidden_size + <span class="number">3</span>, num_labels)  <span class="comment"># +3 for answer_length_feature ,isna_feature and prompt_length_feature</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 由于在多卡训练的时候，不希望返回标量，所以使用未平均过的loss，返回每个样本对应的loss，这是一个tensor</span></span><br><span class="line">        <span class="comment"># 这样子做数据并行的时候，最后模型的输出在 dim0上面concat起来，得到的loss就是所有样本的loss</span></span><br><span class="line">        <span class="variable language_">self</span>.loss_fn = FocalLoss(alpha,reduction=<span class="literal">None</span>) </span><br><span class="line">        </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params"></span></span><br><span class="line"><span class="params">        self,</span></span><br><span class="line"><span class="params">        prompt_input_ids,</span></span><br><span class="line"><span class="params">        prompt_attention_mask,</span></span><br><span class="line"><span class="params">        answer_input_ids,</span></span><br><span class="line"><span class="params">        answer_attention_mask,</span></span><br><span class="line"><span class="params">        prompt_length_feature,</span></span><br><span class="line"><span class="params">        answer_length_feature,</span></span><br><span class="line"><span class="params">        answer_isna_feature,</span></span><br><span class="line"><span class="params">        labels=<span class="literal">None</span></span></span><br><span class="line"><span class="params">    </span>):</span><br><span class="line">        <span class="comment"># Generate hidden states for Prompt</span></span><br><span class="line">        prompt_outputs = <span class="variable language_">self</span>.bert_1(input_ids=prompt_input_ids, attention_mask=prompt_attention_mask)</span><br><span class="line">        prompt_hiddens = prompt_outputs.last_hidden_state  <span class="comment"># (batch_size, seq_len, hidden_size)</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># Generate hidden states for Answer</span></span><br><span class="line">        answer_outputs = <span class="variable language_">self</span>.bert_2(input_ids=answer_input_ids, attention_mask=answer_attention_mask)</span><br><span class="line">        answer_hiddens = answer_outputs.last_hidden_state  <span class="comment"># (batch_size, seq_len, hidden_size)</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># Classify based on Prompt hidden states (CLS token)</span></span><br><span class="line">        cls_prompt = prompt_hiddens[:, <span class="number">0</span>, :]  <span class="comment"># (batch_size, hidden_size)</span></span><br><span class="line">        cls_prompt_with_feature = torch.cat([cls_prompt, prompt_length_feature], dim=-<span class="number">1</span>)  <span class="comment"># Concatenate prompt_length_feature</span></span><br><span class="line">        logits_prompt = <span class="variable language_">self</span>.classifier_prompt(cls_prompt_with_feature) <span class="comment">#仅通过prompt预测label</span></span><br><span class="line">        loss_f1 = <span class="variable language_">self</span>.loss_fn(logits_prompt, labels) <span class="keyword">if</span> labels <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span> <span class="keyword">else</span> <span class="literal">None</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># Cross-Attention between Prompt and Answer，将prompt信息和answer信息混合</span></span><br><span class="line">        attended_output = <span class="variable language_">self</span>.cross_attention(prompt_hiddens, answer_hiddens)  <span class="comment"># (batch_size, seq_len, hidden_size)</span></span><br><span class="line">        cls_mixed = attended_output[:, <span class="number">0</span>, :]  <span class="comment"># Use CLS token of the attended output</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># Classify based on mixed hidden states</span></span><br><span class="line">        cls_mixed_with_features = torch.cat([cls_mixed, answer_length_feature, answer_isna_feature, prompt_length_feature], dim=-<span class="number">1</span>)  <span class="comment"># Concatenate additional features</span></span><br><span class="line">        logits_mixed = <span class="variable language_">self</span>.classifier_mixed(cls_mixed_with_features) <span class="comment">#通过prompt和answer的混合特征 预测label</span></span><br><span class="line">        loss_f2 = <span class="variable language_">self</span>.loss_fn(logits_mixed, labels) <span class="keyword">if</span> labels <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span> <span class="keyword">else</span> <span class="literal">None</span></span><br><span class="line">        <span class="comment"># Total loss</span></span><br><span class="line">        <span class="keyword">if</span> labels <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            total_loss = w_1 * loss_f1 + w_2 * loss_f2</span><br><span class="line">            <span class="keyword">return</span> total_loss, logits_prompt, logits_mixed</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="comment"># If labels are not provided, return the logits only (for inference)</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">None</span>,logits_prompt, logits_mixed</span><br></pre></td></tr></table></figure>
+<h3 id="TinyBert">TinyBert</h3>
+<p>使用的TinyBert是huggingface中的<code>huawei-noah/TinyBERT_General_4L_312D</code>： <a target="_blank" rel="noopener" href="https://huggingface.co/huawei-noah/TinyBERT_General_4L_312D%E3%80%82">https://huggingface.co/huawei-noah/TinyBERT_General_4L_312D。</a></p>
+<p>“Huawei Noah’s TinyBERT_General_4L_312D” 是一种轻量级的预训练语言模型，它是基于 Transformer 的架构，旨在为各种自然语言处理（NLP）任务提供高效的解决方案，同时保持较低的计算资源消耗。</p>
+<p>TinyBERT 是 Huawei Noah 提出的一个轻量级的 BERT 变种，它通过模型压缩技术（如知识蒸馏）将 BERT 模型的大小和计算复杂度大幅度减少，同时尽可能保留 BERT 的性能。TinyBERT 适用于资源受限的环境，如移动设备、嵌入式设备等。</p>
+<p><strong>模型结构</strong>：</p>
+<ul>
+<li><strong>4 层（4L）</strong>：该模型有 4 层 Transformer 编码器，相较于 BERT 的 12 层，它显著减少了模型的规模，使得推理速度更快。</li>
+<li><strong>312 维（312D）</strong>：每一层的隐藏层维度为 312，相比 BERT 的 768 维度进一步减少了模型的存储需求。</li>
+</ul>
+<p>对于给定文本的tokens和掩码，TinyBert能生成包含文本上下文信息的隐藏层输出：(batch_size, seq_len, hidden_size)</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="variable language_">self</span>.bert_1(input_ids=prompt_input_ids, attention_mask=prompt_attention_mask)</span><br><span class="line">prompt_hiddens = prompt_outputs.last_hidden_state</span><br></pre></td></tr></table></figure>
+<p>可以通过初始字符’[cls]'对应的信息，获取上下文信息，可用于文本分类</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">cls_prompt = prompt_hiddens[:, <span class="number">0</span>, :] <span class="comment">#(batch_size, hidden_size)</span></span><br></pre></td></tr></table></figure>
+<h2 id="训练模型">训练模型</h2>
+<h3 id="使用交叉验证来选择合理模型">使用交叉验证来选择合理模型</h3>
+<p>源码文件’StratifiedKFold.ipynb’中，定义了模型和一系列超参数，并采用层次化交叉验证来选择合理的超参数,代码如下：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">stratified_k_fold_cross_validation</span>(<span class="params">model, dataset, labels, k=<span class="number">5</span>, num_epochs=<span class="number">3</span>, batch_size=<span class="number">800</span>, device=<span class="literal">None</span></span>):</span><br><span class="line">    <span class="comment"># StratifiedKFold 实例化，确保标签分布相同</span></span><br><span class="line">    skf = StratifiedKFold(n_splits=k, shuffle=<span class="literal">True</span>, random_state=<span class="number">42</span>)</span><br><span class="line">    all_losses = []</span><br><span class="line">    all_aucs = []</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 将模型包装成多卡训练模式</span></span><br><span class="line">    <span class="keyword">if</span> torch.cuda.device_count() &gt; <span class="number">1</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;Using <span class="subst">&#123;torch.cuda.device_count()&#125;</span> GPUs!&quot;</span>)</span><br><span class="line">        model = torch.nn.DataParallel(model)  <span class="comment"># 多卡训练</span></span><br><span class="line"></span><br><span class="line">    initial_model_params = model.state_dict()</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># StratifiedKFold 划分并训练</span></span><br><span class="line">    <span class="keyword">for</span> fold, (train_idx, val_idx) <span class="keyword">in</span> <span class="built_in">enumerate</span>(skf.split(dataset, labels)):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;Training fold <span class="subst">&#123;fold + <span class="number">1</span>&#125;</span>/<span class="subst">&#123;k&#125;</span>...&quot;</span>)</span><br><span class="line">        <span class="comment">#参数初始化</span></span><br><span class="line">        model.load_state_dict(initial_model_params)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 根据索引划分训练集和验证集</span></span><br><span class="line">        train_subset = Subset(dataset, train_idx)</span><br><span class="line">        val_subset = Subset(dataset, val_idx)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 创建 DataLoader</span></span><br><span class="line">        train_loader = DataLoader(train_subset, batch_size=batch_size, shuffle=<span class="literal">True</span>)</span><br><span class="line">        val_loader = DataLoader(val_subset, batch_size=batch_size, shuffle=<span class="literal">False</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 创建优化器</span></span><br><span class="line">        optimizer = AdamW(model.parameters(), lr=<span class="number">5e-5</span>)</span><br><span class="line">        scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, <span class="string">&#x27;min&#x27;</span>) <span class="comment">#逐渐降低学习率</span></span><br><span class="line"></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 将模型设置到设备</span></span><br><span class="line">        model.to(device)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 开始训练</span></span><br><span class="line">        <span class="keyword">for</span> epoch <span class="keyword">in</span> <span class="built_in">range</span>(num_epochs):</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f&quot;Epoch <span class="subst">&#123;epoch + <span class="number">1</span>&#125;</span>/<span class="subst">&#123;num_epochs&#125;</span>&quot;</span>)</span><br><span class="line">            <span class="comment"># 训练模型</span></span><br><span class="line">            train_loss = train(model, train_loader, optimizer, device)</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f&quot;train_loss: <span class="subst">&#123;train_loss&#125;</span>&quot;</span>)</span><br><span class="line">            <span class="comment"># 验证模型</span></span><br><span class="line">            val_loss,auc = evaluate(model, val_loader, device)</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f&quot;Validation loss: <span class="subst">&#123;val_loss&#125;</span>, AUC: <span class="subst">&#123;auc&#125;</span>&quot;</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 记录每一轮的损失（可以选择记录更细的指标）</span></span><br><span class="line">        all_aucs.append(auc)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 返回每一轮auc的平均值</span></span><br><span class="line">    avg_aucs = <span class="built_in">sum</span>(all_aucs) / <span class="built_in">len</span>(all_aucs)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;Average auc over <span class="subst">&#123;k&#125;</span> folds: <span class="subst">&#123;avg_aucs&#125;</span>&quot;</span>)</span><br><span class="line">    <span class="keyword">return</span> avg_aucs</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">train</span>(<span class="params">model, train_loader, optimizer, device</span>):</span><br><span class="line">    model.train()</span><br><span class="line">    total_loss = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> batch <span class="keyword">in</span> train_loader:</span><br><span class="line">        batch = &#123;k: v.to(device) <span class="keyword">for</span> k, v <span class="keyword">in</span> batch.items()&#125;</span><br><span class="line">        total_loss, _,_ = model(</span><br><span class="line">            prompt_input_ids=batch[<span class="string">&#x27;prompt_input_ids&#x27;</span>],</span><br><span class="line">            prompt_attention_mask=batch[<span class="string">&#x27;prompt_attention_mask&#x27;</span>],</span><br><span class="line">            answer_input_ids=batch[<span class="string">&#x27;answer_input_ids&#x27;</span>],</span><br><span class="line">            answer_attention_mask=batch[<span class="string">&#x27;answer_attention_mask&#x27;</span>],</span><br><span class="line">            prompt_length_feature=batch[<span class="string">&#x27;prompt_length_feature&#x27;</span>],</span><br><span class="line">            answer_length_feature=batch[<span class="string">&#x27;answer_length_feature&#x27;</span>],</span><br><span class="line">            answer_isna_feature=batch[<span class="string">&#x27;answer_isna_feature&#x27;</span>],</span><br><span class="line">            labels=batch[<span class="string">&#x27;labels&#x27;</span>]</span><br><span class="line">        )</span><br><span class="line">        <span class="comment">#由于使用了多卡训练，total_loss为所有GPU上面样本对应的loss，是个tensor</span></span><br><span class="line">        total_loss=torch.mean(total_loss)</span><br><span class="line">        optimizer.zero_grad()</span><br><span class="line">        total_loss.backward()</span><br><span class="line">        optimizer.step()</span><br><span class="line">        total_loss += total_loss.item()</span><br><span class="line">    </span><br><span class="line">    avg_loss = total_loss / <span class="built_in">len</span>(train_loader)</span><br><span class="line">    <span class="keyword">return</span> avg_loss</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> roc_auc_score</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">evaluate</span>(<span class="params">model, eval_loader, device</span>):</span><br><span class="line">    model.<span class="built_in">eval</span>()</span><br><span class="line">    total_loss = <span class="number">0</span></span><br><span class="line">    all_labels = []</span><br><span class="line">    all_preds = []</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">with</span> torch.no_grad():</span><br><span class="line">        <span class="keyword">for</span> batch <span class="keyword">in</span> eval_loader:</span><br><span class="line">            batch = &#123;k: v.to(device) <span class="keyword">for</span> k, v <span class="keyword">in</span> batch.items()&#125;</span><br><span class="line">            total_loss,_,logits_mixed  = model(</span><br><span class="line">                prompt_input_ids=batch[<span class="string">&#x27;prompt_input_ids&#x27;</span>],</span><br><span class="line">                prompt_attention_mask=batch[<span class="string">&#x27;prompt_attention_mask&#x27;</span>],</span><br><span class="line">                answer_input_ids=batch[<span class="string">&#x27;answer_input_ids&#x27;</span>],</span><br><span class="line">                answer_attention_mask=batch[<span class="string">&#x27;answer_attention_mask&#x27;</span>],</span><br><span class="line">                prompt_length_feature=batch[<span class="string">&#x27;prompt_length_feature&#x27;</span>],</span><br><span class="line">                answer_length_feature=batch[<span class="string">&#x27;answer_length_feature&#x27;</span>],</span><br><span class="line">                answer_isna_feature=batch[<span class="string">&#x27;answer_isna_feature&#x27;</span>],</span><br><span class="line">                labels=batch[<span class="string">&#x27;labels&#x27;</span>]</span><br><span class="line">            )</span><br><span class="line">            </span><br><span class="line">            logits_mixed = F.softmax(logits_mixed, dim=-<span class="number">1</span>)</span><br><span class="line">            <span class="comment"># 计算损失</span></span><br><span class="line">            total_loss = torch.mean(total_loss)</span><br><span class="line">            total_loss += total_loss.item()</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 收集标签和预测值用于AUC计算</span></span><br><span class="line">            all_labels.append(batch[<span class="string">&#x27;labels&#x27;</span>].cpu().numpy())</span><br><span class="line">            all_preds.append(logits_mixed.cpu().numpy())  <span class="comment"># 假设 logits_mixed 是模型的预测输出</span></span><br><span class="line">            </span><br><span class="line">    <span class="comment"># 将所有批次的标签和预测结果合并</span></span><br><span class="line">    all_labels = np.concatenate(all_labels)</span><br><span class="line">    all_preds = np.concatenate(all_preds)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 计算AUC</span></span><br><span class="line">    auc = roc_auc_score(all_labels, all_preds[:, <span class="number">1</span>])  <span class="comment"># 选择第二列作为正类概率（假设是二分类）</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 计算平均损失</span></span><br><span class="line">    avg_loss = total_loss / <span class="built_in">len</span>(eval_loader)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> avg_loss, auc</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>在选定的一组合理的超参数下，模型在验证集上的auc值为0.8241：</p>
+<img src="/posts/project/LLMhuanjue/4.jpg" alt="image-20250129070135142" style="zoom:80%;">
+<h3 id="重新训练模型">重新训练模型</h3>
+<p>选好超参数后，模型需要在完整训练集上重新训练，这部分代码，位于源文件<code>idea_model.ipynb</code>中，其中源文件中<code>trained_model.pth</code>为训练完的权重。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">train</span>(<span class="params">model, train_loader, device</span>):</span><br><span class="line">    <span class="keyword">if</span> torch.cuda.device_count() &gt; <span class="number">1</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;Using <span class="subst">&#123;torch.cuda.device_count()&#125;</span> GPUs!&quot;</span>)</span><br><span class="line">        model = torch.nn.DataParallel(model)  <span class="comment"># 多卡训练</span></span><br><span class="line"></span><br><span class="line">    optimizer = AdamW(model.parameters(), lr=<span class="number">5e-5</span>)</span><br><span class="line">    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, <span class="string">&#x27;min&#x27;</span>) <span class="comment">#逐渐降低学习率</span></span><br><span class="line">    <span class="comment"># 将模型设置到设备</span></span><br><span class="line">    model.to(device)</span><br><span class="line">    model.train()</span><br><span class="line">    <span class="keyword">for</span> epoch <span class="keyword">in</span> <span class="built_in">range</span>(num_epochs):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;Epoch <span class="subst">&#123;epoch + <span class="number">1</span>&#125;</span>/<span class="subst">&#123;num_epochs&#125;</span>&quot;</span>)</span><br><span class="line">        total_loss = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> batch <span class="keyword">in</span> train_loader:</span><br><span class="line">            batch = &#123;k: v.to(device) <span class="keyword">for</span> k, v <span class="keyword">in</span> batch.items()&#125;</span><br><span class="line">            total_loss, _,_ = model(</span><br><span class="line">                prompt_input_ids=batch[<span class="string">&#x27;prompt_input_ids&#x27;</span>],</span><br><span class="line">                prompt_attention_mask=batch[<span class="string">&#x27;prompt_attention_mask&#x27;</span>],</span><br><span class="line">                answer_input_ids=batch[<span class="string">&#x27;answer_input_ids&#x27;</span>],</span><br><span class="line">                answer_attention_mask=batch[<span class="string">&#x27;answer_attention_mask&#x27;</span>],</span><br><span class="line">                prompt_length_feature=batch[<span class="string">&#x27;prompt_length_feature&#x27;</span>],</span><br><span class="line">                answer_length_feature=batch[<span class="string">&#x27;answer_length_feature&#x27;</span>],</span><br><span class="line">                answer_isna_feature=batch[<span class="string">&#x27;answer_isna_feature&#x27;</span>],</span><br><span class="line">                labels=batch[<span class="string">&#x27;labels&#x27;</span>]</span><br><span class="line">            )</span><br><span class="line">            <span class="comment">#由于使用了多卡训练，total_loss为所有GPU上面样本对应的loss，是个tensor</span></span><br><span class="line">            total_loss=torch.mean(total_loss)</span><br><span class="line">            optimizer.zero_grad()</span><br><span class="line">            total_loss.backward()</span><br><span class="line">            optimizer.step()</span><br><span class="line">            total_loss += total_loss.item()</span><br><span class="line">        train_loss=total_loss / <span class="built_in">len</span>(train_loader)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;train_loss: <span class="subst">&#123;train_loss&#125;</span>&quot;</span>)</span><br><span class="line">        </span><br><span class="line">    model_save_path = <span class="string">&#x27;trained_model.pth&#x27;</span>  </span><br><span class="line">    torch.save(model.state_dict(), model_save_path) <span class="comment">#保存模型参数</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;Model saved to <span class="subst">&#123;model_save_path&#125;</span>&quot;</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="实验结果分析">实验结果分析</h2>
+<p>在源文件<code>idea_model.ipynb</code>中，最后使用测试集放到模型，输出的 <code>logits_mixed</code>，再加上一次<code>softmax</code>，形成不同标签的概率，然后依照此生成<code>submission.csv</code>文件。</p>
+<p>然后将这个文件上传到kaggle，得到分数，如下图：</p>
+<img src="/posts/project/LLMhuanjue/5.jpg" alt="image-20250129065456521" style="zoom:80%;">
+<p>这个分数和在交叉验证中得到的结果差不多。</p>
+<h2 id="参考文献">参考文献</h2>
+<p>无</p>
+</article><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/img/avatar.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/project/xujiazhiwei/" title="DataFountain-虚假职位招聘预测"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">DataFountain-虚假职位招聘预测</div></div><div class="info-2"><div class="info-item-1">赛题链接：https://www.datafountain.cn/competitions/448 任务分析：这是一个分类任务，难点在于，第一，数据集难以处理，第二，类别不平衡，负类样本占比达到95% 运行环境、使用框架、语言 操作系统：Linux ubuntu 4.15.0-213-generic #224-Ubuntu SMP Mon Jun 19 13:30:12 UTC 2023 x86_64 x86_64 x86_64 GNU/Linux 硬件环境： Intel® Xeon® Gold 6226R CPU @ 2.90GHz +  NVIDIA GeForce RTX 3090 * 1 (CUDA Version: 12.4) 语言和运行环境：python 3.9.21 (main, Dec 11 2024, 16:24:11) + jupyter notebook 7.2.2 使用框架：pytorch 2.5.1+cu124 数据分析、特征设计、抽取、处理 数据处理部分的代码在data_processing.ipynb中，处理好的数据存储在...</div></div></div></a><a class="pagination-related" href="/posts/llm/localllm/" title="使用ollama本地部署大模型"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">使用ollama本地部署大模型</div></div><div class="info-2"><div class="info-item-1">安装ollama ollama是一种本地大模型管理工具 brew install ollama --cask 常见的 ollama 指令有： ollama list：显示模型列表。ollama show [model]：显示模型的信息ollama pull [model]：拉取模型ollama push [model]：推送模型ollama cp [model]：拷贝一个模型ollama rm [model]：删除一个模型ollama run [model]：运行一个模型ollama serve：启动本地 LLM 服务器 当使用ollama serve指令后，显示如下信息： 2025/03/26 13:23:33 routes.go:1230: INFO server config env=&quot;map[HTTPS_PROXY: HTTP_PROXY: NO_PROXY: OLLAMA_CONTEXT_LENGTH:2048 OLLAMA_DEBUG:false OLLAMA_FLASH_ATTENTION:false OLLAMA_GPU_OVERHEAD:0...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%90%E8%A1%8C%E7%8E%AF%E5%A2%83%E3%80%81%E4%BD%BF%E7%94%A8%E6%A1%86%E6%9E%B6%E3%80%81%E8%AF%AD%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">运行环境、使用框架、语言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E3%80%81%E7%89%B9%E5%BE%81%E8%AE%BE%E8%AE%A1%E3%80%81%E6%8A%BD%E5%8F%96%E3%80%81%E5%A4%84%E7%90%86"><span class="toc-number">2.</span> <span class="toc-text">数据分析、特征设计、抽取、处理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%80%E5%8D%95%E6%96%87%E6%9C%AC%E7%89%B9%E5%BE%81%E6%8A%BD%E5%8F%96"><span class="toc-number">2.1.</span> <span class="toc-text">简单文本特征抽取</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#tokenizer"><span class="toc-number">2.2.</span> <span class="toc-text">tokenizer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E8%AE%AD%E7%BB%83%E9%9B%86%E5%92%8C%E6%B5%8B%E8%AF%95%E9%9B%86"><span class="toc-number">2.3.</span> <span class="toc-text">生成训练集和测试集</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BA%94%E5%AF%B9%EF%BC%9A%E7%B1%BB%E5%88%AB%E4%B8%8D%E5%B9%B3%E8%A1%A1-%E2%80%93-focal-loss"><span class="toc-number">3.</span> <span class="toc-text">应对：类别不平衡 – focal_loss</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E5%9E%8B%E8%AE%BE%E8%AE%A1"><span class="toc-number">4.</span> <span class="toc-text">模型设计</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#TinyBert"><span class="toc-number">4.1.</span> <span class="toc-text">TinyBert</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B"><span class="toc-number">5.</span> <span class="toc-text">训练模型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E4%BA%A4%E5%8F%89%E9%AA%8C%E8%AF%81%E6%9D%A5%E9%80%89%E6%8B%A9%E5%90%88%E7%90%86%E6%A8%A1%E5%9E%8B"><span class="toc-number">5.1.</span> <span class="toc-text">使用交叉验证来选择合理模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%8D%E6%96%B0%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B"><span class="toc-number">5.2.</span> <span class="toc-text">重新训练模型</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C%E5%88%86%E6%9E%90"><span class="toc-number">6.</span> <span class="toc-text">实验结果分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="toc-number">7.</span> <span class="toc-text">参考文献</span></a></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2025 By ShawnX</div><div class="footer_custom_text">Hi, welcome to my blog</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"></div><div id="rightside-config-show"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(async () => {
+  const showKatex = () => {
+    document.querySelectorAll('#article-container .katex').forEach(el => el.classList.add('katex-show'))
+  }
+
+  if (!window.katex_js_css) {
+    window.katex_js_css = true
+    await btf.getCSS('https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css')
+    if (true) {
+      await btf.getScript('https://cdn.jsdelivr.net/npm/katex/dist/contrib/copy-tex.min.js')
+    }
+  }
+
+  showKatex()
+})()</script><script>(() => {
+  const runMermaid = ele => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    ele.forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const mermaidThemeConfig = `%%{init:{ 'theme':'${theme}'}}%%\n`
+      const mermaidID = `mermaid-${index}`
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+      const renderMermaid = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      // mermaid v9 and v10 compatibility
+      typeof renderFn === 'string' ? renderMermaid(renderFn) : renderFn.then(({ svg }) => renderMermaid(svg))
+    })
+  }
+
+  const codeToMermaid = () => {
+    const codeMermaidEle = document.querySelectorAll('pre > code.mermaid')
+    if (codeMermaidEle.length === 0) return
+
+    codeMermaidEle.forEach(ele => {
+      const preEle = document.createElement('pre')
+      preEle.className = 'mermaid-src'
+      preEle.hidden = true
+      preEle.textContent = ele.textContent
+      const newEle = document.createElement('div')
+      newEle.className = 'mermaid-wrap'
+      newEle.appendChild(preEle)
+      ele.parentNode.replaceWith(newEle)
+    })
+  }
+
+  const loadMermaid = () => {
+    if (false) codeToMermaid()
+    const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+    if ($mermaid.length === 0) return
+
+    const runMermaidFn = () => runMermaid($mermaid)
+    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaidFn)
+  }
+
+  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><script src="js/sakura.js"></script> - <script src="/js/custom.js"></script> - <div class="aplayer no-destroy" data-id="12839720510" data-server="netease" data-type="playlist" data-fixed="true"> </div><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="false" data-text="coding..,debugging..,running..." data-fontsize="15px" data-random="false" async="async"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script>(() => {
+  const destroyAplayer = () => {
+    if (window.aplayers) {
+      for (let i = 0; i < window.aplayers.length; i++) {
+        if (!window.aplayers[i].options.fixed) {
+          window.aplayers[i].destroy()
+        }
+      }
+    }
+  }
+
+  const runMetingJS = () => {
+    typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+  }
+
+  btf.addGlobalFn('pjaxSend', destroyAplayer, 'destroyAplayer')
+  btf.addGlobalFn('pjaxComplete', loadMeting, 'runMetingJS')
+})()</script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>(() => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => fn())
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      const usePjax = true
+      false 
+        ? (usePjax ? pjax.loadUrl('/404.html') : window.location.href = '/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})()</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

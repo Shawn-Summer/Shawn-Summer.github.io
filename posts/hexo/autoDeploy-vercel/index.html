@@ -1,0 +1,352 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>hexo自动部署到githubPages和vercel | LittleBug</title><meta name="author" content="ShawnX"><meta name="copyright" content="ShawnX"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="准备 首先本地有一份博客源码，然后github上面要有两个仓库:hexo-source和xxxx.github.io.git。还需要一份密钥，用来链接github仓库，密钥可以是github token，也可以是ssh密钥。 github token 是用来以https链接仓库；ssh密钥是用来以ssh链接仓库，分为私钥和公钥，私钥放到本地，公钥放到github。 hexo-source仓库用来备">
+<meta property="og:type" content="article">
+<meta property="og:title" content="hexo自动部署到githubPages和vercel">
+<meta property="og:url" content="http://imxxl.top/posts/hexo/autoDeploy-vercel/index.html">
+<meta property="og:site_name" content="LittleBug">
+<meta property="og:description" content="准备 首先本地有一份博客源码，然后github上面要有两个仓库:hexo-source和xxxx.github.io.git。还需要一份密钥，用来链接github仓库，密钥可以是github token，也可以是ssh密钥。 github token 是用来以https链接仓库；ssh密钥是用来以ssh链接仓库，分为私钥和公钥，私钥放到本地，公钥放到github。 hexo-source仓库用来备">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://imxxl.top/img/avatar.jpg">
+<meta property="article:published_time" content="2024-11-14T13:32:43.000Z">
+<meta property="article:modified_time" content="2025-05-14T12:03:30.942Z">
+<meta property="article:author" content="ShawnX">
+<meta property="article:tag" content="github">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://imxxl.top/img/avatar.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "hexo自动部署到githubPages和vercel",
+  "url": "http://imxxl.top/posts/hexo/autoDeploy-vercel/",
+  "image": "http://imxxl.top/img/avatar.jpg",
+  "datePublished": "2024-11-14T13:32:43.000Z",
+  "dateModified": "2025-05-14T12:03:30.942Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "ShawnX",
+      "url": "http://imxxl.top/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/avatar.jpg"><link rel="canonical" href="http://imxxl.top/posts/hexo/autoDeploy-vercel/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          const hour = new Date().getHours()
+          const isNight = hour <= 6 || hour >= 18
+          if (theme === undefined) isNight ? activateDarkMode() : activateLightMode()
+          else theme === 'light' ? activateLightMode() : activateDarkMode()
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":100,"highlightFullpage":true,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'hexo自动部署到githubPages和vercel',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/mouse.css"><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-image: url(/img/pokemon2.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">31</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">12</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">13</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 全部文章</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 鏈接</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">LittleBug</span></a><a class="nav-page-title" href="/"><span class="site-name">hexo自动部署到githubPages和vercel</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 全部文章</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 鏈接</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">hexo自动部署到githubPages和vercel<a class="post-edit-link" href="https://github.com/Shawn-Summer/hexo-source/edit/main/source/_posts/hexo/autoDeploy-vercel.md" title="编辑" target="_blank"><i class="fas fa-pencil-alt"></i></a></h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-11-14T13:32:43.000Z" title="发表于 2024-11-14 21:32:43">2024-11-14</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-05-14T12:03:30.942Z" title="更新于 2025-05-14 20:03:30">2025-05-14</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/hexo/">hexo</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">1.2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>4分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="准备">准备</h2>
+<p>首先本地有一份博客源码，然后github上面要有两个仓库:<code>hexo-source</code>和<code>xxxx.github.io.git</code>。还需要一份密钥，用来链接github仓库，密钥可以是github token，也可以是ssh密钥。<br>
+github token 是用来以https链接仓库；ssh密钥是用来以ssh链接仓库，分为私钥和公钥，私钥放到本地，公钥放到github。</p>
+<p><code>hexo-source</code>仓库用来备份本地源码，将其设置为 <strong>private</strong> (毕竟，我不想其他人直接git clone就把我的博客系统抄袭了)。<br>
+<code>.gitignore</code>中的文件不需要备份，因为其中都是一些环境依赖，还有发布后的代码。</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="string">.DS_Store</span></span><br><span class="line"><span class="string">Thumbs.db</span></span><br><span class="line"><span class="string">db.json</span></span><br><span class="line"><span class="string">*.log</span></span><br><span class="line"><span class="string">node_modules/</span></span><br><span class="line"><span class="string">public/</span></span><br><span class="line"><span class="string">.deploy*/</span></span><br><span class="line"><span class="string">_multiconfig.yml</span></span><br></pre></td></tr></table></figure>
+<p><code>xxxx.github.io.git</code>是github Pages仓库，它一定是 <strong>public</strong> 的，使用<code>hexo generate</code>后生成的<code>public/</code>中的代码应当被放到这个仓库中。</p>
+<h2 id="建立本地代码和远程仓库的连接">建立本地代码和远程仓库的连接</h2>
+<p>以建立https链接为例：</p>
+<p>hexo根目录下的配置文件：<code>_config.yml</code>中需要设置deploy到我的github page仓库中</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">deploy:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line">  <span class="attr">repo:</span> <span class="string">https://your-github-token@github.com/your-githubname/your-githubname.github.io.git</span></span><br><span class="line">  <span class="attr">branch:</span> <span class="string">main</span></span><br></pre></td></tr></table></figure>
+<p><strong>注意：我使用的是github生成的token，并且采用https进行连接</strong></p>
+<p>我们还要将本地源码托管到远程仓库<code>hexo-source</code>中，下图就是<code>hexo-source</code>中存放的博客源码：</p>
+<img src="/posts/hexo/autoDeploy-vercel/1.jpg" alt="image-20241114230259082" style="zoom: 33%;">
+<p>至此，源码就放到<code>hexo-source</code>中，前端代码就放到<code>xxxx.github.io.git</code>中。</p>
+<h2 id="使用Github-actions自动部署Github-pages">使用Github actions自动部署Github pages</h2>
+<h3 id="使用github-token自动部署">使用github token自动部署</h3>
+<p>我希望就是，如果<code>hexo-source</code>中代码一旦发生变动，Github就能自动帮我生成对应的前端代码，然后将生成的前端页面push到<code>xxxx.github.io.git</code>仓库中。</p>
+<p>Github自动生成其实就是 actions该干的。</p>
+<p>我在<code>hexo-source</code>中新建一个action，或者在本地<code>.github\workflows\</code>中新建一个<code>deploy.yml</code>，里面写入：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">on:</span></span><br><span class="line">  <span class="attr">push:</span></span><br><span class="line">    <span class="attr">branches:</span> [ <span class="string">&quot;main&quot;</span> ]</span><br><span class="line"></span><br><span class="line"><span class="attr">jobs:</span></span><br><span class="line">  <span class="attr">build:</span></span><br><span class="line">    <span class="attr">runs-on:</span> <span class="string">ubuntu-latest</span></span><br><span class="line">    <span class="attr">steps:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">uses:</span> <span class="string">actions/checkout@v4</span></span><br><span class="line"></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Set</span> <span class="string">up</span> <span class="string">Node.js</span></span><br><span class="line">      <span class="attr">uses:</span> <span class="string">actions/setup-node@v4</span></span><br><span class="line">      <span class="attr">with:</span></span><br><span class="line">        <span class="attr">node-version:</span> <span class="string">&quot;20.18.0&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">npm</span> <span class="string">install,</span> <span class="string">build</span></span><br><span class="line">      <span class="attr">run:</span> <span class="string">|</span></span><br><span class="line"><span class="string">        npm install</span></span><br><span class="line"><span class="string"></span>        </span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Deploy</span> <span class="string">Blog</span></span><br><span class="line">      <span class="attr">run:</span> <span class="string">|</span></span><br><span class="line"><span class="string">        git config --global user.name &quot;Github Actions&quot;</span></span><br><span class="line"><span class="string">        git config --global user.email &quot;GithubActions@mail.cn&quot;</span></span><br><span class="line"><span class="string">        npm run deploy</span></span><br></pre></td></tr></table></figure>
+<p><strong>注意：不能使用<code>hexo clean</code>替换<code>npm run clean</code>，action环境中没装<code>hexo-cli</code>无法识别<code>hexo</code>指令</strong></p>
+<p>action帮我做的事情就是，它一旦发现有东西push到<code>hexo-source</code>中，就开始自动化部署：</p>
+<ol>
+<li>下载仓库代码到actions环境中</li>
+<li>安装Node.js</li>
+<li>使用<code>npm</code>安装依赖包</li>
+<li>执行<code>hexo clean&amp;&amp;hexo deploy</code></li>
+</ol>
+<p>当修改好<code>deploy.yml</code>后，我们提交，然后push到<code>hexo-source</code>仓库后，会激发action.</p>
+<img src="/posts/hexo/autoDeploy-vercel/2.jpg" alt="image-20241114230633453" style="zoom:50%;">
+<p>然后对应的<code>xxxx.github.io.git</code>仓库中就会生成：</p>
+<img src="/posts/hexo/autoDeploy-vercel/3.jpg" alt="image-20241114230917669" style="zoom:50%;">
+<h3 id="使用ssh密钥自动部署">使用ssh密钥自动部署</h3>
+<p>如果不使用github token，而使用ssh链接github，此时我们的<code>_config.yml</code>中的deploy配置也应该改为使用ssh链接</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">deploy:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line">  <span class="attr">repository:</span> <span class="string">git@github.com:your-name/your-name.github.io.git</span> </span><br><span class="line">  <span class="attr">branch:</span> <span class="string">main</span></span><br></pre></td></tr></table></figure>
+<p>我已经有一个密钥对，本地私钥放在:<code>~/.ssh/id_rsa</code>中，公钥就设置在github中，我想要把本地私钥放到action环境中，如何使得action环境接收私钥？我可以使用github secrets来保存本地私钥，然后传递给action环境<br>
+首先建立secret：<br>
+<img src="/posts/hexo/autoDeploy-vercel/5.jpg" alt="image-2024111511151234" style="zoom:50%;"></p>
+<p>以后就可以使用<code>$&#123;&#123; secrets.SSH_PRIVATE_KEY &#125;&#125;</code>来访问私钥。</p>
+<p>此时的<code>deploy.yml</code>内容：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">on:</span></span><br><span class="line">  <span class="attr">push:</span></span><br><span class="line">    <span class="attr">branches:</span> [ <span class="string">&quot;main&quot;</span> ]</span><br><span class="line"></span><br><span class="line"><span class="attr">jobs:</span></span><br><span class="line">  <span class="attr">build:</span></span><br><span class="line">    <span class="attr">runs-on:</span> <span class="string">ubuntu-latest</span></span><br><span class="line">    <span class="attr">steps:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">uses:</span> <span class="string">actions/checkout@v4</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 设置 SSH 密钥</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Set</span> <span class="string">up</span> <span class="string">SSH</span> <span class="string">key</span></span><br><span class="line">      <span class="attr">run:</span> <span class="string">|</span></span><br><span class="line"><span class="string">        mkdir -p ~/.ssh</span></span><br><span class="line"><span class="string">        echo &quot;$&#123;&#123; secrets.SSH_PRIVATE_KEY &#125;&#125;&quot; &gt; ~/.ssh/id_rsa</span></span><br><span class="line"><span class="string">        chmod 600 ~/.ssh/id_rsa</span></span><br><span class="line"><span class="string">        ssh-keyscan github.com &gt;&gt; ~/.ssh/known_hosts</span></span><br><span class="line"><span class="string"></span>        </span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Set</span> <span class="string">up</span> <span class="string">Node.js</span></span><br><span class="line">      <span class="attr">uses:</span> <span class="string">actions/setup-node@v4</span></span><br><span class="line">      <span class="attr">with:</span></span><br><span class="line">        <span class="attr">node-version:</span> <span class="string">&quot;20.18.0&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">npm</span> <span class="string">install,</span> <span class="string">build</span></span><br><span class="line">      <span class="attr">run:</span> <span class="string">|</span></span><br><span class="line"><span class="string">        npm install</span></span><br><span class="line"><span class="string"></span>        </span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Deploy</span> <span class="string">Blog</span></span><br><span class="line">      <span class="attr">run:</span> <span class="string">|</span></span><br><span class="line"><span class="string">        git config --global user.name &quot;Github Actions&quot;</span></span><br><span class="line"><span class="string">        git config --global user.email &quot;GithubActions@mail.cn&quot;</span></span><br><span class="line"><span class="string">        npm run deploy</span></span><br><span class="line"><span class="string"></span></span><br></pre></td></tr></table></figure>
+<h2 id="使用vercel管理前端代码">使用vercel管理前端代码</h2>
+<p>github pages服务每个用户只能用一个，所以非常宝贵，这时我们就会使用vercel来管理前端代码。</p>
+<p>vercel可以监控源码，一旦源码发生变化，就会重新生成前端代码，和github actions做一样的事情。</p>
+<p>简单来说，vercel直接连接<code>source-code</code>仓库，然后帮你自动部署到vercel中page。</p>
+<ol>
+<li>使用github账号注册vercel</li>
+<li>将github中<code>hexo-source</code>仓库导入vercel</li>
+<li>配置自动部署指令</li>
+</ol>
+<img src="/posts/hexo/autoDeploy-vercel/4.jpg" alt="image-20241114232000174" style="zoom: 40%;">
+<p><strong>注意：这里的不能使用 npm run deploy,因为deploy是部署到github中的，直接使用hexo server部署到vercel本地就行了</strong></p>
+<ol>
+<li>点击部署，我们就可以看到生成日志，最后生成前端代码</li>
+<li>点击vercel送的域名就可以看到自己的网站了</li>
+</ol>
+<p>至此，我以后一旦修改了<code>hexo-source</code>仓库中的代码，就会立即生成前端代码分别部署到github Pages页面和vercel中，这样子我甚至可以直接在github网站上面写文章。</p>
+</article><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/github/">github</a></div><div class="post-share"><div class="social-share" data-image="/img/avatar.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/pytorch/autograd/" title="pytorch中的自动微分"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">pytorch中的自动微分</div></div><div class="info-2"><div class="info-item-1">自动微分 我们知道在pytorch是支持自动微分的，也就是自动求导数，在深度学习框架中，我们一般会求loss函数关于可学习参数的偏导数。 import torchx = torch.arange(4.0)# x=tensor([0., 1., 2., 3.])x.requires_grad_(True)  # 等价于x=torch.arange(4.0,requires_grad=True)x.grad  # 默认值是None 如果我们将来需要计算关于某个 变量...</div></div></div></a><a class="pagination-related" href="/posts/environment-construction/git_tutorial/" title="Git的一些经验"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">Git的一些经验</div></div><div class="info-2"><div class="info-item-1">连接问题 参考：https://v2ex.com/t/843383#reply47 远程仓库有两种连接方式：https 和 ssh： https://github.com/xxx.gitgit@github.com:xxx.git 可以使用 git config -l 来看当前仓库对应的远程仓库的链接来分辨使用的是 ssh 连接，还是 https 链接。 我一般使用ssh key来完成身份验证,基本流程是,将公钥id.rsa.pub存储到GitHub账户上,私钥放到~/.ssh/id_rsa中,这样每次git push的时候,就会自动验证身份. 设置 Http Proxy git config --global http.proxy socks5://127.0.0.1:7890 事实上使用 socks5h 更佳，即 git config --global http.proxy socks5h://127.0.0.1:7890 h 代表 host ，包括了域名解析，即域名解析也强制走这个 proxy 。另外不需要配置 https.proxy，git...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%86%E5%A4%87"><span class="toc-number">1.</span> <span class="toc-text">准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BB%BA%E7%AB%8B%E6%9C%AC%E5%9C%B0%E4%BB%A3%E7%A0%81%E5%92%8C%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93%E7%9A%84%E8%BF%9E%E6%8E%A5"><span class="toc-number">2.</span> <span class="toc-text">建立本地代码和远程仓库的连接</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8Github-actions%E8%87%AA%E5%8A%A8%E9%83%A8%E7%BD%B2Github-pages"><span class="toc-number">3.</span> <span class="toc-text">使用Github actions自动部署Github pages</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8github-token%E8%87%AA%E5%8A%A8%E9%83%A8%E7%BD%B2"><span class="toc-number">3.1.</span> <span class="toc-text">使用github token自动部署</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8ssh%E5%AF%86%E9%92%A5%E8%87%AA%E5%8A%A8%E9%83%A8%E7%BD%B2"><span class="toc-number">3.2.</span> <span class="toc-text">使用ssh密钥自动部署</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8vercel%E7%AE%A1%E7%90%86%E5%89%8D%E7%AB%AF%E4%BB%A3%E7%A0%81"><span class="toc-number">4.</span> <span class="toc-text">使用vercel管理前端代码</span></a></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2025 By ShawnX</div><div class="footer_custom_text">Hi, welcome to my blog</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"></div><div id="rightside-config-show"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(async () => {
+  const showKatex = () => {
+    document.querySelectorAll('#article-container .katex').forEach(el => el.classList.add('katex-show'))
+  }
+
+  if (!window.katex_js_css) {
+    window.katex_js_css = true
+    await btf.getCSS('https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css')
+    if (true) {
+      await btf.getScript('https://cdn.jsdelivr.net/npm/katex/dist/contrib/copy-tex.min.js')
+    }
+  }
+
+  showKatex()
+})()</script><script>(() => {
+  const runMermaid = ele => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    ele.forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const mermaidThemeConfig = `%%{init:{ 'theme':'${theme}'}}%%\n`
+      const mermaidID = `mermaid-${index}`
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+      const renderMermaid = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      // mermaid v9 and v10 compatibility
+      typeof renderFn === 'string' ? renderMermaid(renderFn) : renderFn.then(({ svg }) => renderMermaid(svg))
+    })
+  }
+
+  const codeToMermaid = () => {
+    const codeMermaidEle = document.querySelectorAll('pre > code.mermaid')
+    if (codeMermaidEle.length === 0) return
+
+    codeMermaidEle.forEach(ele => {
+      const preEle = document.createElement('pre')
+      preEle.className = 'mermaid-src'
+      preEle.hidden = true
+      preEle.textContent = ele.textContent
+      const newEle = document.createElement('div')
+      newEle.className = 'mermaid-wrap'
+      newEle.appendChild(preEle)
+      ele.parentNode.replaceWith(newEle)
+    })
+  }
+
+  const loadMermaid = () => {
+    if (false) codeToMermaid()
+    const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+    if ($mermaid.length === 0) return
+
+    const runMermaidFn = () => runMermaid($mermaid)
+    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaidFn)
+  }
+
+  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><script src="js/sakura.js"></script> - <script src="/js/custom.js"></script> - <div class="aplayer no-destroy" data-id="12839720510" data-server="netease" data-type="playlist" data-fixed="true"> </div><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="false" data-text="coding..,debugging..,running..." data-fontsize="15px" data-random="false" async="async"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script>(() => {
+  const destroyAplayer = () => {
+    if (window.aplayers) {
+      for (let i = 0; i < window.aplayers.length; i++) {
+        if (!window.aplayers[i].options.fixed) {
+          window.aplayers[i].destroy()
+        }
+      }
+    }
+  }
+
+  const runMetingJS = () => {
+    typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+  }
+
+  btf.addGlobalFn('pjaxSend', destroyAplayer, 'destroyAplayer')
+  btf.addGlobalFn('pjaxComplete', loadMeting, 'runMetingJS')
+})()</script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>(() => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => fn())
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      const usePjax = true
+      false 
+        ? (usePjax ? pjax.loadUrl('/404.html') : window.location.href = '/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})()</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

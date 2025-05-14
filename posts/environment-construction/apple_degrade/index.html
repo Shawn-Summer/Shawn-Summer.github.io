@@ -1,0 +1,341 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>安装低版本 macOS，并尝试恢复数据 | LittleBug</title><meta name="author" content="ShawnX"><meta name="copyright" content="ShawnX"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="升级指定新版本的 macOS 非常简单，只需要在 app store 中下载并安装即可，这样也不会抹掉原来的数据。但是安装低版本 macOS，要想恢复数据会存在麻烦，因为 低版本的 macOS 可能不兼容高版本的数据，本文仅尝试恢复数据。 注意事项  为了防止降级失败，我们不能将原来的操作系统抹掉。 使用时间机器备份数据。 将低版本的 macOS 安装在磁盘新分区或外部存储设备中。  我们的总体思">
+<meta property="og:type" content="article">
+<meta property="og:title" content="安装低版本 macOS，并尝试恢复数据">
+<meta property="og:url" content="http://imxxl.top/posts/environment-construction/apple_degrade/index.html">
+<meta property="og:site_name" content="LittleBug">
+<meta property="og:description" content="升级指定新版本的 macOS 非常简单，只需要在 app store 中下载并安装即可，这样也不会抹掉原来的数据。但是安装低版本 macOS，要想恢复数据会存在麻烦，因为 低版本的 macOS 可能不兼容高版本的数据，本文仅尝试恢复数据。 注意事项  为了防止降级失败，我们不能将原来的操作系统抹掉。 使用时间机器备份数据。 将低版本的 macOS 安装在磁盘新分区或外部存储设备中。  我们的总体思">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://imxxl.top/img/avatar.jpg">
+<meta property="article:published_time" content="2025-01-04T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-05-14T12:03:30.942Z">
+<meta property="article:author" content="ShawnX">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://imxxl.top/img/avatar.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "安装低版本 macOS，并尝试恢复数据",
+  "url": "http://imxxl.top/posts/environment-construction/apple_degrade/",
+  "image": "http://imxxl.top/img/avatar.jpg",
+  "datePublished": "2025-01-04T16:00:00.000Z",
+  "dateModified": "2025-05-14T12:03:30.942Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "ShawnX",
+      "url": "http://imxxl.top/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/avatar.jpg"><link rel="canonical" href="http://imxxl.top/posts/environment-construction/apple_degrade/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          const hour = new Date().getHours()
+          const isNight = hour <= 6 || hour >= 18
+          if (theme === undefined) isNight ? activateDarkMode() : activateLightMode()
+          else theme === 'light' ? activateLightMode() : activateDarkMode()
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":100,"highlightFullpage":true,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '安装低版本 macOS，并尝试恢复数据',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/mouse.css"><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-image: url(/img/pokemon2.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">31</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">12</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">13</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 全部文章</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 鏈接</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">LittleBug</span></a><a class="nav-page-title" href="/"><span class="site-name">安装低版本 macOS，并尝试恢复数据</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 全部文章</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 鏈接</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">安装低版本 macOS，并尝试恢复数据<a class="post-edit-link" href="https://github.com/Shawn-Summer/hexo-source/edit/main/source/_posts/environment-construction/apple_degrade.md" title="编辑" target="_blank"><i class="fas fa-pencil-alt"></i></a></h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-01-04T16:00:00.000Z" title="发表于 2025-01-05 00:00:00">2025-01-05</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-05-14T12:03:30.942Z" title="更新于 2025-05-14 20:03:30">2025-05-14</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/environment-construction/">environment-construction</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">948</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>3分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>升级指定新版本的 macOS 非常简单，只需要在 app store 中下载并安装即可，这样也不会抹掉原来的数据。但是安装低版本 macOS，要想恢复数据会存在麻烦，因为 <strong>低版本的 macOS 可能不兼容高版本的数据</strong>，本文仅尝试恢复数据。</p>
+<h2 id="注意事项">注意事项</h2>
+<ol>
+<li>为了防止降级失败，我们不能将原来的操作系统抹掉。</li>
+<li>使用时间机器备份数据。</li>
+<li>将低版本的 macOS 安装在磁盘新分区或外部存储设备中。</li>
+</ol>
+<p>我们的总体思路是：安装低版本的 macOS，并使用迁移助手，从时间机器中恢复数据。</p>
+<h2 id="下载-macOS-安装包">下载 macOS 安装包</h2>
+<p>下载地址:<a target="_blank" rel="noopener" href="https://support.apple.com/zh-cn/102662">https://support.apple.com/zh-cn/102662</a>.<br>
+下载完成后，会得到一个应用程序包，我们会发现点击不了它，因为不能安装低版本 macOS，在 <code>xxx.app/Contents/Resources/</code> 目录下存在两个工具：</p>
+<ul>
+<li>createinstallmedia：制作 macOS 引导程序</li>
+<li>startosinstall：安装 macOS 操作系统</li>
+</ul>
+<p>macOS 引导程序和 macOS 操作系统是两个东西，前者是用来安装操作系统的。</p>
+<p>startosinstall 是无法使用的，因为 startosinstall 的 license 中规定，要安装的 macOS 不能低于当前启动宗卷的 macOS。</p>
+<p>我们可以使用 createinstallmedia 来将 macOS 引导程序安装在某个磁盘分区或者外部存储设备中，这样子在恢复模式中就可以使用该引导程序了。</p>
+<h2 id="mac中的-device、partition、container-和-volume-的概念">mac中的 device、partition、container 和 volume 的概念</h2>
+<p>参考：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/596119469">https://zhuanlan.zhihu.com/p/596119469</a></p>
+<p>device 是指存储设备：ssd固态硬盘和U盘等</p>
+<p>device 可以进行分区，即获得 partition，相当于将存储设备一分为二，获得两个存储设备。我们需要在分区中安装文件系统，不然无法使用。</p>
+<p>文件系统有：</p>
+<ul>
+<li>
+<p>APFS：apple file system，只有 macOS 可以识别的文件系统</p>
+</li>
+<li>
+<p>Mac OS extended（又称为 HFS+）：早期的苹果文件系统，目前仅用于存放 macOS 引导程序</p>
+</li>
+<li>
+<p>NTFS、FAT、EXFAT 等。其中 EXFAT 是 macOS 和 Windows 都可以识别的文件系统。</p>
+</li>
+</ul>
+<p>container（即 APFS container）是一个逻辑概念，用来容纳 APFS volumes 的。<br>
+volume 又称宗卷，对应真正的文件系统，volume 可以挂载到路径上，例如 Macintosh HD 挂载在<code>/</code>中，constainer 下的所有 volumes 共享存储空间。所以一个 container 下，可以放各自独立的文件系统，每个文件系统都可以挂载到不同的路径上。</p>
+<p>我们需要明白：<strong>macOS 引导程序只能安装在 HFS+ 文件系统，macOS 操作系统（新版）只能安装在 APFS 文件系统</strong>。</p>
+<h2 id="安装-macOS-引导程序">安装 macOS 引导程序</h2>
+<p>参考：<a target="_blank" rel="noopener" href="https://support.apple.com/zh-cn/101578">https://support.apple.com/zh-cn/101578</a></p>
+<p>我们需要将磁盘分区或者U盘格式化为 macos扩展(日志式) + GUID。</p>
+<p>然后使用 <code>createinstallmedia</code> 工具：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> ./createinstallmedia --volume /Volumes/MyVolume</span><br></pre></td></tr></table></figure>
+<p>上面的<code>Volumes/MyVolume</code>表示u盘或者分区中 宗卷的装载点,其实就是把 macOS 引导程序安装到<code>Volumes/MyVolume</code>中.</p>
+<h2 id="安装-macOS-操作系统">安装 macOS 操作系统</h2>
+<p>intel芯片的Mac,启动时长按option,m芯片的mac,启动时长按电源键就可以进行恢复模式，此时我们可以看到 macOS 引导程序。</p>
+<p>我们需要使用一个新的磁盘分区（新的 APFS 宗卷），然后使用 macOS 引导程序将 macOS 操作系统安装到这个宗卷中。</p>
+<h2 id="恢复数据">恢复数据</h2>
+<p>macOS 安装完成后，会重启，然后以这个新的 APFS 宗卷作为启动盘来运行激活程序，在迁移助手中，选择从时间机器中恢复数据，则我们会看到时间机器中的数据副本，一般来说，这里的数据副本是高版本 macOS 的数据，我们期望用低版本 macOS 可以使用高版本的数据副本。</p>
+</article><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/img/avatar.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/paperReading/end2end/DiffusionDrive/" title="[2024.11.25-arxiv] DiffusionDrive: Truncated Diffusion Model for End-to-End Autonomous Driving"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">[2024.11.25-arxiv] DiffusionDrive: Truncated Diffusion Model for End-to-End Autonomous Driving</div></div><div class="info-2"><div class="info-item-1"> motivation：diffusion model for planning diffusion model 现在很多应用在traffic simulation 上，在用 diffusion model 做 plan的没有。  (a): this paradigm does not account for the inherent uncertainty and multi-mode nature of driving behaviors. 无法表示 uncertainty (b): this large fixed-vocabulary paradigm is fundamentally constrained by the number and quality of anchor trajectories, often failing in out-of-vocabulary scenarios. Furthermore, managing a large number of anchors presents significant computational...</div></div></div></a><a class="pagination-related" href="/posts/paperReading/end2end/Is-Ego-Status-All-You-Need-for-open/" title="[CVPR2024] Is Ego Status All You Need for Open-Loop End-to-End Autonomous Driving?"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">[CVPR2024] Is Ego Status All You Need for Open-Loop End-to-End Autonomous Driving?</div></div><div class="info-2"><div class="info-item-1"> conclusion The planning performance of existing open-loop autonomous driving models based on nuScenes is highly affected by ego status (velocity, acceleration, yaw angle). With ego status involved, the model’s final predicted trajectories are basically dominated by it, resulting in a diminished use of sensory information. Methods utilizing ego status are not directly comparable and conclusions should not be drawn from such comparisons 目前存在的开环（端到端）自动驾驶模型的测试performance（数据集为...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-number">1.</span> <span class="toc-text">注意事项</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD-macOS-%E5%AE%89%E8%A3%85%E5%8C%85"><span class="toc-number">2.</span> <span class="toc-text">下载 macOS 安装包</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#mac%E4%B8%AD%E7%9A%84-device%E3%80%81partition%E3%80%81container-%E5%92%8C-volume-%E7%9A%84%E6%A6%82%E5%BF%B5"><span class="toc-number">3.</span> <span class="toc-text">mac中的 device、partition、container 和 volume 的概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-macOS-%E5%BC%95%E5%AF%BC%E7%A8%8B%E5%BA%8F"><span class="toc-number">4.</span> <span class="toc-text">安装 macOS 引导程序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-macOS-%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F"><span class="toc-number">5.</span> <span class="toc-text">安装 macOS 操作系统</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%81%A2%E5%A4%8D%E6%95%B0%E6%8D%AE"><span class="toc-number">6.</span> <span class="toc-text">恢复数据</span></a></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2025 By ShawnX</div><div class="footer_custom_text">Hi, welcome to my blog</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"></div><div id="rightside-config-show"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(async () => {
+  const showKatex = () => {
+    document.querySelectorAll('#article-container .katex').forEach(el => el.classList.add('katex-show'))
+  }
+
+  if (!window.katex_js_css) {
+    window.katex_js_css = true
+    await btf.getCSS('https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css')
+    if (true) {
+      await btf.getScript('https://cdn.jsdelivr.net/npm/katex/dist/contrib/copy-tex.min.js')
+    }
+  }
+
+  showKatex()
+})()</script><script>(() => {
+  const runMermaid = ele => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    ele.forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const mermaidThemeConfig = `%%{init:{ 'theme':'${theme}'}}%%\n`
+      const mermaidID = `mermaid-${index}`
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+      const renderMermaid = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      // mermaid v9 and v10 compatibility
+      typeof renderFn === 'string' ? renderMermaid(renderFn) : renderFn.then(({ svg }) => renderMermaid(svg))
+    })
+  }
+
+  const codeToMermaid = () => {
+    const codeMermaidEle = document.querySelectorAll('pre > code.mermaid')
+    if (codeMermaidEle.length === 0) return
+
+    codeMermaidEle.forEach(ele => {
+      const preEle = document.createElement('pre')
+      preEle.className = 'mermaid-src'
+      preEle.hidden = true
+      preEle.textContent = ele.textContent
+      const newEle = document.createElement('div')
+      newEle.className = 'mermaid-wrap'
+      newEle.appendChild(preEle)
+      ele.parentNode.replaceWith(newEle)
+    })
+  }
+
+  const loadMermaid = () => {
+    if (false) codeToMermaid()
+    const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+    if ($mermaid.length === 0) return
+
+    const runMermaidFn = () => runMermaid($mermaid)
+    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaidFn)
+  }
+
+  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><script src="js/sakura.js"></script> - <script src="/js/custom.js"></script> - <div class="aplayer no-destroy" data-id="12839720510" data-server="netease" data-type="playlist" data-fixed="true"> </div><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="false" data-text="coding..,debugging..,running..." data-fontsize="15px" data-random="false" async="async"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script>(() => {
+  const destroyAplayer = () => {
+    if (window.aplayers) {
+      for (let i = 0; i < window.aplayers.length; i++) {
+        if (!window.aplayers[i].options.fixed) {
+          window.aplayers[i].destroy()
+        }
+      }
+    }
+  }
+
+  const runMetingJS = () => {
+    typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+  }
+
+  btf.addGlobalFn('pjaxSend', destroyAplayer, 'destroyAplayer')
+  btf.addGlobalFn('pjaxComplete', loadMeting, 'runMetingJS')
+})()</script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>(() => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => fn())
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      const usePjax = true
+      false 
+        ? (usePjax ? pjax.loadUrl('/404.html') : window.location.href = '/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})()</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

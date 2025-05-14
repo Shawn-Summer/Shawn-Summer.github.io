@@ -1,0 +1,689 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>环境配置 | LittleBug</title><meta name="robots" content="noindex"><meta name="author" content="ShawnX"><meta name="copyright" content="ShawnX"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="mac键盘和快捷键 按键调整  CapsLock-&gt;Ctrl Ctrl-&gt;Option(Alt)  禁用 CapsLock 键,使用 Ctrl+space 切换输入法 快捷键 mac原生快捷键 参考链接：https:&#x2F;&#x2F;support.apple.com&#x2F;en-us&#x2F;102650 Fn+A:显示 dock 可以改为 Fn+N:显示 Notification Center f11：显示桌">
+<meta property="og:type" content="article">
+<meta property="og:title" content="环境配置">
+<meta property="og:url" content="http://imxxl.top/huanjingpeizhi/index.html">
+<meta property="og:site_name" content="LittleBug">
+<meta property="og:description" content="mac键盘和快捷键 按键调整  CapsLock-&gt;Ctrl Ctrl-&gt;Option(Alt)  禁用 CapsLock 键,使用 Ctrl+space 切换输入法 快捷键 mac原生快捷键 参考链接：https:&#x2F;&#x2F;support.apple.com&#x2F;en-us&#x2F;102650 Fn+A:显示 dock 可以改为 Fn+N:显示 Notification Center f11：显示桌">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://imxxl.top/img/avatar.jpg">
+<meta property="article:published_time" content="2024-12-31T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-05-14T12:03:30.943Z">
+<meta property="article:author" content="ShawnX">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://imxxl.top/img/avatar.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "环境配置",
+  "url": "http://imxxl.top/huanjingpeizhi/",
+  "image": "http://imxxl.top/img/avatar.jpg",
+  "datePublished": "2024-12-31T16:00:00.000Z",
+  "dateModified": "2025-05-14T12:03:30.943Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "ShawnX",
+      "url": "http://imxxl.top/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/avatar.jpg"><link rel="canonical" href="http://imxxl.top/huanjingpeizhi/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          const hour = new Date().getHours()
+          const isNight = hour <= 6 || hour >= 18
+          if (theme === undefined) isNight ? activateDarkMode() : activateLightMode()
+          else theme === 'light' ? activateLightMode() : activateDarkMode()
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":100,"highlightFullpage":true,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '环境配置',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/mouse.css"><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-image: url(/img/pokemon2.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">31</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">12</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">13</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 全部文章</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 鏈接</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">LittleBug</span></a><a class="nav-page-title" href="/"><span class="site-name">环境配置</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 全部文章</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 鏈接</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">环境配置<a class="post-edit-link" href="https://github.com/Shawn-Summer/hexo-source/edit/main/source/_posts/hidden/huanjingpeizhi.md" title="编辑" target="_blank"><i class="fas fa-pencil-alt"></i></a></h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-12-31T16:00:00.000Z" title="发表于 2025-01-01 00:00:00">2025-01-01</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-05-14T12:03:30.943Z" title="更新于 2025-05-14 20:03:30">2025-05-14</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/hidden/">hidden</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">6.3k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>24分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="mac键盘和快捷键">mac键盘和快捷键</h2>
+<h3 id="按键调整">按键调整</h3>
+<ul>
+<li>CapsLock-&gt;Ctrl</li>
+<li>Ctrl-&gt;Option(Alt)</li>
+</ul>
+<p>禁用 CapsLock 键,使用 Ctrl+space 切换输入法</p>
+<h3 id="快捷键">快捷键</h3>
+<h4 id="mac原生快捷键">mac原生快捷键</h4>
+<p>参考链接：<a target="_blank" rel="noopener" href="https://support.apple.com/en-us/102650">https://support.apple.com/en-us/102650</a></p>
+<p><code>Fn+A</code>:显示 dock 可以改为</p>
+<p><code>Fn+N</code>:显示 Notification Center</p>
+<p><code>f11</code>：显示桌面</p>
+<p><code>f12</code>（自定义）：显示 Notification Center</p>
+<p>ctrl+数字：切换桌面</p>
+<h4 id="Raycast快捷键">Raycast快捷键</h4>
+<p>Raycast 是一款管理快捷键的软件，可以实现快速切换app</p>
+<p><code>option+space</code>:iTerm2</p>
+<p><code>option+z</code>:zotero</p>
+<p><code>option+v</code>:vscode</p>
+<p><code>option+t</code>:typora</p>
+<p><code>option+f</code>:finder</p>
+<p><code>option+c</code>:chrome</p>
+<p>也可以给下面<code>apple script</code>来创建快捷键<code>ctrl+q</code>：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">-- 显示桌面、通知中心和dock</span><br><span class="line">tell application <span class="string">&quot;System Events&quot;</span></span><br><span class="line">    -- <span class="title class_">Press</span> <span class="variable constant_">F11</span> to show desktop</span><br><span class="line">    key code <span class="number">103</span></span><br><span class="line">    delay <span class="number">0.7</span></span><br><span class="line">    </span><br><span class="line">    -- <span class="title class_">Press</span> <span class="variable constant_">F12</span> to show <span class="title class_">Notification</span> <span class="title class_">Center</span></span><br><span class="line">    key code <span class="number">111</span></span><br><span class="line">    delay <span class="number">0.7</span></span><br><span class="line">    </span><br><span class="line">    -- <span class="title class_">Press</span> <span class="title class_">Ctrl</span> + <span class="variable constant_">F3</span> to move focus to dock</span><br><span class="line">    key code <span class="number">99</span> using &#123;control down&#125;</span><br><span class="line">end tell</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="上网软件">上网软件</h2>
+<p>clash for windows （<a target="_blank" rel="noopener" href="https://www.cfmem.com/2021/08/clash.html%EF%BC%89">https://www.cfmem.com/2021/08/clash.html）</a></p>
+<p>配置文件：clash_config.yaml</p>
+<p>设置终端代理 ～/.zshrc</p>
+<p>一个很好的机场:<a target="_blank" rel="noopener" href="https://docs.sakura-cat.club/">https://docs.sakura-cat.club/</a></p>
+<h2 id="typora">typora</h2>
+<p>注意激活license 文本编辑器</p>
+<p>为方便命令行使用在 <code>.zshrc</code>文件中加入：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">alias</span> typora=<span class="string">&quot;open -a Typora&quot;</span> <span class="comment">#输入命令 typora . 即可打开当前文件夹</span></span><br></pre></td></tr></table></figure>
+<p>Typora 主题使用 drake black(类GitHub black主题)/ phycat orange,前者更紧凑舒适,后者利于演示.</p>
+<h2 id="Homebrew-iTerm2-Oh-My-Zsh-git">Homebrew + iTerm2 + Oh My Zsh + git</h2>
+<p>配置指南</p>
+<p>参考： <a target="_blank" rel="noopener" href="https://juejin.cn/post/7257740918432792632?from=search-suggest">https://juejin.cn/post/7257740918432792632?from=search-suggest</a></p>
+<p>注意Homebrew可以通过设置proxy，来下载github的一些插件</p>
+<p>Homebrew 的安装应用和插件的目录在<code>/opt/homebrew</code> （apple silicon）。</p>
+<p>插件：</p>
+<ul>
+<li>git（下载Homebrew 时自动下载）设置git代理、复制id_rsa、id_rsa.pub</li>
+<li>zsh-syntax-highlighting</li>
+<li>Zsh-autosugusstions</li>
+<li>autojump</li>
+<li>colorls</li>
+<li>powerlevel10k</li>
+<li>字体使用主题推荐字体</li>
+<li>tmux</li>
+</ul>
+<p>设置可以在当前文件夹中打开iterm2，编写apple script 如下。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">-- 获取当前 <span class="title class_">Finder</span> 窗口的路径</span><br><span class="line">tell application <span class="string">&quot;Finder&quot;</span></span><br><span class="line">	set currentPath to <span class="variable constant_">POSIX</span> path <span class="title function_">of</span> (target <span class="keyword">of</span> front <span class="title class_">Finder</span> <span class="variable language_">window</span> <span class="keyword">as</span> text)</span><br><span class="line">end tell</span><br><span class="line"></span><br><span class="line">-- 如果 iterm已经打开，则创建一个新的<span class="variable language_">window</span>，打开path</span><br><span class="line"><span class="keyword">if</span> application <span class="string">&quot;iTerm&quot;</span> is running then</span><br><span class="line">	tell application <span class="string">&quot;iTerm&quot;</span></span><br><span class="line">		-- 获取窗口数量</span><br><span class="line">		set windowCount to count <span class="keyword">of</span> windows</span><br><span class="line">		-- 创建新的窗口</span><br><span class="line">		create <span class="variable language_">window</span> <span class="keyword">with</span> <span class="keyword">default</span> profile</span><br><span class="line">		-- 等待确保新窗口存在</span><br><span class="line">		repeat <span class="keyword">while</span> (count <span class="keyword">of</span> windows) ≤ windowCount</span><br><span class="line">		end repeat</span><br><span class="line">		tell current session <span class="keyword">of</span> current <span class="variable language_">window</span></span><br><span class="line">			write text <span class="string">&quot;cd &quot;</span> &amp; quoted form <span class="keyword">of</span> currentPath</span><br><span class="line">		end tell</span><br><span class="line">	end tell</span><br><span class="line">	-- 如果 iterm没有打开，则先激活（直接创建一个<span class="variable language_">window</span>），然后打开path</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">	tell application <span class="string">&quot;iTerm&quot;</span></span><br><span class="line">		activate</span><br><span class="line">		repeat <span class="keyword">while</span> <span class="title function_">not</span> (exists first <span class="variable language_">window</span>) -- 如果第一个窗口不存在就一直等待</span><br><span class="line">		end repeat</span><br><span class="line">		tell current session <span class="keyword">of</span> front <span class="variable language_">window</span></span><br><span class="line">			write text <span class="string">&quot;cd &quot;</span> &amp; quoted form <span class="keyword">of</span> currentPath</span><br><span class="line">		end tell</span><br><span class="line">	end tell</span><br><span class="line">end <span class="keyword">if</span></span><br></pre></td></tr></table></figure>
+<p>然后保存为 application，然后按住command 拖到 finder的tool bar中，即可。</p>
+<h3 id="备份">备份</h3>
+<h4 id="zsh的备份">zsh的备份</h4>
+<p>配置文件位于<code>~/.zshrc</code></p>
+<h4 id="git的备份">git的备份</h4>
+<p>配置文件位于<code>.gitconfig</code></p>
+<h4 id="iTerm2的备份">iTerm2的备份</h4>
+<ul>
+<li>在 iTerm2 &gt; <code>General &gt; Settings</code> 中，勾选 <strong>Load settings from a custom folder</strong></li>
+<li>选择刚才保存 <code>.plist</code> 文件的目录，例如 <code>~/onedrive/config/iterm2</code></li>
+<li>关闭并重新打开 iTerm2，它会自动加载该目录下的设置。</li>
+</ul>
+<h2 id="GitHub">GitHub</h2>
+<h3 id="GitHub-Desktop">GitHub Desktop</h3>
+<h3 id="GitHub-CLI">GitHub CLI</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">brew install gh</span><br></pre></td></tr></table></figure>
+<p>这个软件是一个使用命令行操作 GitHub 的软件。</p>
+<h2 id="鼠须管输入法">鼠须管输入法</h2>
+<h3 id="配置指南">配置指南</h3>
+<p>mac自带的中文输入法不好用，存在bug，使用rime这款客制化输入法替代。</p>
+<p>rime是一个输入法引擎，中文名为中州韵，它有很多前端版本，包括小狼毫、鼠须管、仓输入法、小企鹅输入法等。</p>
+<p>mac上，我选择鼠须管（<a target="_blank" rel="noopener" href="https://github.com/rime/squirrel%EF%BC%89+%E9%9B%BE%E5%87%87%E6%8B%BC%E9%9F%B3%EF%BC%88https://github.com/iDvel/rime-ice%EF%BC%89">https://github.com/rime/squirrel）+雾凇拼音（https://github.com/iDvel/rime-ice）</a></p>
+<p>参考：<a target="_blank" rel="noopener" href="https://github.com/ssnhd/rime">https://github.com/ssnhd/rime</a> 和 <code>https://dvel.me/posts/rime-ice/</code></p>
+<p>鼠须管默认为所有用户安装：安装在 <code>/Library/Input Methods</code></p>
+<p>前端配置默认给当前用户安装：<code>~/Library/Rime</code> (配置目录)</p>
+<h3 id="取消Mac中option-字母输出特殊字符">取消Mac中<code>option+字母</code>输出特殊字符</h3>
+<p>这需要使用特殊的键盘布局,例如unicode布局</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">keyboard_layout:</span> <span class="string">&#x27;com.apple.keylayout.UnicodeHexInput&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>或者使用自定义的键盘布局,参考链接:<a target="_blank" rel="noopener" href="https://gist.github.com/haosdent/573ea124e5ea666fc576">https://gist.github.com/haosdent/573ea124e5ea666fc576</a></p>
+<h3 id="使用打补丁的方式修改配置文件">使用打补丁的方式修改配置文件</h3>
+<ul>
+<li>方案 <code>xxx.schema.yaml</code> 的补丁文件是 <code>xxx.custom.yaml</code></li>
+<li><code>default.yaml</code> <code>squirrel.yaml</code> 就是把结尾的 <code>.yaml</code> 改成 <code>.custom.yaml</code></li>
+</ul>
+<p>打补丁方式修改配置文件,有3种方式:</p>
+<ol>
+<li>覆盖写</li>
+<li>单个字段修改</li>
+<li>追加写</li>
+</ol>
+<p>配置文件的优先级如下:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">graph LR</span><br><span class="line">    A[xxx.custom.yaml] --&gt; B[xxx.schema.yaml]</span><br><span class="line">    B --&gt; C[default.custom.yaml]</span><br><span class="line">    C --&gt; D[default.yaml]</span><br><span class="line">    D --&gt; E[客户端自带的default.yaml]</span><br></pre></td></tr></table></figure>
+<p>因为雾凇拼音的GitHub库是由作者长期维护的,我需要经常使用<code>git pull</code>来获得实时更新,尤其是词库的长期更新,使用打补丁的形式不会对git的状态做出改变,因为<code>.gitignore</code>包括有<code>*.custom.yaml</code>.</p>
+<h3 id="特定程序中的配置">特定程序中的配置</h3>
+<p>这个输入法强大的地方在于配置标点符号和在特定程序中设置中英文。</p>
+<p>打开 <code>squirrel.custom.yaml</code>，将程序标识符添加进去，并输入对应模式开启默认中英文。</p>
+<ul>
+<li><code>ascii_mode: true</code>：默认英文</li>
+<li><code>ascii_mode: false</code>：默认中文</li>
+<li><code>ascii_punct: true</code>：开启英文标点</li>
+</ul>
+<p>示例：VSCode 默认英文输入，始终输出英文标点（半角）。</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">com.microsoft.VSCode<span class="punctuation">:</span></span><br><span class="line">    ascii_mode<span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span></span><br><span class="line">    sacii_punct<span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span></span><br></pre></td></tr></table></figure>
+<p><strong>延伸：如何获取程序标识符？</strong></p>
+<ol>
+<li>打开 Mac 活动监视器，选中程序，点击上方 <code>···</code> 里<strong>取样进程</strong>。</li>
+<li>找到 <code>Identifier</code> 后面即为程序标识符。</li>
+</ol>
+<h3 id="同步与备份">同步与备份</h3>
+<p>参考:<a target="_blank" rel="noopener" href="https://www.mintimate.cc/zh/guide/deviceSync.html">https://www.mintimate.cc/zh/guide/deviceSync.html</a></p>
+<p>只要我们使用rime输入法后,rime就会记录我们的打字习惯,在配置目录中生成<code>*.userdb/</code>文件夹,这里放着二进制的用户词典,这是非常重要的文件夹,我们需要同步它.</p>
+<p>另一种需要备份的文件是:一些的配置文件,例如<code>txt</code>和<code>yaml</code>文件</p>
+<p>针对打字习惯,我们希望做到双向同步,而配置文件则只做单向备份,这也是rime的<code>sync user data</code>功能.</p>
+<h4 id="rime同步用户数据">rime同步用户数据</h4>
+<p>在配置文件夹中的<code>installation.yaml</code>文件中,可以写入:</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">installation_id:</span> <span class="string">&quot;MacBook&quot;</span></span><br><span class="line"><span class="attr">sync_dir:</span> <span class="string">&quot;/Users/xxl/Library/Mobile Documents/com~apple~CloudDocs/rime_config/&quot;</span></span><br></pre></td></tr></table></figure>
+<p>这样配置好后,点击Rime中的<code>sync user data</code>选项后,会在<code>sync_dir</code>文件夹下创建一个<code>installation_id</code>文件夹,用来存储该用户的数据.</p>
+<p>一般来说,在多设备情况下,<code>sync_dir</code>应当保持一致,例如选择云盘中的固定位置,而<code>installation_id</code>要保持不同,每个设备对应一个id. 这么做的意义是:每个设备的配置文件需要独立,而输入习惯需要共享.</p>
+<p>在<code>installation_id</code>文件夹下,存放着</p>
+<ol>
+<li>输入习惯:<code>xxx.userdb.txt</code></li>
+<li>配置文件:<code>xxx.ymal</code>和<code>xxx.txt</code></li>
+</ol>
+<h4 id="配置文件的备份与迁移">配置文件的备份与迁移</h4>
+<p>配置目录下(一层)的所有<code>yaml</code>和<code>txt</code>文件就是配置文件:</p>
+<ul>
+<li>
+<p><code>default.yaml</code>:一些全局设置</p>
+</li>
+<li>
+<p><code>xxx.custom.yaml</code>:补丁文件</p>
+</li>
+<li>
+<p><code>xxx.schema.yaml</code>:xxx输入方案的配置文件</p>
+</li>
+<li>
+<p><code>xxx.dict.yaml</code>:xxx输入方案的挂载词库</p>
+</li>
+<li>
+<p><code>squirrel.yaml</code>:鼠须管的前端配置文件</p>
+</li>
+<li>
+<p><code>weasel.yaml</code>:小狼毫的前端配置文件</p>
+</li>
+<li>
+<p><code>symbols_v.yaml</code>:全拼 v 模式配置文件</p>
+</li>
+<li>
+<p><code>symbols_caps_v.yaml</code>:双拼 V 模式配置文件</p>
+</li>
+<li>
+<p><code>custom_phrase.txt</code>:自定义短语文件</p>
+</li>
+<li>
+<p><code>installation.yaml</code>:同步设置文件</p>
+</li>
+<li>
+<p><code>user.yaml</code>:用户状态记录</p>
+</li>
+</ul>
+<p>以上文件在点击<code>sync user data</code>后都会直接拷贝到<code>installation_id</code>下,是一种单向备份,迁移时,其实<strong>只要将补丁文件迁移过去</strong>就行了,其他的直接使用GitHub<code>git clone</code>就好了.</p>
+<h4 id="输入习惯的同步">输入习惯的同步</h4>
+<p>输入习惯保存在配置目录下的 <code>*.userdb/</code> 文件夹中,在点击<code>sync user data</code>后,<code>installation_id</code>文件夹下会生成一个<code>*.userdb.txt</code>文件.</p>
+<p><code>*.userdb.txt</code>文件是一个输入习惯的快照,它整合了<code>sync_dir</code>下<strong>所有用户</strong>的输入习惯,形成的一个快照.</p>
+<p>具体来说,<code>A</code>用户点击<code>sync user data</code>后,rime会检查<code>sync_dir</code>下所有用户的对应同名快照文件,如<code>rime_ice.userdb.txt</code>文件,然后整合用户<code>B</code>和<code>C</code>的<code>rime_ice.userdb.txt</code>文件以及用户<code>A</code>的<code>rime_ice.userdb/</code>文件夹下内容,使用一种最高权重算法生成用户<code>A</code>自己的<code>rime_ice.userdb.txt</code>.</p>
+<p>而且,这是一种双向同步,也就是说,如果我把配置目录下的<code>xxx.userdb/</code>文件夹删了,但是同步文件夹下的<code>xxx.userdb.txt</code>没有删,此时点击<code>sync user data</code>后,<code>xxx.userdb/</code>文件夹还会恢复.</p>
+<p>所以说,迁移的时候,可以使用新id也可以使用存在的id,只要保证输入习惯快照存在,就可以恢复输入习惯.</p>
+<h2 id="小仓鼠输入法">小仓鼠输入法</h2>
+<p>小仓鼠（Hamster）是基于 RIME 的 iOS 上的输入法。</p>
+<p>参考：<a target="_blank" rel="noopener" href="https://ihsiao.com/apps/hamster/docs/">https://ihsiao.com/apps/hamster/docs/</a></p>
+<h3 id="hamster-的简单框架">hamster 的简单框架</h3>
+<img src="/huanjingpeizhi/hamster_1.png" alt="文件存放路径" style="zoom:50%;">
+<p>小仓鼠和鼠须管的区别在于：</p>
+<ul>
+<li>鼠须管的配置目录为 Rime，而小仓鼠中配置目录为：sharedSupport 和 Rime。因为小仓鼠把自己的客户端配置文件（即 hamster ）移动到 sharedSupport 中。</li>
+<li>小仓鼠的配置文件有两个副本，分别为应用文件和键盘文件。鼠须管只有键盘文件，即配置目录下就是键盘文件。在使用输入法的同时，键盘文件中的自造词或一些脚本文件会发生变化，而应用文件不会变化，所以应用文件对于小仓鼠来说相当于一种备份。</li>
+<li>小仓鼠中有键盘皮肤，而鼠须管只有键盘主题。小仓鼠中的键盘皮肤很复杂，而且它取代了配置文件中的很多功能，键盘皮肤已经玩出花了。</li>
+</ul>
+<h3 id="使用-iCloud-drive-同步-hamster-和-squirrel-的词库">使用 iCloud drive 同步 hamster 和 squirrel 的词库</h3>
+<p>在 hamster 的 <code>installation.yaml</code> 中写入如下：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">installation_id:</span> <span class="string">iPhone</span></span><br><span class="line"><span class="attr">sync_dir:</span> <span class="string">&quot;/private/var/mobile/Library/Mobile Documents/com~apple~CloudDocs/rime_config&quot;</span></span><br></pre></td></tr></table></figure>
+<p>点击同步后会会发现，在 iCloud drive 中的 rime_config 中结构如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">└── MacBook/</span><br><span class="line"> │  ├──── custom_phrase.txt</span><br><span class="line"> │  ├──── melt_eng.userdb.txt</span><br><span class="line"> │  ├──── rime_ice.userdb.txt</span><br><span class="line"> │  ├──── ......</span><br><span class="line"> │  └──── user.yaml</span><br><span class="line"> └── iPhone/</span><br><span class="line"> │  ├──── custom_phrase.txt</span><br><span class="line"> │  ├──── melt_eng.userdb.txt</span><br><span class="line"> │  ├──── rime_ice.userdb.txt</span><br><span class="line"> │  ├──── ......</span><br><span class="line"> │  └──── user.yaml</span><br></pre></td></tr></table></figure>
+<p>rime 会合并不同设备的输入习惯（词库），iPhone 一旦点击同步后， 它可以学习到 MacBook 的输入习惯，反之，MacBook 一旦点击同步，它也可以学习到 iPhone 的输入习惯。</p>
+<h2 id="同步不同设备上的-rime-配置">同步不同设备上的 rime 配置</h2>
+<p>macOS：鼠须管</p>
+<p>windows：小狼毫</p>
+<p>linux: fcitx5</p>
+<p>ios：仓</p>
+<p>andriod：fcitx5-android</p>
+<p>同步最困难的就是 ios ，因为目前来说，仓输入法的同步只能使用 iCloud 和 Dropbox。其次是 Android，他可以使用 foldersync 这个app 来将本地文件夹和远端同步（不支持 iCloud）。</p>
+<p>尝试1: Dropbox 同步。 失败，因为 Dropbox 免费版的设备数量最多支持 3 个，而且国内无法直连</p>
+<p>尝试2: macOS 、ios 和 windows 使用 iCloud ，Linux 和 Android 使用 onedrive / 坚果云，然后将尝试将 OneDrive 和 iCloud drive 同步。</p>
+<p>尝试3: 使用 Syncthing 进行多设备同步，但是太过繁琐。</p>
+<p>尝试4: 使用 rclone 来进行云盘同步或者挂载，rclone 和 foldersync 是类似的东西。但是 iCloud drive 挂载会有时效性，大概每隔 30 天要重新登录一次。</p>
+<p>目前最好就是全部使用 iCloud drive，因为我可能以后手机不会选择 Android 的。</p>
+<p>但是我期待：</p>
+<ol>
+<li>ios 上能支持诸如 WebDAV or OneDrive 同步，或者出现类似的 foldersync app，或者原生 files</li>
+<li>Android 支持 iCloud 同步。</li>
+</ol>
+<p>总之，最好就是使用，OneDrive，坚果云和 iCloud drive，WebDAV ，smb 来统一所有设备。</p>
+<p>不过这个是很久远之后的事情了。</p>
+<h2 id="chrome">chrome</h2>
+<h2 id="ThunderBird-windows-mail-Mac">ThunderBird (windows) mail(Mac)</h2>
+<p>绑定 gmail 和 ustcmail and tecent mail</p>
+<p>存在问题：ustcmail使用IMAP协议时，cpu利用率过高</p>
+<p>解决：使用pop3协议收邮件</p>
+<h2 id="Miniconda（python）">Miniconda（python）</h2>
+<p>设置国内镜像源</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/</span><br><span class="line">conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/</span><br><span class="line">conda config --<span class="built_in">set</span> show_channel_urls <span class="built_in">yes</span></span><br></pre></td></tr></table></figure>
+<p>备份配置文件:<code>~/.condarc</code></p>
+<h2 id="vscode">vscode</h2>
+<ul>
+<li>设置 <code>code .</code>命令</li>
+</ul>
+<h3 id="插件">插件</h3>
+<ul>
+<li><code>better comments</code>:这是一个注释高亮插件,可以用来添加注释</li>
+<li><code>C/C++</code>：这是做 cpp 和 c 的自动代码补全，语法识别，可以指导生成 <code>tasks.josn</code> 和 <code>lauch.json </code>中 cpp 配置内容，编译和运行 c++ 代码，选择的配置最好和使用的编译器一致，例如 MacBook 上内置的 clang 编译器，或者 linux 上的 gnu gcc 编译器。这里的 intellisence 功能很有用，用来代码补全和语法检错。</li>
+<li><code>python</code>：和上面一样</li>
+</ul>
+<h3 id="VSCode-代码编译和运行-调试逻辑">VSCode 代码编译和运行/调试逻辑</h3>
+<p>vscode 的工作逻辑是基于 <code>tasks.json</code> 和 <code>launch.json</code> 文件的。</p>
+<p><strong>编译逻辑（Build）→ <code>tasks.json</code></strong></p>
+<ul>
+<li>VS Code 的「任务 (Task)」系统负责执行编译命令，比如调用 <code>g++</code> 或 <code>clang++</code>。</li>
+<li>这些命令、参数、工作目录，以及错误匹配器，都写在 <code>.vscode/tasks.json</code> 里。</li>
+<li>调试配置中的 <code>&quot;preLaunchTask&quot;</code> 会触发这里定义的任务。</li>
+</ul>
+<p><strong>运行/调试逻辑 (Launch &amp; Debug) → <code>launch.json</code></strong></p>
+<ul>
+<li>VS Code 的调试系统遵循 Debug Adapter Protocol，需要知道要启动哪个可执行、带什么参数、在哪个目录、用哪个调试器。</li>
+<li>这些信息都在 <code>.vscode/launch.json</code> 里的 <code>configurations</code> 数组里定义。</li>
+<li>你按 <strong>F5</strong>、或左侧栏的 ▶️、或 CodeLens 的 “Debug C/C++ File” 都会读取这份配置来启动调试会话。</li>
+</ul>
+<p>没有这<code>tasks.json</code> 和 <code>launch.json</code> 文件，VS Code 也能用「临时内置配置」来快速编译和调试单文件（尤其是 C/C++ 扩展加了 CodeLens）</p>
+<img src="/huanjingpeizhi/xxl/hexo-source/source/_posts/hidden/huanjingpeizhi/vscode1.png" alt="image-20250513200714887" style="zoom: 50%;">
+<p>上图为 python 插件添加的 CodeLens ，除了最后一个选项，都是使用「临时内置配置」来运行和调试单文件的，它们不会生成和利用 <code>launch.json</code> 文件。</p>
+<p>一般情况下，我们都是使用<strong>F5</strong>、或左侧栏的 ▶️ 来运行和调试代码，对于快速的任务可以直接使用 CodeLens 来快速运行和调试。</p>
+<h3 id="配置remote开发环境">配置remote开发环境</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="zotero">zotero</h2>
+<p>参考网址： <a target="_blank" rel="noopener" href="https://www.haoyep.com/posts/zotero-config/">https://www.haoyep.com/posts/zotero-config/</a> （很多配置不需要 我会翻墙）</p>
+<p>下载 zotero本体 和 chrome连接插件</p>
+<p>添加 engine</p>
+<p>设置同步</p>
+<p>插件</p>
+<ul>
+<li>翻译器 tranlate for zotero (不用,因为不能读出来,使用有道词典)</li>
+<li>记笔记better notes for zotero</li>
+</ul>
+<h3 id="同步问题">同步问题</h3>
+<p>参考:<a target="_blank" rel="noopener" href="https://zotero-chinese.com/user-guide/sync">https://zotero-chinese.com/user-guide/sync</a></p>
+<p>我们在这里把同步分为「数据的同步」和「文件的同步」。</p>
+<p>数据的同步指 <code>条目字段信息</code>、<code>批注</code>、<code>笔记</code> 的同步，这些数据仅能通过 Zotero 官方提供的服务同步。</p>
+<p>文件的同步指 <code>PDF 附件</code>、<code>网页附件</code>、<code>Word 文档</code>、<code>EPub 文件</code> 等所有附件的同步。这些文件既可以通过 Zotero 官方服务同步，也可以通过 WebDAV 网盘来同步。</p>
+<p>我使用 zotero 本身做数据的同步,使用 infinicloud 做文件的同步，注意 infinicloud 中填的密码是 app keys。</p>
+<img src="/huanjingpeizhi/zotero_sync_1.png" alt="image-20250422111321439" style="zoom: 40%;">
+<h3 id="备份问题">备份问题</h3>
+<p>参考:<a target="_blank" rel="noopener" href="https://zotero-chinese.com/user-guide/backup">https://zotero-chinese.com/user-guide/backup</a></p>
+<p>我们将构成 Zotero 正常运行的文件分为三部分：</p>
+<ul>
+<li>Zotero 程序文件 (Program Files)</li>
+<li>Zotero 数据文件 (Zotero Data Folder)：包括文献条目信息、笔记、附件、标签、文件夹结构、转换器和引文样式等</li>
+<li>Zotero 用户配置文件 (Zotero Profile Directory)：包括您的个性化设置、插件及其配置、数据库位置等</li>
+</ul>
+<p>程序文件不需要备份,我们只需要备份数据文件和用户配置文件</p>
+<p>数据文件存储在:<code>/Users/&lt;username&gt;/Zotero</code>中</p>
+<p>用户配置文件存储在:<code>/Users/&lt;username&gt;/Library/Application Support/Zotero/Profiles/&lt;randomstring&gt;</code>中</p>
+<p>在新设备中安装zotero时,只需要将对应文件夹复制粘贴过去即可。</p>
+<p>我们使用 OneDrive 备份 zotero 的数据文件和用户配置文件，同步脚本如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">SRC_DATA=~/zotero/</span><br><span class="line">DEST_DATA=~/OneDrive/config/zotero配置/数据文件/</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用 find 动态获取默认配置文件路径</span></span><br><span class="line">SRC_CONFIG=$(find ~/Library/Application\ Support/Zotero/Profiles -name <span class="string">&quot;*.default&quot;</span> -<span class="built_in">type</span> d)</span><br><span class="line"></span><br><span class="line">DEST_CONFIG=~/OneDrive/config/zotero配置/用户配置文件/</span><br><span class="line"></span><br><span class="line"><span class="comment"># 确保目标目录存在</span></span><br><span class="line"><span class="built_in">mkdir</span> -p <span class="string">&quot;<span class="variable">$DEST_DATA</span>&quot;</span></span><br><span class="line"><span class="built_in">mkdir</span> -p <span class="string">&quot;<span class="variable">$DEST_CONFIG</span>&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用 rsync 覆盖并同步数据文件</span></span><br><span class="line">rsync -av --delete <span class="string">&quot;<span class="variable">$SRC_DATA</span>&quot;</span> <span class="string">&quot;<span class="variable">$DEST_DATA</span>&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用 rsync 覆盖并同步用户配置文件</span></span><br><span class="line">rsync -av --delete <span class="string">&quot;<span class="variable">$SRC_CONFIG</span>&quot;</span> <span class="string">&quot;<span class="variable">$DEST_CONFIG</span>&quot;</span></span><br></pre></td></tr></table></figure>
+<h2 id="OmniGraffle">OmniGraffle</h2>
+<p>这是一个科研绘图软件，非常有用，不过要破解才能使用。</p>
+<h2 id="云盘">云盘</h2>
+<h3 id="rclone">rclone</h3>
+<h4 id="简单使用">简单使用</h4>
+<p>参考：<a target="_blank" rel="noopener" href="https://rclone.org/install/">https://rclone.org/install/</a></p>
+<p>rclone 是管理多个云存储设备的软件，安装命令如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">brew install rclone</span><br></pre></td></tr></table></figure>
+<p>然后配置两个云盘，例如为：icloud drive 和 坚果云（WebDAV）</p>
+<p>使用如下命令，将 icloud drive 中的两个文件夹覆盖掉坚果云中对应文件夹,然后将坚果云中的一个文件夹覆盖掉 iCloud drive 中的某个文件。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">rclone copy us_icloud:rime_config/iPhone jianguoyun:rime_config/iPhone --progress --ignore-times --no-traverse --delete-during &amp;&amp; \</span><br><span class="line">rclone copy us_icloud:rime_config/MacBook jianguoyun:rime_config/MacBook --progress --ignore-times --no-traverse --delete-during &amp;&amp; \</span><br><span class="line">rclone copy jianguoyun:rime_config/Android us_icloud:rime_config/Android --progress --ignore-times --no-traverse --delete-during</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h4 id="使用-GitHub-action-来自动完成云盘间交互">使用 GitHub action 来自动完成云盘间交互</h4>
+<p>参考：<a target="_blank" rel="noopener" href="https://www.eallion.com/s3-sync/">https://www.eallion.com/s3-sync/</a></p>
+<p>首先使用命令 <code>rclone config file</code> 找到 rclone 的配置文件所在地，然后使用如下指令，生成加密字符：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">base64</span> -w 0 rclone.config</span><br></pre></td></tr></table></figure>
+<p>或者在 macOS 中输入如下命令</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">base64</span> &lt; ~/.config/rclone/rclone.conf | <span class="built_in">tr</span> -d <span class="string">&#x27;\n&#x27;</span> &gt; temp.txt</span><br></pre></td></tr></table></figure>
+<p>将生成的加密字符串，作为 RCLONE_CONFIG 导入到对应的 GitHub repository 中，然后创建GitHub action：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">name:</span> <span class="string">s3</span> <span class="string">bucket</span> <span class="string">Sync</span></span><br><span class="line"></span><br><span class="line"><span class="attr">on:</span></span><br><span class="line">  <span class="comment"># 每 3 天运行一次（每隔 72 小时）</span></span><br><span class="line">  <span class="attr">push:</span></span><br><span class="line">    <span class="attr">branches:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">main</span>  <span class="comment"># 或你使用的分支名，如 &quot;master&quot;</span></span><br><span class="line">  <span class="attr">schedule:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">cron:</span> <span class="string">&quot;0 0 */3 * *&quot;</span>  <span class="comment"># 每三天的 00:00 UTC 执行</span></span><br><span class="line"></span><br><span class="line"><span class="attr">jobs:</span></span><br><span class="line">  <span class="attr">auto-rclone:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">setup</span></span><br><span class="line">    <span class="attr">runs-on:</span> <span class="string">ubuntu-latest</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">steps:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Checkout</span></span><br><span class="line">      <span class="attr">uses:</span> <span class="string">actions/checkout@v3</span></span><br><span class="line"></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Setup</span> <span class="string">Rclone</span></span><br><span class="line">      <span class="attr">uses:</span> <span class="string">AnimMouse/setup-rclone@v1</span></span><br><span class="line">      <span class="attr">with:</span></span><br><span class="line">        <span class="attr">rclone_config:</span> <span class="string">$&#123;&#123;</span> <span class="string">secrets.RCLONE_CONFIG</span> <span class="string">&#125;&#125;</span></span><br><span class="line">        </span><br><span class="line">    <span class="bullet">-</span> <span class="attr">run:</span> <span class="string">|</span></span><br><span class="line"><span class="string">        rclone copy us_icloud:rime_config/iPhone jianguoyun:rime_config/iPhone --progress --ignore-times --no-traverse --delete-during</span></span><br><span class="line"><span class="string">        rclone copy us_icloud:rime_config/MacBook jianguoyun:rime_config/MacBook --progress --ignore-times --no-traverse --delete-during</span></span><br><span class="line"><span class="string">        rclone copy jianguoyun:rime_config/Android us_icloud:rime_config/Android --progress --ignore-times --no-traverse --delete-during</span></span><br></pre></td></tr></table></figure>
+<p>不过这个方案有个问题，就是 iCloud drive 的 trust token 只有 30 天有效时间，所以使用 icloud drive 不太友好。</p>
+<h3 id="onedrive">onedrive</h3>
+<p>使用onedrive（15GB）来备份文件，mac也使用onedrive。 icloud用来存图片和邮件以及密码。</p>
+<p>在电脑上下载onedrive，然后将需要备份的文件夹直接拉到里面即可，选择 always keep on this device，这样就可以在优先在本地存储，然后它自动上传云端。</p>
+<p>onedrive for mac有个问题:无法同步符号链接.</p>
+<h3 id="坚果云">坚果云</h3>
+<p>坚果云是一个跨平台的云盘，而 OneDrive 要会员才能实现跨平台。</p>
+<h3 id="iCloud-drive">iCloud drive</h3>
+<p>无法跨平台，不适用于 Linux 和 Android。</p>
+<h3 id="Infiniti-drive">Infiniti drive</h3>
+<p>存在 WebDAV 功能，而且存储的容量比较大</p>
+<h2 id="zerotier">zerotier</h2>
+<p>这是一个跨平台的创建虚拟局域网的工具，用来给可以访问公网的设备创建一个局域网，使得彼此建议 p2p 连接。</p>
+<img src="/huanjingpeizhi/xxl/hexo-source/source/_posts/hidden/huanjingpeizhi/zerotier1.png" alt="image-20250514012057933" style="zoom:50%;">
+<p>可以将设备加入到某个虚拟局域网中，然后出现上述的提示，其中 managed ip ：10.147.20.213，这不是设备的本地 IP 地址，而是通过 ZeroTier 在虚拟网络中分配的 IP 地址，允许设备与其他连接到相同 ZeroTier 网络的设备进行通信。</p>
+<p>使用命令行 ifconfig 可以看到创建了如下两个虚拟网卡：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">❯ ifconfig</span><br><span class="line">feth6892: flags=8943&lt;UP,BROADCAST,RUNNING,PROMISC,SIMPLEX,MULTICAST&gt; mtu 2800</span><br><span class="line">	options=8&lt;VLAN_HWTAGGING&gt;</span><br><span class="line">	ether 66:65:74:68:1a:ec</span><br><span class="line">	peer: feth1892</span><br><span class="line">	media: autoselect (10Gbase-T &lt;full-duplex&gt;)</span><br><span class="line">	status: active</span><br><span class="line">feth1892: flags=8843&lt;UP,BROADCAST,RUNNING,SIMPLEX,MULTICAST&gt; metric 5000 mtu 2800</span><br><span class="line">	options=8&lt;VLAN_HWTAGGING&gt;</span><br><span class="line">	ether aa:43:d3:53:6e:aa</span><br><span class="line">	inet 10.147.20.213 netmask 0xffffff00 broadcast 10.147.20.255</span><br><span class="line">	peer: feth6892</span><br><span class="line">	media: autoselect (10Gbase-T &lt;full-duplex&gt;)</span><br><span class="line">	status: active</span><br><span class="line">	</span><br><span class="line">❯ zerotier-cli listnetworks</span><br><span class="line">200 listnetworks &lt;nwid&gt; &lt;name&gt; &lt;mac&gt; &lt;status&gt; &lt;type&gt; &lt;dev&gt; &lt;ZT assigned ips&gt;</span><br><span class="line">200 listnetworks db64858fed3018ab mynetwork aa:43:d3:53:6e:aa OK PRIVATE feth1892 10.147.20.213/24</span><br></pre></td></tr></table></figure>
+<p>这个有个很重要的功能就是，ftp 或者 smb 服务器都会监听所有的 ip 地址，然后这里的 10.147.20.213 就会被监听，所以只要虚拟局域网中的其他设备，即使不在同一个网络中都可以使用文件传输服务。</p>
+<h2 id="termius">termius</h2>
+<h2 id="nano">nano</h2>
+<p>先升级nano</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">brew install nano</span><br></pre></td></tr></table></figure>
+<p>然后下载nano语法高亮插件</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">curl https://raw.githubusercontent.com/scopatz/nanorc/master/install.sh | sh</span><br></pre></td></tr></table></figure>
+<p>这样他会自动创建<code>~/.nano</code>文件夹和<code>~/.nanorc</code>文件，并且在配置文件中加入语法高亮。</p>
+<p>可以在<code>.nanorc</code>中加入如下命令来设置鼠标，这样子，nano就和自带文本编辑器一样了</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">set</span> mouse</span><br></pre></td></tr></table></figure>
+<h2 id="tmux">tmux</h2>
+<p>tmux是cs架构，首先打开服务器，然后创建客户端，即会话，可以创建多个客户端。tmux服务器的父进程是1，即终端kill后，服务器仍然运行，自然客户端也在运行。</p>
+<p>当终端通过ssh连接到服务器后，启动服务器上的tmux 服务器，然后在创建客户端，在客户端中运行程序，如果ssh断开，相当于这个客户端被detach了，但是由于服务器上tmux服务器还在运行，所以不会导致客户端中程序中断。</p>
+<p>tmux，可以开启多个客户端（会话），一个会话可以开多个windows，一个window又可以开多个pane。一个pane相当于新建一个shell。</p>
+<p>教程：<a target="_blank" rel="noopener" href="https://blog.twofei.com/807/">https://blog.twofei.com/807/</a></p>
+<p><a target="_blank" rel="noopener" href="https://louiszhai.github.io017/09/30/tmux/">https://louiszhai.github.io017/09/30/tmux/</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/Tristin-C/tmux-cheatsheet">https://github.com/Tristin-C/tmux-cheatsheet</a></p>
+<h3 id="配置文件-tmux-conf">配置文件 <code>.tmux.conf</code></h3>
+<p>使用如下指令（在<code>prefix + :</code>中输入 ）使得配置生效。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">source-file ~/.tmux.conf</span><br></pre></td></tr></table></figure>
+<p>还可以在iterm2中添加代码，自动打开tmux</p>
+<h3 id="插件-2">插件</h3>
+<h4 id="tmux插件管理包">tmux插件管理包</h4>
+<blockquote>
+<p>git clone <a target="_blank" rel="noopener" href="https://github.com/tmux-plugins/tpm">https://github.com/tmux-plugins/tpm</a> ~/.tmux/plugins/tpm</p>
+</blockquote>
+<p>在 ～/.tmux.conf中加入</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 默认需要引入的插件</span></span><br><span class="line"><span class="built_in">set</span> -g @plugin <span class="string">&#x27;tmux-plugins/tpm&#x27;</span></span><br><span class="line"><span class="built_in">set</span> -g @plugin <span class="string">&#x27;tmux-plugins/tmux-sensible&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 引入其他插件的示例</span></span><br><span class="line"><span class="comment"># set -g @plugin &#x27;github_username/plugin_name&#x27; # 格式：github用户名/插件名</span></span><br><span class="line"><span class="comment"># set -g @plugin &#x27;git@github.com/user/plugin&#x27; # 格式：git@github插件地址</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 初始化tmux插件管理器(保证这行在~/.tmux.conf的非常靠后的位置)</span></span><br><span class="line">run <span class="string">&#x27;~/.tmux/plugins/tpm/tpm&#x27;</span></span><br></pre></td></tr></table></figure>
+<h4 id="Tmux-Resurrect">Tmux Resurrect</h4>
+<p>安装tpm后，直接在配置文件中加一行，再使用（prefix + I(大写)）即可自动安装：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">set</span> -g @plugin <span class="string">&#x27;tmux-plugins/tmux-resurrect&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>tmux resurrect是一个用来保存和恢复tmux快照的插件</p>
+<p>确保文件夹： <code>~/.tmux/resurrect</code>存在，否则无法保存快照。</p>
+<h3 id="Tmux和iterm2集成-可选">Tmux和iterm2集成(可选)</h3>
+<p>参考： <a target="_blank" rel="noopener" href="https://blog.twofei.com/883/#integration">https://blog.twofei.com/883/#integration</a></p>
+<p>iterm2本身具有 创建new window 和 new tab的功能，相当于tmux的prefix + c 创建一个window。</p>
+<p>iterm2具有的分屏功能，相当于tmux 的将window分成pane的功能</p>
+<p>Tmux和iterm2的集成就是使用命令 <code>tmux -CC</code>后，会创建一个新的会话，然后在新的会话中禁用tmux的快捷键，而使用iterm2的自带的分屏创建窗口（tab）快捷键。这样能优化页面显示，使得iterm2更好适配tmux，并且使用更加丝滑。</p>
+<p>使用iterm2集成后，每个pane都是一个iterm的模块，更好适配了。</p>
+<h2 id="常用软件">常用软件</h2>
+<h3 id="PicGo（图床工具）">PicGo（图床工具）</h3>
+<p>下载链接：<a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/PicGo">https://github.com/Molunerfinn/PicGo</a></p>
+<h3 id="ice-menubar管理工具">ice (menubar管理工具)</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">brew install jordanbaird-ice</span><br></pre></td></tr></table></figure>
+<p>这是一个免费的mac menu bar的管理工具，防止被图标被吞</p>
+<h3 id="Raycast-app-快速切换">Raycast (app 快速切换)</h3>
+<h3 id="appcleaner">appcleaner</h3>
+<p>这是一个彻底删除application的软件</p>
+<p>链接:<a target="_blank" rel="noopener" href="https://freemacsoft.net/appcleaner/">https://freemacsoft.net/appcleaner/</a></p>
+<p>mac的app存放逻辑是：app放在<code>~/applications</code>中，一些配置文件放在</p>
+<ul>
+<li><code>~/Library/Application Scripts</code></li>
+<li><code>~/Library/Application Support</code></li>
+<li><code>~/Library/Containers</code></li>
+<li><code>~/Library/Group Containers</code></li>
+<li><code>~/Library/Cache</code></li>
+<li><code>~/Library/Preferences</code></li>
+</ul>
+<p>总之基本都在用户目录中的<code>Library</code>中</p>
+<h3 id="mac-clean-up-py-可选"><a target="_blank" rel="noopener" href="http://mac-clean-up.py">mac-clean-up.py</a> (可选)</h3>
+<p>这是GitHub上的一款清理mac的文件(还在更新中),优势在于可以清理很多非application的垃圾.</p>
+<h3 id="keycastr-按键显示软件">keycastr(按键显示软件)</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">brew install --cask keycastr</span><br></pre></td></tr></table></figure>
+<h3 id="cleanmykeyboard">cleanmykeyboard</h3>
+<p>这是用来锁定键盘的软件</p>
+<h3 id="smartmontools（硬盘检测工具）">smartmontools（硬盘检测工具）</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">brew install smartmontools</span><br></pre></td></tr></table></figure>
+<p>然后使用如下命令，查看 disk0 的信息</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">smartctl -a disk0</span><br></pre></td></tr></table></figure>
+<p>示例输出：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">smartctl 7.4 2023-08-01 r5530 [Darwin 24.3.0 arm64] (local build)</span><br><span class="line">Copyright (C) 2002-23, Bruce Allen, Christian Franke, www.smartmontools.org</span><br><span class="line"></span><br><span class="line">=== START OF INFORMATION SECTION ===</span><br><span class="line">Model Number:                       APPLE SSD AP1024Z</span><br><span class="line">Serial Number:                      0ba01e4962502629</span><br><span class="line">Firmware Version:                   532.100.</span><br><span class="line">PCI Vendor/Subsystem ID:            0x106b</span><br><span class="line">IEEE OUI Identifier:                0x000000</span><br><span class="line">Controller ID:                      0</span><br><span class="line">NVMe Version:                       &lt;1.2</span><br><span class="line">Number of Namespaces:               3</span><br><span class="line">Local Time is:                      Mon Apr 21 14:57:34 2025 CST</span><br><span class="line">Firmware Updates (0x02):            1 Slot</span><br><span class="line">Optional Admin Commands (0x0004):   Frmw_DL</span><br><span class="line">Optional NVM Commands (0x0004):     DS_Mngmt</span><br><span class="line">Maximum Data Transfer Size:         256 Pages</span><br><span class="line"></span><br><span class="line">Supported Power States</span><br><span class="line">St Op     Max   Active     Idle   RL RT WL WT  Ent_Lat  Ex_Lat</span><br><span class="line"> 0 +     0.00W       -        -    0  0  0  0        0       0</span><br><span class="line"></span><br><span class="line">=== START OF SMART DATA SECTION ===</span><br><span class="line">SMART overall-health self-assessment test result: PASSED</span><br><span class="line"></span><br><span class="line">SMART/Health Information (NVMe Log 0x02)</span><br><span class="line">Critical Warning:                   0x00</span><br><span class="line">Temperature:                        31 Celsius</span><br><span class="line">Available Spare:                    100%</span><br><span class="line">Available Spare Threshold:          99%</span><br><span class="line">Percentage Used:                    0%</span><br><span class="line">Data Units Read:                    17,242,140 [8.82 TB]</span><br><span class="line">Data Units Written:                 19,244,088 [9.85 TB]</span><br><span class="line">Host Read Commands:                 350,717,731</span><br><span class="line">Host Write Commands:                313,458,756</span><br><span class="line">Controller Busy Time:               0</span><br><span class="line">Power Cycles:                       289</span><br><span class="line">Power On Hours:                     242</span><br><span class="line">Unsafe Shutdowns:                   27</span><br><span class="line">Media and Data Integrity Errors:    0</span><br><span class="line">Error Information Log Entries:      0</span><br><span class="line"></span><br><span class="line">Read 1 entries from Error Information Log failed: GetLogPage failed: system=0x38, sub=0x0, code=745</span><br></pre></td></tr></table></figure>
+<h3 id="Tmate-可选">Tmate (可选)</h3>
+<p>参考：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/idorax/p/12380758.html">https://www.cnblogs.com/idorax/p/12380758.html</a></p>
+<p>Tmate做的是共享屏幕，共同编辑的功能，可以使用腾讯会议来代替，而且Tmate版本有点落后，对tmux的支持不是很好。</p>
+<p>所以tmate唯一的亮点就是 共同编辑功能，这个功能挺鸡肋的，所以做快捷的演示可能比较好，即临时共享终端。</p>
+<p>Tmate是Tmux的fork版本，它和tmux共享配置，它的服务器和客户端之间使用ssh连接</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">brew install tmate</span><br></pre></td></tr></table></figure>
+<p>输入tmate后会显示如下信息 （代表4种连接方式）：</p>
+<figure class="highlight smalltalk"><table><tr><td class="code"><pre><span class="line"><span class="type">Wed</span> <span class="type">Feb</span> <span class="number">26</span> <span class="number">01</span>:<span class="number">05</span>:<span class="number">14</span> <span class="number">2025</span> [tmate] <span class="type">Note</span>: clear your terminal before sharing readonly access</span><br><span class="line"><span class="type">Wed</span> <span class="type">Feb</span> <span class="number">26</span> <span class="number">01</span>:<span class="number">05</span>:<span class="number">14</span> <span class="number">2025</span> [tmate] web session read only: https://tmate.io/t/ro-<span class="type">XvjafjPQDNyDmPU8JVLXFT6Nc</span></span><br><span class="line"><span class="type">Wed</span> <span class="type">Feb</span> <span class="number">26</span> <span class="number">01</span>:<span class="number">05</span>:<span class="number">14</span> <span class="number">2025</span> [tmate] ssh session read only: ssh ro-<span class="type">XvjafjPQDNyDmPU8JVLXFT6Nc</span>@sfo2.tmate.io</span><br><span class="line"><span class="type">Wed</span> <span class="type">Feb</span> <span class="number">26</span> <span class="number">01</span>:<span class="number">05</span>:<span class="number">14</span> <span class="number">2025</span> [tmate] web session: https://tmate.io/t/m2NkM5rTNtCVQqph3p29AFEde</span><br><span class="line"><span class="type">Wed</span> <span class="type">Feb</span> <span class="number">26</span> <span class="number">01</span>:<span class="number">05</span>:<span class="number">14</span> <span class="number">2025</span> [tmate] ssh session: ssh m2NkM5rTNtCVQqph3p29AFEde@sfo2.tmate.io</span><br></pre></td></tr></table></figure>
+<p>进入后可以将tmux的配置文件复制到 <code>~/.tmate.conf</code>中才能使用。</p>
+<h3 id="终端上的-Mac-App-Store「mas」">终端上的 Mac App Store「mas」</h3>
+<p>参考：<a target="_blank" rel="noopener" href="https://sspai.com/post/40382">https://sspai.com/post/40382</a> and <a target="_blank" rel="noopener" href="https://github.com/mas-cli/mas">https://github.com/mas-cli/mas</a></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">brew install mas</span><br></pre></td></tr></table></figure>
+<p>这是一个使用终端安装、更新 app 的工具。</p>
+<!-- flag of hidden posts --></article><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/img/avatar.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"></nav></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#mac%E9%94%AE%E7%9B%98%E5%92%8C%E5%BF%AB%E6%8D%B7%E9%94%AE"><span class="toc-number">1.</span> <span class="toc-text">mac键盘和快捷键</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8C%89%E9%94%AE%E8%B0%83%E6%95%B4"><span class="toc-number">1.1.</span> <span class="toc-text">按键调整</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BF%AB%E6%8D%B7%E9%94%AE"><span class="toc-number">1.2.</span> <span class="toc-text">快捷键</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#mac%E5%8E%9F%E7%94%9F%E5%BF%AB%E6%8D%B7%E9%94%AE"><span class="toc-number">1.2.1.</span> <span class="toc-text">mac原生快捷键</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Raycast%E5%BF%AB%E6%8D%B7%E9%94%AE"><span class="toc-number">1.2.2.</span> <span class="toc-text">Raycast快捷键</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8A%E7%BD%91%E8%BD%AF%E4%BB%B6"><span class="toc-number">2.</span> <span class="toc-text">上网软件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#typora"><span class="toc-number">3.</span> <span class="toc-text">typora</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Homebrew-iTerm2-Oh-My-Zsh-git"><span class="toc-number">4.</span> <span class="toc-text">Homebrew + iTerm2 + Oh My Zsh + git</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%87%E4%BB%BD"><span class="toc-number">4.1.</span> <span class="toc-text">备份</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#zsh%E7%9A%84%E5%A4%87%E4%BB%BD"><span class="toc-number">4.1.1.</span> <span class="toc-text">zsh的备份</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#git%E7%9A%84%E5%A4%87%E4%BB%BD"><span class="toc-number">4.1.2.</span> <span class="toc-text">git的备份</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#iTerm2%E7%9A%84%E5%A4%87%E4%BB%BD"><span class="toc-number">4.1.3.</span> <span class="toc-text">iTerm2的备份</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GitHub"><span class="toc-number">5.</span> <span class="toc-text">GitHub</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#GitHub-Desktop"><span class="toc-number">5.1.</span> <span class="toc-text">GitHub Desktop</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#GitHub-CLI"><span class="toc-number">5.2.</span> <span class="toc-text">GitHub CLI</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%BC%A0%E9%A1%BB%E7%AE%A1%E8%BE%93%E5%85%A5%E6%B3%95"><span class="toc-number">6.</span> <span class="toc-text">鼠须管输入法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97"><span class="toc-number">6.1.</span> <span class="toc-text">配置指南</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%96%E6%B6%88Mac%E4%B8%ADoption-%E5%AD%97%E6%AF%8D%E8%BE%93%E5%87%BA%E7%89%B9%E6%AE%8A%E5%AD%97%E7%AC%A6"><span class="toc-number">6.2.</span> <span class="toc-text">取消Mac中option+字母输出特殊字符</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E6%89%93%E8%A1%A5%E4%B8%81%E7%9A%84%E6%96%B9%E5%BC%8F%E4%BF%AE%E6%94%B9%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-number">6.3.</span> <span class="toc-text">使用打补丁的方式修改配置文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%89%B9%E5%AE%9A%E7%A8%8B%E5%BA%8F%E4%B8%AD%E7%9A%84%E9%85%8D%E7%BD%AE"><span class="toc-number">6.4.</span> <span class="toc-text">特定程序中的配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%8C%E6%AD%A5%E4%B8%8E%E5%A4%87%E4%BB%BD"><span class="toc-number">6.5.</span> <span class="toc-text">同步与备份</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#rime%E5%90%8C%E6%AD%A5%E7%94%A8%E6%88%B7%E6%95%B0%E6%8D%AE"><span class="toc-number">6.5.1.</span> <span class="toc-text">rime同步用户数据</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E7%9A%84%E5%A4%87%E4%BB%BD%E4%B8%8E%E8%BF%81%E7%A7%BB"><span class="toc-number">6.5.2.</span> <span class="toc-text">配置文件的备份与迁移</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BE%93%E5%85%A5%E4%B9%A0%E6%83%AF%E7%9A%84%E5%90%8C%E6%AD%A5"><span class="toc-number">6.5.3.</span> <span class="toc-text">输入习惯的同步</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%8F%E4%BB%93%E9%BC%A0%E8%BE%93%E5%85%A5%E6%B3%95"><span class="toc-number">7.</span> <span class="toc-text">小仓鼠输入法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#hamster-%E7%9A%84%E7%AE%80%E5%8D%95%E6%A1%86%E6%9E%B6"><span class="toc-number">7.1.</span> <span class="toc-text">hamster 的简单框架</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-iCloud-drive-%E5%90%8C%E6%AD%A5-hamster-%E5%92%8C-squirrel-%E7%9A%84%E8%AF%8D%E5%BA%93"><span class="toc-number">7.2.</span> <span class="toc-text">使用 iCloud drive 同步 hamster 和 squirrel 的词库</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%8C%E6%AD%A5%E4%B8%8D%E5%90%8C%E8%AE%BE%E5%A4%87%E4%B8%8A%E7%9A%84-rime-%E9%85%8D%E7%BD%AE"><span class="toc-number">8.</span> <span class="toc-text">同步不同设备上的 rime 配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#chrome"><span class="toc-number">9.</span> <span class="toc-text">chrome</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ThunderBird-windows-mail-Mac"><span class="toc-number">10.</span> <span class="toc-text">ThunderBird (windows) mail(Mac)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Miniconda%EF%BC%88python%EF%BC%89"><span class="toc-number">11.</span> <span class="toc-text">Miniconda（python）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#vscode"><span class="toc-number">12.</span> <span class="toc-text">vscode</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8F%92%E4%BB%B6"><span class="toc-number">12.1.</span> <span class="toc-text">插件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#VSCode-%E4%BB%A3%E7%A0%81%E7%BC%96%E8%AF%91%E5%92%8C%E8%BF%90%E8%A1%8C-%E8%B0%83%E8%AF%95%E9%80%BB%E8%BE%91"><span class="toc-number">12.2.</span> <span class="toc-text">VSCode 代码编译和运行&#x2F;调试逻辑</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AEremote%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83"><span class="toc-number">12.3.</span> <span class="toc-text">配置remote开发环境</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#zotero"><span class="toc-number">13.</span> <span class="toc-text">zotero</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%8C%E6%AD%A5%E9%97%AE%E9%A2%98"><span class="toc-number">13.1.</span> <span class="toc-text">同步问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%87%E4%BB%BD%E9%97%AE%E9%A2%98"><span class="toc-number">13.2.</span> <span class="toc-text">备份问题</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#OmniGraffle"><span class="toc-number">14.</span> <span class="toc-text">OmniGraffle</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%91%E7%9B%98"><span class="toc-number">15.</span> <span class="toc-text">云盘</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#rclone"><span class="toc-number">15.1.</span> <span class="toc-text">rclone</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8"><span class="toc-number">15.1.1.</span> <span class="toc-text">简单使用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-GitHub-action-%E6%9D%A5%E8%87%AA%E5%8A%A8%E5%AE%8C%E6%88%90%E4%BA%91%E7%9B%98%E9%97%B4%E4%BA%A4%E4%BA%92"><span class="toc-number">15.1.2.</span> <span class="toc-text">使用 GitHub action 来自动完成云盘间交互</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#onedrive"><span class="toc-number">15.2.</span> <span class="toc-text">onedrive</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9D%9A%E6%9E%9C%E4%BA%91"><span class="toc-number">15.3.</span> <span class="toc-text">坚果云</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#iCloud-drive"><span class="toc-number">15.4.</span> <span class="toc-text">iCloud drive</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Infiniti-drive"><span class="toc-number">15.5.</span> <span class="toc-text">Infiniti drive</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#zerotier"><span class="toc-number">16.</span> <span class="toc-text">zerotier</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#termius"><span class="toc-number">17.</span> <span class="toc-text">termius</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#nano"><span class="toc-number">18.</span> <span class="toc-text">nano</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#tmux"><span class="toc-number">19.</span> <span class="toc-text">tmux</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6-tmux-conf"><span class="toc-number">19.1.</span> <span class="toc-text">配置文件 .tmux.conf</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8F%92%E4%BB%B6-2"><span class="toc-number">19.2.</span> <span class="toc-text">插件</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#tmux%E6%8F%92%E4%BB%B6%E7%AE%A1%E7%90%86%E5%8C%85"><span class="toc-number">19.2.1.</span> <span class="toc-text">tmux插件管理包</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Tmux-Resurrect"><span class="toc-number">19.2.2.</span> <span class="toc-text">Tmux Resurrect</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Tmux%E5%92%8Citerm2%E9%9B%86%E6%88%90-%E5%8F%AF%E9%80%89"><span class="toc-number">19.3.</span> <span class="toc-text">Tmux和iterm2集成(可选)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E8%BD%AF%E4%BB%B6"><span class="toc-number">20.</span> <span class="toc-text">常用软件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#PicGo%EF%BC%88%E5%9B%BE%E5%BA%8A%E5%B7%A5%E5%85%B7%EF%BC%89"><span class="toc-number">20.1.</span> <span class="toc-text">PicGo（图床工具）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ice-menubar%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7"><span class="toc-number">20.2.</span> <span class="toc-text">ice (menubar管理工具)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Raycast-app-%E5%BF%AB%E9%80%9F%E5%88%87%E6%8D%A2"><span class="toc-number">20.3.</span> <span class="toc-text">Raycast (app 快速切换)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#appcleaner"><span class="toc-number">20.4.</span> <span class="toc-text">appcleaner</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#mac-clean-up-py-%E5%8F%AF%E9%80%89"><span class="toc-number">20.5.</span> <span class="toc-text">mac-clean-up.py (可选)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#keycastr-%E6%8C%89%E9%94%AE%E6%98%BE%E7%A4%BA%E8%BD%AF%E4%BB%B6"><span class="toc-number">20.6.</span> <span class="toc-text">keycastr(按键显示软件)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#cleanmykeyboard"><span class="toc-number">20.7.</span> <span class="toc-text">cleanmykeyboard</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#smartmontools%EF%BC%88%E7%A1%AC%E7%9B%98%E6%A3%80%E6%B5%8B%E5%B7%A5%E5%85%B7%EF%BC%89"><span class="toc-number">20.8.</span> <span class="toc-text">smartmontools（硬盘检测工具）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Tmate-%E5%8F%AF%E9%80%89"><span class="toc-number">20.9.</span> <span class="toc-text">Tmate (可选)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%88%E7%AB%AF%E4%B8%8A%E7%9A%84-Mac-App-Store%E3%80%8Cmas%E3%80%8D"><span class="toc-number">20.10.</span> <span class="toc-text">终端上的 Mac App Store「mas」</span></a></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2025 By ShawnX</div><div class="footer_custom_text">Hi, welcome to my blog</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"></div><div id="rightside-config-show"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(async () => {
+  const showKatex = () => {
+    document.querySelectorAll('#article-container .katex').forEach(el => el.classList.add('katex-show'))
+  }
+
+  if (!window.katex_js_css) {
+    window.katex_js_css = true
+    await btf.getCSS('https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css')
+    if (true) {
+      await btf.getScript('https://cdn.jsdelivr.net/npm/katex/dist/contrib/copy-tex.min.js')
+    }
+  }
+
+  showKatex()
+})()</script><script>(() => {
+  const runMermaid = ele => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    ele.forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const mermaidThemeConfig = `%%{init:{ 'theme':'${theme}'}}%%\n`
+      const mermaidID = `mermaid-${index}`
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+      const renderMermaid = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      // mermaid v9 and v10 compatibility
+      typeof renderFn === 'string' ? renderMermaid(renderFn) : renderFn.then(({ svg }) => renderMermaid(svg))
+    })
+  }
+
+  const codeToMermaid = () => {
+    const codeMermaidEle = document.querySelectorAll('pre > code.mermaid')
+    if (codeMermaidEle.length === 0) return
+
+    codeMermaidEle.forEach(ele => {
+      const preEle = document.createElement('pre')
+      preEle.className = 'mermaid-src'
+      preEle.hidden = true
+      preEle.textContent = ele.textContent
+      const newEle = document.createElement('div')
+      newEle.className = 'mermaid-wrap'
+      newEle.appendChild(preEle)
+      ele.parentNode.replaceWith(newEle)
+    })
+  }
+
+  const loadMermaid = () => {
+    if (false) codeToMermaid()
+    const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+    if ($mermaid.length === 0) return
+
+    const runMermaidFn = () => runMermaid($mermaid)
+    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaidFn)
+  }
+
+  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><script src="js/sakura.js"></script> - <script src="/js/custom.js"></script> - <div class="aplayer no-destroy" data-id="12839720510" data-server="netease" data-type="playlist" data-fixed="true"> </div><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="false" data-text="coding..,debugging..,running..." data-fontsize="15px" data-random="false" async="async"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script>(() => {
+  const destroyAplayer = () => {
+    if (window.aplayers) {
+      for (let i = 0; i < window.aplayers.length; i++) {
+        if (!window.aplayers[i].options.fixed) {
+          window.aplayers[i].destroy()
+        }
+      }
+    }
+  }
+
+  const runMetingJS = () => {
+    typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+  }
+
+  btf.addGlobalFn('pjaxSend', destroyAplayer, 'destroyAplayer')
+  btf.addGlobalFn('pjaxComplete', loadMeting, 'runMetingJS')
+})()</script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>(() => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => fn())
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      const usePjax = true
+      false 
+        ? (usePjax ? pjax.loadUrl('/404.html') : window.location.href = '/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})()</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
