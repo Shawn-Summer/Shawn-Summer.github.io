@@ -1,0 +1,322 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>LittleBug - www.imxxl.top</title><meta name="author" content="ShawnX"><meta name="copyright" content="ShawnX"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="This is a blog">
+<meta property="og:type" content="website">
+<meta property="og:title" content="LittleBug">
+<meta property="og:url" content="http://imxxl.top/index.html">
+<meta property="og:site_name" content="LittleBug">
+<meta property="og:description" content="This is a blog">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://imxxl.top/img/avatar.jpg">
+<meta property="article:author" content="ShawnX">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://imxxl.top/img/avatar.jpg"><link rel="shortcut icon" href="/img/avatar.jpg"><link rel="canonical" href="http://imxxl.top/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          const hour = new Date().getHours()
+          const isNight = hour <= 6 || hour >= 18
+          if (theme === undefined) isNight ? activateDarkMode() : activateLightMode()
+          else theme === 'light' ? activateLightMode() : activateDarkMode()
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":100,"highlightFullpage":true,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'LittleBug',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'home'
+}</script><link rel="stylesheet" href="/css/mouse.css"><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-image: url(/img/pokemon2.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">32</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">12</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">13</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 全部文章</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 鏈接</span></a></div></div></div></div><div class="page" id="body-wrap"><header class="full_page" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">LittleBug</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 全部文章</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 鏈接</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="site-info"><h1 id="site-title">LittleBug</h1><div id="site-subtitle"><span id="subtitle"></span></div></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts nc" id="recent-posts"><div class="recent-post-items"><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/posts/CPP/10/" title="无标题">无标题</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-05-26T13:25:04.453Z" title="发表于 2025-05-26 21:25:04">2025-05-26</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/CPP/">CPP</a></span></div><div class="content">类和动态分配（一）设计一个String类  对类成员使用动态内存分配会产生一系列问题。我们需要对原有类体系进行扩充。  1. 实例：StringBad类 #include&lt;iostream&gt;#ifndef STRNGBAD_H_#define STRNGBAD_H_class StringBad&#123;private:    char * str;      //指向字符串的指针    int len;        //字符串的长度    static int num_strings;    //对象个数public:    StringBad(const char * s);   //构造函数    StringBad();                 //默认构造函数    ~StringBad();                //析构函数    //友元函数    friend std::ostream &amp; operator&lt;&lt;(std::ostream &amp; os,const StringBad &amp;...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/posts/CPP/%E4%BB%8EC%E5%88%B0C++___%E7%B1%BB%E5%92%8C%E5%8A%A8%E6%80%81%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D(%E4%BA%8C)/" title="无标题">无标题</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-05-26T13:25:04.453Z" title="发表于 2025-05-26 21:25:04">2025-05-26</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/CPP/">CPP</a></span></div><div class="content">类和动态内存分配(二) 1. 在类中使用动态内存分配的注意事项 1.1 构造函数中使用new  如果在构造函数中使用new来初始化指针成员,则应在析构函数中使用delete new和delete必须相互兼容,new相对delete;new[]相对delete[] 因为只有一个析构函数,所有的构造函数都必须与它兼容   注意的是:delete或者delete[]都可以对空指针操作. NULl和0和nullptr:空指针可以用0或者NULL来表示,C++11使用一个特殊的关键词:nullptr来表示空指针.    应该定义一个复制构造函数,通过深度复制将一个对象初始化成另一个对象. String::String(const String &amp;st)//复制构造函数&#123;    len=st.len;    str=new char[len+1];    std::strcpy(str,st.str);    num_strings++;&#125;   应该定义一个赋值运算符。 String&amp; String::operator=(const...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/posts/llm/rag_local_llm/" title="本地部署RAG文档问答系统">本地部署RAG文档问答系统</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-05-26T02:32:00.000Z" title="发表于 2025-05-26 10:32:00">2025-05-26</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/llm/">llm</a></span></div><div class="content">参考：https://zhuanlan.zhihu.com/p/649366179 https://www.anjhon.top/llms-mac-local-rag llama-cpp-python 的安装 llama.cpp是ggml这个机器学习库的衍生项目，专门用于Llama系列模型的推理。llama.cpp和ggml均为纯C/C++实现，针对Apple Silicon芯片进行优化和硬件加速，支持模型的整型量化 (Integer Quantization): 4-bit, 5-bit, 8-bit等。社区同时开发了其他语言的bindings，例如llama-cpp-python，由此提供其他语言下的API调用。 GitHub 仓库：https://github.com/abetlen/llama-cpp-python apple silicon 安装教程参考：https://llama-cpp-python.readthedocs.io/en/latest/install/macos/ 安装脚本： pip uninstall llama-cpp-python...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/posts/environment-construction/umacos/" title="macOS 安装在外部存储设备中，并作为启动盘">macOS 安装在外部存储设备中，并作为启动盘</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-04-17T16:00:00.000Z" title="发表于 2025-04-18 00:00:00">2025-04-18</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/environment-construction/">environment-construction</a></span></div><div class="content">参考：https://support.apple.com/zh-cn/111336 如果你有外置储存设备（例如 USB 或雷雳驱动器），则可以在这台设备上安装 macOS，然后将它用作 Mac 的启动磁盘。 注意：外部存储设备必须要符合一定标准，才可以作为启动盘。 外部存储设备中安装高版本 macOS 下载地址:https://support.apple.com/zh-cn/102662. 如果我们希望外部存储设备中的 macOS 版本高于（或等于）当前启动盘的 macOS，这操作就非常简单，只需要下载 macOS 安装包，然后点击安装，磁盘选择外部存储设备即可。 外部存储设备中安装低版本 macOS 此时，只能在恢复模式下，启动 macOS 引导程序，将 macOS 安装到外部存储设备中。 流程为：  下载低版本 macOS 安装包 制作 macOS 引导程序 重启进入恢复模式，选择 macOS 引导程序，安装 macOS 到外部存储设备  步骤2，使用 macOS 安装包中的 createinstallmedia 工具： sudo ./createinstallmedia...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/posts/llm/localllm/" title="使用ollama本地部署大模型">使用ollama本地部署大模型</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-03-26T02:32:00.000Z" title="发表于 2025-03-26 10:32:00">2025-03-26</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/llm/">llm</a></span></div><div class="content">安装ollama ollama是一种本地大模型管理工具 brew install ollama --cask 常见的 ollama 指令有： ollama list：显示模型列表。ollama show [model]：显示模型的信息ollama pull [model]：拉取模型ollama push [model]：推送模型ollama cp [model]：拷贝一个模型ollama rm [model]：删除一个模型ollama run [model]：运行一个模型ollama serve：启动本地 LLM 服务器 当使用ollama serve指令后，显示如下信息： 2025/03/26 13:23:33 routes.go:1230: INFO server config env=&quot;map[HTTPS_PROXY: HTTP_PROXY: NO_PROXY: OLLAMA_CONTEXT_LENGTH:2048 OLLAMA_DEBUG:false OLLAMA_FLASH_ATTENTION:false OLLAMA_GPU_OVERHEAD:0...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/posts/project/LLMhuanjue/" title="kaggle Detect hallucinations in LLMs">kaggle Detect hallucinations in LLMs</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-01-28T16:00:00.000Z" title="发表于 2025-01-29 00:00:00">2025-01-29</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/project/">project</a></span></div><div class="content">赛题链接：https://www.kaggle.com/competitions/ml-olympiad-detect-hallucinations-in-llms 任务分析：这是一个文本分类任务，难点在于如何提取文本特征、建立文本关系特征，以及如何解决类别不平衡问题 运行环境、使用框架、语言 操作系统：Linux ubuntu 4.15.0-213-generic #224-Ubuntu SMP Mon Jun 19 13:30:12 UTC 2023 x86_64 x86_64 x86_64 GNU/Linux 硬件环境： Intel® Xeon® Gold 6226R CPU @ 2.90GHz +  NVIDIA GeForce RTX 3090 * 8 (CUDA Version: 12.4) 语言和运行环境：python 3.9.21 (main, Dec 11 2024, 16:24:11) + jupyter notebook 7.2.2 使用框架：pytorch...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/posts/project/xujiazhiwei/" title="DataFountain-虚假职位招聘预测">DataFountain-虚假职位招聘预测</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-01-22T16:00:00.000Z" title="发表于 2025-01-23 00:00:00">2025-01-23</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/project/">project</a></span></div><div class="content">赛题链接：https://www.datafountain.cn/competitions/448 任务分析：这是一个分类任务，难点在于，第一，数据集难以处理，第二，类别不平衡，负类样本占比达到95% 运行环境、使用框架、语言 操作系统：Linux ubuntu 4.15.0-213-generic #224-Ubuntu SMP Mon Jun 19 13:30:12 UTC 2023 x86_64 x86_64 x86_64 GNU/Linux 硬件环境： Intel® Xeon® Gold 6226R CPU @ 2.90GHz +  NVIDIA GeForce RTX 3090 * 1 (CUDA Version: 12.4) 语言和运行环境：python 3.9.21 (main, Dec 11 2024, 16:24:11) + jupyter notebook 7.2.2 使用框架：pytorch 2.5.1+cu124 数据分析、特征设计、抽取、处理 数据处理部分的代码在data_processing.ipynb中，处理好的数据存储在...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/posts/paperReading/end2end/Is-Ego-Status-All-You-Need-for-open/" title="[CVPR2024] Is Ego Status All You Need for Open-Loop End-to-End Autonomous Driving?">[CVPR2024] Is Ego Status All You Need for Open-Loop End-to-End Autonomous Driving?</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-01-18T16:00:00.000Z" title="发表于 2025-01-19 00:00:00">2025-01-19</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/paperReading/">paperReading</a><i class="fas fa-angle-right article-meta-link"></i><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/paperReading/end2end/">end2end</a></span></div><div class="content"> conclusion The planning performance of existing open-loop autonomous driving models based on nuScenes is highly affected by ego status (velocity, acceleration, yaw angle). With ego status involved, the model’s final predicted trajectories are basically dominated by it, resulting in a diminished use of sensory information. Methods utilizing ego status are not directly comparable and conclusions should not be drawn from such comparisons 目前存在的开环（端到端）自动驾驶模型的测试performance（数据集为...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/posts/environment-construction/apple_degrade/" title="安装低版本 macOS，并尝试恢复数据">安装低版本 macOS，并尝试恢复数据</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-01-04T16:00:00.000Z" title="发表于 2025-01-05 00:00:00">2025-01-05</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/environment-construction/">environment-construction</a></span></div><div class="content">升级指定新版本的 macOS 非常简单，只需要在 app store 中下载并安装即可，这样也不会抹掉原来的数据。但是安装低版本 macOS，要想恢复数据会存在麻烦，因为 低版本的 macOS 可能不兼容高版本的数据，本文仅尝试恢复数据。 注意事项  为了防止降级失败，我们不能将原来的操作系统抹掉。 使用时间机器备份数据。 将低版本的 macOS 安装在磁盘新分区或外部存储设备中。  我们的总体思路是：安装低版本的 macOS，并使用迁移助手，从时间机器中恢复数据。 下载 macOS 安装包 下载地址:https://support.apple.com/zh-cn/102662. 下载完成后，会得到一个应用程序包，我们会发现点击不了它，因为不能安装低版本 macOS，在 xxx.app/Contents/Resources/ 目录下存在两个工具：  createinstallmedia：制作 macOS 引导程序 startosinstall：安装 macOS 操作系统  macOS 引导程序和 macOS...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/posts/paperReading/end2end/DiffusionDrive/" title="[2024.11.25-arxiv] DiffusionDrive: Truncated Diffusion Model for End-to-End Autonomous Driving">[2024.11.25-arxiv] DiffusionDrive: Truncated Diffusion Model for End-to-End Autonomous Driving</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-12-22T16:00:00.000Z" title="发表于 2024-12-23 00:00:00">2024-12-23</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/paperReading/">paperReading</a><i class="fas fa-angle-right article-meta-link"></i><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/paperReading/end2end/">end2end</a></span></div><div class="content"> motivation：diffusion model for planning diffusion model 现在很多应用在traffic simulation 上，在用 diffusion model 做 plan的没有。  (a): this paradigm does not account for the inherent uncertainty and multi-mode nature of driving behaviors. 无法表示 uncertainty (b): this large fixed-vocabulary paradigm is fundamentally constrained by the number and quality of anchor trajectories, often failing in out-of-vocabulary scenarios. Furthermore, managing a large number of anchors presents significant computational...</div></div></div></div><nav id="pagination"><div class="pagination"><span class="page-number current">1</span><a class="page-number" href="/page/2/#content-inner">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/#content-inner">4</a><a class="extend next" rel="next" href="/page/2/#content-inner"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/cpp/" style="font-size: 1.45em; color: rgb(85, 50, 94);">cpp</a><a href="/tags/github/" style="font-size: 1.25em; color: rgb(50, 80, 136);">github</a><a href="/tags/pytorch/" style="font-size: 1.15em; color: rgb(83, 200, 50);">pytorch</a><a href="/tags/%E8%87%AA%E5%8A%A8%E5%BE%AE%E5%88%86/" style="font-size: 1.15em; color: rgb(195, 194, 192);">自动微分</a><a href="/tags/multimodal/" style="font-size: 1.25em; color: rgb(200, 50, 69);">multimodal</a><a href="/tags/lidar/" style="font-size: 1.25em; color: rgb(182, 195, 57);">lidar</a><a href="/tags/camera/" style="font-size: 1.25em; color: rgb(146, 135, 129);">camera</a><a href="/tags/diffusion/" style="font-size: 1.15em; color: rgb(55, 139, 82);">diffusion</a><a href="/tags/inference/" style="font-size: 1.15em; color: rgb(69, 108, 68);">inference</a><a href="/tags/variational-inference/" style="font-size: 1.15em; color: rgb(105, 50, 130);">variational inference</a><a href="/tags/transformer/" style="font-size: 1.35em; color: rgb(50, 56, 50);">transformer</a><a href="/tags/point-cloud/" style="font-size: 1.25em; color: rgb(50, 151, 141);">point cloud</a></div></div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站信息</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">32</div></div><div class="webinfo-item"><div class="item-name">本站总字数 :</div><div class="item-count">66.3k</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">本站总浏览量 :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2025-05-26T13:25:27.431Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2025 By ShawnX</div><div class="footer_custom_text">Hi, welcome to my blog</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"></div><div id="rightside-config-show"><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>window.typedJSFn = {
+  init: str => {
+    window.typed = new Typed('#subtitle', Object.assign({
+      strings: str,
+      startDelay: 300,
+      typeSpeed: 150,
+      loop: true,
+      backSpeed: 50,
+    }, null))
+  },
+  run: subtitleType => {
+    if (true) {
+      if (typeof Typed === 'function') {
+        subtitleType()
+      } else {
+        btf.getScript('https://cdn.jsdelivr.net/npm/typed.js/dist/typed.umd.min.js').then(subtitleType)
+      }
+    } else {
+      subtitleType()
+    }
+  },
+  processSubtitle: (content, extraContents = []) => {
+    if (true) {
+      const sub = [].slice()
+
+      if (extraContents.length > 0) {
+        sub.unshift(...extraContents)
+      }
+
+      if (typeof content === 'string') {
+        sub.unshift(content)
+      } else if (Array.isArray(content)) {
+        sub.unshift(...content)
+      }
+
+      sub.length > 0 && typedJSFn.init(sub)
+    } else {
+      document.getElementById('subtitle').textContent = typeof content === 'string' ? content :
+        (Array.isArray(content) && content.length > 0 ? content[0] : '')
+    }
+  }
+}
+btf.addGlobalFn('pjaxSendOnce', () => { typed.destroy() }, 'typedDestroy')
+</script><script>function subtitleType () {
+  btf.getScript('https://sdk.jinrishici.com/v2/browser/jinrishici.js')
+    .then(() => {
+      jinrishici.load(result => {
+        if (result && result.data && result.data.content) {
+          typedJSFn.processSubtitle(result.data.content)
+        } else {
+          throw new Error('Failed to parse the return value of Jinrishici API')
+        }
+      })
+    })
+    .catch(err => {
+      console.error('Failed to get the Jinrishici API:', err)
+      typedJSFn.processSubtitle(0)
+    })
+}
+typedJSFn.run(subtitleType)
+</script><script>(() => {
+  const runMermaid = ele => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    ele.forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const mermaidThemeConfig = `%%{init:{ 'theme':'${theme}'}}%%\n`
+      const mermaidID = `mermaid-${index}`
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+      const renderMermaid = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      // mermaid v9 and v10 compatibility
+      typeof renderFn === 'string' ? renderMermaid(renderFn) : renderFn.then(({ svg }) => renderMermaid(svg))
+    })
+  }
+
+  const codeToMermaid = () => {
+    const codeMermaidEle = document.querySelectorAll('pre > code.mermaid')
+    if (codeMermaidEle.length === 0) return
+
+    codeMermaidEle.forEach(ele => {
+      const preEle = document.createElement('pre')
+      preEle.className = 'mermaid-src'
+      preEle.hidden = true
+      preEle.textContent = ele.textContent
+      const newEle = document.createElement('div')
+      newEle.className = 'mermaid-wrap'
+      newEle.appendChild(preEle)
+      ele.parentNode.replaceWith(newEle)
+    })
+  }
+
+  const loadMermaid = () => {
+    if (false) codeToMermaid()
+    const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+    if ($mermaid.length === 0) return
+
+    const runMermaidFn = () => runMermaid($mermaid)
+    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaidFn)
+  }
+
+  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><script src="js/sakura.js"></script> - <script src="/js/custom.js"></script> - <div class="aplayer no-destroy" data-id="12839720510" data-server="netease" data-type="playlist" data-fixed="true"> </div><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="false" data-text="coding..,debugging..,running..." data-fontsize="15px" data-random="false" async="async"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script>(() => {
+  const destroyAplayer = () => {
+    if (window.aplayers) {
+      for (let i = 0; i < window.aplayers.length; i++) {
+        if (!window.aplayers[i].options.fixed) {
+          window.aplayers[i].destroy()
+        }
+      }
+    }
+  }
+
+  const runMetingJS = () => {
+    typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+  }
+
+  btf.addGlobalFn('pjaxSend', destroyAplayer, 'destroyAplayer')
+  btf.addGlobalFn('pjaxComplete', loadMeting, 'runMetingJS')
+})()</script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>(() => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => fn())
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      const usePjax = true
+      false 
+        ? (usePjax ? pjax.loadUrl('/404.html') : window.location.href = '/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})()</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
