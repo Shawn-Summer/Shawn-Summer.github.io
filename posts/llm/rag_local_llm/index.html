@@ -1,0 +1,344 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>本地部署RAG文档问答系统 | LittleBug</title><meta name="author" content="ShawnX"><meta name="copyright" content="ShawnX"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="参考：https:&#x2F;&#x2F;zhuanlan.zhihu.com&#x2F;p&#x2F;649366179 https:&#x2F;&#x2F;www.anjhon.top&#x2F;llms-mac-local-rag llama-cpp-python 的安装 llama.cpp是ggml这个机器学习库的衍生项目，专门用于Llama系列模型的推理。llama.cpp和ggml均为纯C&#x2F;C++实现，针对Apple Silicon芯片进行优化和硬件加速">
+<meta property="og:type" content="article">
+<meta property="og:title" content="本地部署RAG文档问答系统">
+<meta property="og:url" content="http://imxxl.top/posts/llm/rag_local_llm/index.html">
+<meta property="og:site_name" content="LittleBug">
+<meta property="og:description" content="参考：https:&#x2F;&#x2F;zhuanlan.zhihu.com&#x2F;p&#x2F;649366179 https:&#x2F;&#x2F;www.anjhon.top&#x2F;llms-mac-local-rag llama-cpp-python 的安装 llama.cpp是ggml这个机器学习库的衍生项目，专门用于Llama系列模型的推理。llama.cpp和ggml均为纯C&#x2F;C++实现，针对Apple Silicon芯片进行优化和硬件加速">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://imxxl.top/img/avatar.jpg">
+<meta property="article:published_time" content="2025-05-26T02:32:00.000Z">
+<meta property="article:modified_time" content="2025-06-03T05:05:46.831Z">
+<meta property="article:author" content="ShawnX">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://imxxl.top/img/avatar.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "本地部署RAG文档问答系统",
+  "url": "http://imxxl.top/posts/llm/rag_local_llm/",
+  "image": "http://imxxl.top/img/avatar.jpg",
+  "datePublished": "2025-05-26T02:32:00.000Z",
+  "dateModified": "2025-06-03T05:05:46.831Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "ShawnX",
+      "url": "http://imxxl.top/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/avatar.jpg"><link rel="canonical" href="http://imxxl.top/posts/llm/rag_local_llm/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          const hour = new Date().getHours()
+          const isNight = hour <= 6 || hour >= 18
+          if (theme === undefined) isNight ? activateDarkMode() : activateLightMode()
+          else theme === 'light' ? activateLightMode() : activateDarkMode()
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":100,"highlightFullpage":true,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '本地部署RAG文档问答系统',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/mouse.css"><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-image: url(/img/pokemon2.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">32</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">12</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">13</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 全部文章</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 鏈接</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">LittleBug</span></a><a class="nav-page-title" href="/"><span class="site-name">本地部署RAG文档问答系统</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 全部文章</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 鏈接</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">本地部署RAG文档问答系统<a class="post-edit-link" href="https://github.com/Shawn-Summer/hexo-source/edit/main/source/_posts/llm/rag_local_llm.md" title="编辑" target="_blank"><i class="fas fa-pencil-alt"></i></a></h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-05-26T02:32:00.000Z" title="发表于 2025-05-26 10:32:00">2025-05-26</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-06-03T05:05:46.831Z" title="更新于 2025-06-03 13:05:46">2025-06-03</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/llm/">llm</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">1.9k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>8分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>参考：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/649366179">https://zhuanlan.zhihu.com/p/649366179</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.anjhon.top/llms-mac-local-rag">https://www.anjhon.top/llms-mac-local-rag</a></p>
+<h2 id="llama-cpp-python-的安装">llama-cpp-python 的安装</h2>
+<p><strong>llama.cpp</strong>是<a href="https://link.zhihu.com/?target=https%3A//github.com/ggerganov/ggml">ggml</a>这个机器学习库的衍生项目，专门用于Llama系列模型的推理。llama.cpp和ggml均为纯C/C++实现，针对Apple Silicon芯片进行优化和硬件加速，支持模型的整型量化 (Integer Quantization): 4-bit, 5-bit, 8-bit等。社区同时开发了其他语言的bindings，例如<a href="https://link.zhihu.com/?target=https%3A//github.com/abetlen/llama-cpp-python">llama-cpp-python</a>，由此提供其他语言下的API调用。</p>
+<p>GitHub 仓库：<a target="_blank" rel="noopener" href="https://github.com/abetlen/llama-cpp-python">https://github.com/abetlen/llama-cpp-python</a></p>
+<p>apple silicon 安装教程参考：<a target="_blank" rel="noopener" href="https://llama-cpp-python.readthedocs.io/en/latest/install/macos/">https://llama-cpp-python.readthedocs.io/en/latest/install/macos/</a></p>
+<p>安装脚本：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pip uninstall llama-cpp-python -y</span><br><span class="line">CMAKE_ARGS=<span class="string">&quot;-DGGML_METAL=on&quot;</span> pip install -U llama-cpp-python --no-cache-dir</span><br><span class="line">pip install <span class="string">&#x27;llama-cpp-python[server]&#x27;</span></span><br></pre></td></tr></table></figure>
+<ol>
+<li>安装 llama-cpp-python，编译时启动 metal 平台加速（针对不同后端硬件使用不同硬件加速策略，例如 cuda 加速，cpu 加速等）</li>
+<li>额外安装 <code>server</code> 依赖，从而让你能<strong>在本地运行 LLaMA 模型并开启一个 API 服务接口</strong>（像 OpenAI 的 ChatGPT 一样通过 HTTP 调用）。</li>
+</ol>
+<h2 id="安装量化的模型">安装量化的模型</h2>
+<p>llama-cpp 只支持 gguf 格式的量化模型，可以直接下载量化好的模型，或者自己手动量化。</p>
+<p>这个仓库：<a target="_blank" rel="noopener" href="https://huggingface.co/TheBloke%EF%BC%8C%E4%BC%9A%E4%B8%93%E9%97%A8%E6%8F%90%E4%BE%9B%E9%87%8F%E5%8C%96%E5%A5%BD%E7%9A%84%E6%A8%A1%E5%9E%8B%E3%80%82">https://huggingface.co/TheBloke，会专门提供量化好的模型。</a></p>
+<p>例如可以选择 <a target="_blank" rel="noopener" href="https://huggingface.co/TheBloke/deepseek-llm-7B-chat-GGUF/blob/main/deepseek-llm-7b-chat.Q5_K_S.gguf">deepseek-llm-7b-chat.Q5_K_S.gguf</a> 这个模型。</p>
+<p>安装好之后，使用下面命令运行与测试大模型</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">python3 -m llama_cpp.server --model gguf模型路径 --n_gpu_layers 100</span><br></pre></td></tr></table></figure>
+<p><em><strong>Note:</strong> If you omit the <code>--n_gpu_layers 100</code> then CPU will be used</em>,这表示加载到 GPU（metal）上的层数</p>
+<p>然后点击 <a target="_blank" rel="noopener" href="http://localhost:8000/docs#">http://localhost:8000/docs#</a> 可以看到如下：</p>
+<img src="/posts/llm/rag_local_llm/1.png" alt="image-20250526125250959" style="zoom: 33%;">
+<p>运行如下代码可以测试这个模型，来写一首诗</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line">url = <span class="string">&quot;http://localhost:8000/v1/chat/completions&quot;</span></span><br><span class="line">headers = &#123;<span class="string">&quot;Content-Type&quot;</span>: <span class="string">&quot;application/json&quot;</span>&#125;</span><br><span class="line">data = &#123;</span><br><span class="line">    <span class="string">&quot;model&quot;</span>: <span class="string">&quot;llama&quot;</span>,</span><br><span class="line">    <span class="string">&quot;messages&quot;</span>: [</span><br><span class="line">        &#123;<span class="string">&quot;role&quot;</span>: <span class="string">&quot;user&quot;</span>, <span class="string">&quot;content&quot;</span>: <span class="string">&quot;请帮我写一首诗&quot;</span>&#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">response = requests.post(url, headers=headers, json=data)</span><br><span class="line"><span class="built_in">print</span>(response.json()[<span class="string">&quot;choices&quot;</span>][<span class="number">0</span>][<span class="string">&quot;message&quot;</span>][<span class="string">&quot;content&quot;</span>])</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="构建-RAG">构建 RAG</h2>
+<p>本实验旨在构建一个基于检索增强技术的大模型问答系统。通过结合外部知识库的高效检索能力与大语言模型的强大生成能力，系统能够在面对复杂或专业性较强的问题时，快速检索相关知识片段并生成准确、连贯的答案。</p>
+<p>RAG 系统的基本流程通常包括三个阶段：</p>
+<ul>
+<li>
+<p>知识库构建。这一步主要包括从各类文档中加载原始数据，对文本进行清洗和切分（splitting），将其划分为适合处理的语义片段。随后，使用嵌入模型（如 Sentence-BERT、text-embedding-ada-002 等）将文本转化为向量形式，并存入向量数据库中（如 FAISS、Milvus 等），形成可查询的外部知识库。</p>
+</li>
+<li>
+<p>检索。当用户提出问题时，系统会将用户查询编码为向量，并与知识库中的文本向量进行相似度匹配，检索出与查询语义最相关的若干文档或段落。这一过程显著提高了系统对特定领域信息的覆盖能力，使得模型能够访问超出其预训练知识范围的最新或专业内容。</p>
+</li>
+<li>
+<p>生成。检索到的相关文段会与用户的问题一并输入至大语言模型中（如 LLaMA、Mistral、ChatGLM 等），模型在参考相关知识的基础上生成语义连贯、上下文一致的回答。</p>
+</li>
+</ul>
+<img src="/posts/llm/rag_local_llm/2.png" alt="2" style="zoom: 67%;">
+<h3 id="运行-llama-cpp-server">运行 llama.cpp server</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">python3 -m llama_cpp.server --model gguf模型路径 --n_gpu_layers 100</span><br></pre></td></tr></table></figure>
+<p>运行以后就会在某个端口,运行一个大语言模型的服务器,会得到一个 openai_api_base: <a target="_blank" rel="noopener" href="http://localhost:8000/v1">http://localhost:8000/v1</a></p>
+<h3 id="构建知识库">构建知识库</h3>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># document loading &amp; splitting</span></span><br><span class="line"><span class="keyword">from</span> langchain.document_loaders <span class="keyword">import</span> PyPDFLoader</span><br><span class="line">loader = PyPDFLoader(<span class="string">&quot;data/中国科学技术大学研究生学籍管理实施细则.pdf&quot;</span>)</span><br><span class="line">pages = loader.load()</span><br><span class="line"><span class="keyword">from</span> langchain.text_splitter <span class="keyword">import</span> RecursiveCharacterTextSplitter</span><br><span class="line">splitter= RecursiveCharacterTextSplitter(chunk_size = <span class="number">500</span>,chunk_overlap = <span class="number">150</span>,)</span><br><span class="line">all_splits = splitter.split_documents(pages)</span><br><span class="line"><span class="keyword">from</span> langchain.vectorstores <span class="keyword">import</span> FAISS</span><br><span class="line">embedding =HuggingFaceEmbeddingsMPS(<span class="string">&quot;shibing624/text2vec-base-chinese&quot;</span>)</span><br><span class="line">vectorstore = FAISS.from_documents(documents=all_splits, embedding=embedding)</span><br></pre></td></tr></table></figure>
+<p>这里对 pdf 文件，先加载，读取句子后，使用 RecursiveCharacterTextSplitte 将句子分段（分片），然后投影到 embedding 维度。注意：每个句子对应一个嵌入向量。</p>
+<h3 id="检索">检索</h3>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"> 		query = pair[<span class="string">&quot;question&quot;</span>]</span><br><span class="line">    true_answer = pair[<span class="string">&quot;answer&quot;</span>]</span><br><span class="line">    result_simi=vectorstore.similarity_search(query,k=<span class="number">3</span>) <span class="comment">#检索三个相似的语段，作为上下文</span></span><br><span class="line">    context = <span class="string">&quot;&quot;</span>.join([x.page_content <span class="keyword">for</span> x <span class="keyword">in</span> result_simi]);</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        model_answer = llm_chain.run(&#123;<span class="string">&quot;context&quot;</span>: context,<span class="string">&quot;query&quot;</span>: query&#125;)</span><br></pre></td></tr></table></figure>
+<p>这里 <code>result_simi</code> 为一个 document 列表，即 段落列表，首先使用 query 找到最相似的 3 个语段，然后将这些语段，作为上下文传递给 llm。</p>
+<h3 id="生成">生成</h3>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> langchain.chat_models <span class="keyword">import</span> ChatOpenAI</span><br><span class="line">chat_model = ChatOpenAI(openai_api_key = <span class="string">&quot;EMPTY&quot;</span>, openai_api_base = <span class="string">&quot;http://localhost:8000/v1&quot;</span>, max_tokens=<span class="number">512</span>)</span><br><span class="line"><span class="keyword">from</span> langchain.prompts <span class="keyword">import</span> PromptTemplate</span><br><span class="line"><span class="keyword">from</span> langchain.chains <span class="keyword">import</span> LLMChain</span><br><span class="line">template = <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">请基于以下内容简洁回答，不使用 Markdown 格式，也不要加标题、列表、代码块或换行符。只输出纯文本。</span></span><br><span class="line"><span class="string">&#123;context&#125;</span></span><br><span class="line"><span class="string">问题：</span></span><br><span class="line"><span class="string">&#123;query&#125;</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line">prompt = PromptTemplate(template=template, input_variables=[<span class="string">&quot;context&quot;</span> ,<span class="string">&quot;query&quot;</span>])</span><br><span class="line">llm_chain = LLMChain(prompt=prompt, llm=chat_model  , llm_kwargs = &#123;<span class="string">&quot;temperature&quot;</span>:<span class="number">0</span>, <span class="string">&quot;max_tokens&quot;</span>:<span class="number">512</span>&#125;)</span><br><span class="line"><span class="keyword">from</span> tqdm <span class="keyword">import</span> tqdm</span><br><span class="line"><span class="comment"># 存储结果</span></span><br><span class="line">results = []</span><br><span class="line"><span class="keyword">for</span> pair <span class="keyword">in</span> tqdm(qa_pairs):</span><br><span class="line">    query = pair[<span class="string">&quot;question&quot;</span>]</span><br><span class="line">    true_answer = pair[<span class="string">&quot;answer&quot;</span>]</span><br><span class="line">    result_simi=vectorstore.similarity_search(query,k=<span class="number">3</span>) <span class="comment">#检索三个相似的语段，作为上下文</span></span><br><span class="line">    context = <span class="string">&quot;&quot;</span>.join([x.page_content <span class="keyword">for</span> x <span class="keyword">in</span> result_simi]);</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        model_answer = llm_chain.run(&#123;<span class="string">&quot;context&quot;</span>: context,<span class="string">&quot;query&quot;</span>: query&#125;)</span><br><span class="line">        <span class="comment"># 保存比较结果</span></span><br><span class="line">        results.append(&#123;</span><br><span class="line">            <span class="string">&quot;question&quot;</span>: query,</span><br><span class="line">            <span class="string">&quot;true_answer&quot;</span>: true_answer,</span><br><span class="line">            <span class="string">&quot;model_answer&quot;</span>: model_answer</span><br><span class="line">        &#125;)</span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">        results.append(&#123;</span><br><span class="line">            <span class="string">&quot;question&quot;</span>: query,</span><br><span class="line">            <span class="string">&quot;true_answer&quot;</span>: true_answer,</span><br><span class="line">            <span class="string">&quot;model_answer&quot;</span>: <span class="string">f&quot;Error: <span class="subst">&#123;<span class="built_in">str</span>(e)&#125;</span>&quot;</span></span><br><span class="line">        &#125;)</span><br></pre></td></tr></table></figure>
+<h2 id="完整代码">完整代码</h2>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> langchain.embeddings.base <span class="keyword">import</span> Embeddings</span><br><span class="line"><span class="keyword">from</span> sentence_transformers <span class="keyword">import</span> SentenceTransformer</span><br><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">HuggingFaceEmbeddingsMPS</span>(<span class="title class_ inherited__">Embeddings</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, model_name</span>):</span><br><span class="line">        <span class="variable language_">self</span>.device = torch.device(<span class="string">&quot;mps&quot;</span> <span class="keyword">if</span> torch.backends.mps.is_available() <span class="keyword">else</span> <span class="string">&quot;cpu&quot;</span>)</span><br><span class="line">        <span class="variable language_">self</span>.model = SentenceTransformer(model_name, device=<span class="variable language_">self</span>.device)</span><br><span class="line">  </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">embed_documents</span>(<span class="params">self, texts</span>):</span><br><span class="line">        <span class="keyword">return</span> [<span class="variable language_">self</span>.model.encode(text) <span class="keyword">for</span> text <span class="keyword">in</span> texts]</span><br><span class="line">  </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">embed_query</span>(<span class="params">self, text</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.model.encode(text)</span><br><span class="line"></span><br><span class="line"><span class="comment"># document loading &amp; splitting</span></span><br><span class="line"><span class="keyword">from</span> langchain.document_loaders <span class="keyword">import</span> PyPDFLoader</span><br><span class="line">loader = PyPDFLoader(<span class="string">&quot;data/中国科学技术大学研究生学籍管理实施细则.pdf&quot;</span>)</span><br><span class="line">pages = loader.load()</span><br><span class="line"><span class="keyword">from</span> langchain.text_splitter <span class="keyword">import</span> RecursiveCharacterTextSplitter</span><br><span class="line">splitter= RecursiveCharacterTextSplitter(chunk_size = <span class="number">500</span>,chunk_overlap = <span class="number">150</span>,)</span><br><span class="line">all_splits = splitter.split_documents(pages)</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> langchain.vectorstores <span class="keyword">import</span> FAISS</span><br><span class="line">embedding =HuggingFaceEmbeddingsMPS(<span class="string">&quot;shibing624/text2vec-base-chinese&quot;</span>)</span><br><span class="line">vectorstore = FAISS.from_documents(documents=all_splits, embedding=embedding)</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> langchain.chat_models <span class="keyword">import</span> ChatOpenAI</span><br><span class="line">chat_model = ChatOpenAI(openai_api_key = <span class="string">&quot;EMPTY&quot;</span>, openai_api_base = <span class="string">&quot;http://localhost:8000/v1&quot;</span>, max_tokens=<span class="number">512</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> langchain.prompts <span class="keyword">import</span> PromptTemplate</span><br><span class="line"><span class="keyword">from</span> langchain.chains <span class="keyword">import</span> LLMChain</span><br><span class="line">template = <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">请基于以下内容简洁回答，不使用 Markdown 格式，也不要加标题、列表、代码块或换行符。只输出纯文本。</span></span><br><span class="line"><span class="string">&#123;context&#125;</span></span><br><span class="line"><span class="string">问题：</span></span><br><span class="line"><span class="string">&#123;query&#125;</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line">prompt = PromptTemplate(template=template, input_variables=[<span class="string">&quot;context&quot;</span> ,<span class="string">&quot;query&quot;</span>])</span><br><span class="line">llm_chain = LLMChain(prompt=prompt, llm=chat_model  , llm_kwargs = &#123;<span class="string">&quot;temperature&quot;</span>:<span class="number">0</span>, <span class="string">&quot;max_tokens&quot;</span>:<span class="number">512</span>&#125;)</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"></span><br><span class="line"><span class="comment"># 读取 Excel 文件</span></span><br><span class="line">df = pd.read_excel(<span class="string">&quot;data/问答对.xlsx&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 或构造成字典列表</span></span><br><span class="line"><span class="comment"># 你的问答对</span></span><br><span class="line">qa_pairs = [&#123;<span class="string">&quot;question&quot;</span>: q, <span class="string">&quot;answer&quot;</span>: a&#125; <span class="keyword">for</span> q, a <span class="keyword">in</span> <span class="built_in">zip</span>(df[<span class="string">&quot;问&quot;</span>], df[<span class="string">&quot;答&quot;</span>])]</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> tqdm <span class="keyword">import</span> tqdm</span><br><span class="line"></span><br><span class="line"><span class="comment"># 存储结果</span></span><br><span class="line">results = []</span><br><span class="line"><span class="keyword">for</span> pair <span class="keyword">in</span> tqdm(qa_pairs):</span><br><span class="line">    query = pair[<span class="string">&quot;question&quot;</span>]</span><br><span class="line">    true_answer = pair[<span class="string">&quot;answer&quot;</span>]</span><br><span class="line">    result_simi=vectorstore.similarity_search(query,k=<span class="number">3</span>) <span class="comment">#检索三个相似的语段，作为上下文</span></span><br><span class="line">    context = <span class="string">&quot;&quot;</span>.join([x.page_content <span class="keyword">for</span> x <span class="keyword">in</span> result_simi]);</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        model_answer = llm_chain.run(&#123;<span class="string">&quot;context&quot;</span>: context,<span class="string">&quot;query&quot;</span>: query&#125;)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 保存比较结果</span></span><br><span class="line">        results.append(&#123;</span><br><span class="line">            <span class="string">&quot;question&quot;</span>: query,</span><br><span class="line">            <span class="string">&quot;true_answer&quot;</span>: true_answer,</span><br><span class="line">            <span class="string">&quot;model_answer&quot;</span>: model_answer</span><br><span class="line">        &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">        results.append(&#123;</span><br><span class="line">            <span class="string">&quot;question&quot;</span>: query,</span><br><span class="line">            <span class="string">&quot;true_answer&quot;</span>: true_answer,</span><br><span class="line">            <span class="string">&quot;model_answer&quot;</span>: <span class="string">f&quot;Error: <span class="subst">&#123;<span class="built_in">str</span>(e)&#125;</span>&quot;</span></span><br><span class="line">        &#125;)</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> sklearn.metrics.pairwise <span class="keyword">import</span> cosine_similarity</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"><span class="comment"># 计算两个文本的相似度</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_similarity</span>(<span class="params">true_answer, model_answer, embedder=embedding</span>):</span><br><span class="line">    embs = embedder.model.encode([true_answer, model_answer], convert_to_numpy=<span class="literal">True</span>)</span><br><span class="line">    <span class="keyword">return</span> cosine_similarity([embs[<span class="number">0</span>]], [embs[<span class="number">1</span>]])[<span class="number">0</span>][<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 对所有结果进行相似度计算</span></span><br><span class="line"><span class="keyword">for</span> r <span class="keyword">in</span> results:</span><br><span class="line">    <span class="keyword">if</span> <span class="string">&quot;Error&quot;</span> <span class="keyword">not</span> <span class="keyword">in</span> r[<span class="string">&quot;model_answer&quot;</span>]:</span><br><span class="line">        r[<span class="string">&quot;similarity&quot;</span>] = get_similarity(r[<span class="string">&quot;true_answer&quot;</span>], r[<span class="string">&quot;model_answer&quot;</span>])</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        r[<span class="string">&quot;similarity&quot;</span>] = <span class="number">0.0</span>  <span class="comment"># 出错默认相似度为 0</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 转为 DataFrame 分析</span></span><br><span class="line">result_df = pd.DataFrame(results)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">result_df.to_excel(<span class="string">&quot;results2.xlsx&quot;</span>, index=<span class="literal">False</span>)</span><br><span class="line">average_similarity = result_df[<span class="string">&quot;similarity&quot;</span>].mean()</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;Average similarity: <span class="subst">&#123;average_similarity:<span class="number">.4</span>f&#125;</span>&quot;</span>)</span><br></pre></td></tr></table></figure>
+</article><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/img/avatar.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/environment-construction/umacos/" title="macOS 安装在外部存储设备中，并作为启动盘"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">macOS 安装在外部存储设备中，并作为启动盘</div></div><div class="info-2"><div class="info-item-1">参考：https://support.apple.com/zh-cn/111336 如果你有外置储存设备（例如 USB 或雷雳驱动器），则可以在这台设备上安装 macOS，然后将它用作 Mac 的启动磁盘。 注意：外部存储设备必须要符合一定标准，才可以作为启动盘。 外部存储设备中安装高版本 macOS 下载地址:https://support.apple.com/zh-cn/102662. 如果我们希望外部存储设备中的 macOS 版本高于（或等于）当前启动盘的 macOS，这操作就非常简单，只需要下载 macOS 安装包，然后点击安装，磁盘选择外部存储设备即可。 外部存储设备中安装低版本 macOS 此时，只能在恢复模式下，启动 macOS 引导程序，将 macOS 安装到外部存储设备中。 流程为：  下载低版本 macOS 安装包 制作 macOS 引导程序 重启进入恢复模式，选择 macOS 引导程序，安装 macOS 到外部存储设备  步骤2，使用 macOS 安装包中的 createinstallmedia 工具： sudo ./createinstallmedia...</div></div></div></a><a class="pagination-related" href="/posts/CPP/10/" title=""><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2"></div></div><div class="info-2"><div class="info-item-1">类和动态分配（一）设计一个String类  对类成员使用动态内存分配会产生一系列问题。我们需要对原有类体系进行扩充。  1. 实例：StringBad类 #include&lt;iostream&gt;#ifndef STRNGBAD_H_#define STRNGBAD_H_class StringBad&#123;private:    char * str;      //指向字符串的指针    int len;        //字符串的长度    static int num_strings;    //对象个数public:    StringBad(const char * s);   //构造函数    StringBad();                 //默认构造函数    ~StringBad();                //析构函数    //友元函数    friend std::ostream &amp; operator&lt;&lt;(std::ostream &amp; os,const StringBad &amp;...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#llama-cpp-python-%E7%9A%84%E5%AE%89%E8%A3%85"><span class="toc-number">1.</span> <span class="toc-text">llama-cpp-python 的安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E9%87%8F%E5%8C%96%E7%9A%84%E6%A8%A1%E5%9E%8B"><span class="toc-number">2.</span> <span class="toc-text">安装量化的模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9E%84%E5%BB%BA-RAG"><span class="toc-number">3.</span> <span class="toc-text">构建 RAG</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%90%E8%A1%8C-llama-cpp-server"><span class="toc-number">3.1.</span> <span class="toc-text">运行 llama.cpp server</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9E%84%E5%BB%BA%E7%9F%A5%E8%AF%86%E5%BA%93"><span class="toc-number">3.2.</span> <span class="toc-text">构建知识库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A3%80%E7%B4%A2"><span class="toc-number">3.3.</span> <span class="toc-text">检索</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%9F%E6%88%90"><span class="toc-number">3.4.</span> <span class="toc-text">生成</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%8C%E6%95%B4%E4%BB%A3%E7%A0%81"><span class="toc-number">4.</span> <span class="toc-text">完整代码</span></a></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2025 By ShawnX</div><div class="footer_custom_text">Hi, welcome to my blog</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"></div><div id="rightside-config-show"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(async () => {
+  const showKatex = () => {
+    document.querySelectorAll('#article-container .katex').forEach(el => el.classList.add('katex-show'))
+  }
+
+  if (!window.katex_js_css) {
+    window.katex_js_css = true
+    await btf.getCSS('https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css')
+    if (true) {
+      await btf.getScript('https://cdn.jsdelivr.net/npm/katex/dist/contrib/copy-tex.min.js')
+    }
+  }
+
+  showKatex()
+})()</script><script>(() => {
+  const runMermaid = ele => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    ele.forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const mermaidThemeConfig = `%%{init:{ 'theme':'${theme}'}}%%\n`
+      const mermaidID = `mermaid-${index}`
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+      const renderMermaid = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      // mermaid v9 and v10 compatibility
+      typeof renderFn === 'string' ? renderMermaid(renderFn) : renderFn.then(({ svg }) => renderMermaid(svg))
+    })
+  }
+
+  const codeToMermaid = () => {
+    const codeMermaidEle = document.querySelectorAll('pre > code.mermaid')
+    if (codeMermaidEle.length === 0) return
+
+    codeMermaidEle.forEach(ele => {
+      const preEle = document.createElement('pre')
+      preEle.className = 'mermaid-src'
+      preEle.hidden = true
+      preEle.textContent = ele.textContent
+      const newEle = document.createElement('div')
+      newEle.className = 'mermaid-wrap'
+      newEle.appendChild(preEle)
+      ele.parentNode.replaceWith(newEle)
+    })
+  }
+
+  const loadMermaid = () => {
+    if (false) codeToMermaid()
+    const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+    if ($mermaid.length === 0) return
+
+    const runMermaidFn = () => runMermaid($mermaid)
+    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaidFn)
+  }
+
+  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><script src="js/sakura.js"></script> - <script src="/js/custom.js"></script> - <div class="aplayer no-destroy" data-id="12839720510" data-server="netease" data-type="playlist" data-fixed="true"> </div><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="false" data-text="coding..,debugging..,running..." data-fontsize="15px" data-random="false" async="async"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script>(() => {
+  const destroyAplayer = () => {
+    if (window.aplayers) {
+      for (let i = 0; i < window.aplayers.length; i++) {
+        if (!window.aplayers[i].options.fixed) {
+          window.aplayers[i].destroy()
+        }
+      }
+    }
+  }
+
+  const runMetingJS = () => {
+    typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+  }
+
+  btf.addGlobalFn('pjaxSend', destroyAplayer, 'destroyAplayer')
+  btf.addGlobalFn('pjaxComplete', loadMeting, 'runMetingJS')
+})()</script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>(() => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => fn())
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      const usePjax = true
+      false 
+        ? (usePjax ? pjax.loadUrl('/404.html') : window.location.href = '/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})()</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

@@ -1,0 +1,6 @@
+*{
+    cursor: url("/cursor/zhengchang.cur"),auto!important;
+}
+:active{
+    cursor: url("/cursor/dianji.cur"),auto!important;
+}
