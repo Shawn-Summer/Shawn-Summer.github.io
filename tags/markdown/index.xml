@@ -1,3 +1,20 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Markdown on A minimal Hugo website</title><link>https://Shawn-Summer.github.io/tags/markdown/</link><description>Recent content in Markdown on A minimal Hugo website</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sun, 01 Jun 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://Shawn-Summer.github.io/tags/markdown/index.xml" rel="self" type="application/rss+xml"/><item><title>Markdown stress testing</title><link>https://Shawn-Summer.github.io/posts/test0/</link><pubDate>Sun, 01 Jun 2025 00:00:00 +0000</pubDate><guid>https://Shawn-Summer.github.io/posts/test0/</guid><description>简介 文章使用方法 这原本是一篇 Typora 下使用 Markdown 语法的案例实践分享，最早创建于 2021 年 11 月之前，于 2023 年 6 月大改。本篇文章使用 Markdown 标记语法编写而成，汇聚了常用 Markdown 语法标注。对于不同目标人群有不同的作用：
-对于 Markdown 学习者。可以获取文章源码（Github 仓库地址在下面），并使用你的本地编辑器打开。通过对比标记语言与渲染结果直接学习。如果你不喜欢这种 MarkDown 学习方式，你可以参考 GitHub 学习相关 Markdown 规范：基本撰写和格式语法 - GitHub 文档 对于其他人。这篇文章包含不同标准 Markdown 语法，你可以在任何 Markdown 编辑器打开以测试其渲染效果。 比如说——你。你使用什么方式看到这篇文章，就了解到你所用的软件对 Markdown 语言的支持情况。如果你通过我的博客打开，那么你看到的就是 Hexo 渲染后的结果（至少目前时是这样）。 比如说——我，笔记重度依赖。我需要对比本地编辑器的渲染器与 Hexo 各类渲染器和插件对 Markdown 的支持程度，以培养合适的写作习惯，加强核心工作流的可移植性。 文章目前可预览的在线版本：
-Hexo 渲染网页：Markdown渲染测试 | 半方池水半方田 (uuanqin.top)。源文件直接通过 Hexo 渲染生成的静态网页。 Github 仓库： https://github.com/uuanqin/Markdown-Grammar-Rendering-Test 。源文件的副本，不定期与 Hexo 本地同步。 Markdown 标准 约翰·格鲁伯在 2004 年创造了 Markdown 语言，Daring Fireball: Markdown。格鲁伯认为不应完全标准化：「不同的网站（和人们）有不同的需求。没有一种语法可以让所有人满意。1」</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Markdown on A minimal Hugo website</title><link>https://Shawn-Summer.github.io/tags/markdown/</link><description>Recent content in Markdown on A minimal Hugo website</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Sun, 01 Jun 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://Shawn-Summer.github.io/tags/markdown/index.xml" rel="self" type="application/rss+xml"/><item><title>Markdown stress testing</title><link>https://Shawn-Summer.github.io/posts/test0/</link><pubDate>Sun, 01 Jun 2025 00:00:00 +0000</pubDate><guid>https://Shawn-Summer.github.io/posts/test0/</guid><description>&lt;h1 id="简介">简介&lt;/h1>
+&lt;h2 id="文章使用方法">文章使用方法&lt;/h2>
+&lt;p>这原本是一篇 Typora 下使用 Markdown 语法的案例实践分享，最早创建于 2021 年 11 月之前，于 2023 年 6 月大改。本篇文章使用 Markdown 标记语法编写而成，汇聚了常用 Markdown 语法标注。对于不同目标人群有不同的作用：&lt;/p>
+&lt;ul>
+&lt;li>对于 Markdown 学习者。可以获取文章源码（Github 仓库地址在下面），并使用你的本地编辑器打开。通过对比标记语言与渲染结果直接学习。如果你不喜欢这种 MarkDown 学习方式，你可以参考 GitHub 学习相关 Markdown 规范：&lt;a href="https://docs.github.com/zh/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax">基本撰写和格式语法 - GitHub 文档&lt;/a>&lt;/li>
+&lt;li>对于其他人。这篇文章包含不同标准 Markdown 语法，你可以在任何 Markdown 编辑器打开以测试其渲染效果。
+&lt;ul>
+&lt;li>比如说——你。你使用什么方式看到这篇文章，就了解到你所用的软件对 Markdown 语言的支持情况。如果你通过我的博客打开，那么你看到的就是 Hexo 渲染后的结果（至少目前时是这样）。&lt;/li>
+&lt;li>比如说——我，笔记重度依赖。我需要对比本地编辑器的渲染器与 Hexo 各类渲染器和插件对 Markdown 的支持程度，以培养合适的写作习惯，加强核心工作流的可移植性。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>文章目前可预览的在线版本：&lt;/p>
+&lt;ul>
+&lt;li>Hexo 渲染网页：&lt;a href="https://uuanqin.top/p/3c4a82e6/">Markdown渲染测试 | 半方池水半方田 (uuanqin.top)&lt;/a>。源文件直接通过 Hexo 渲染生成的静态网页。&lt;/li>
+&lt;li>Github 仓库： &lt;a href="https://github.com/uuanqin/Markdown-Grammar-Rendering-Test">https://github.com/uuanqin/Markdown-Grammar-Rendering-Test&lt;/a> 。源文件的副本，不定期与 Hexo 本地同步。&lt;/li>
+&lt;/ul>
+&lt;h2 id="markdown-标准">Markdown 标准&lt;/h2>
+&lt;p>约翰·格鲁伯在 2004 年创造了 Markdown 语言，&lt;a href="https://daringfireball.net/projects/markdown/">Daring Fireball: Markdown&lt;/a>。格鲁伯认为不应完全标准化：「不同的网站（和人们）有不同的需求。没有一种语法可以让所有人满意。&lt;sup id="fnref:1">&lt;a href="#fn:1" class="footnote-ref" role="doc-noteref">1&lt;/a>&lt;/sup>」&lt;/p>
+&lt;p>下文将从 Commonmark、GFM 为基础分板块进行 Markdown 渲染测试。&lt;/p></description></item></channel></rss>

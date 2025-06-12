@@ -1,13 +1,106 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on A minimal Hugo website</title><link>https://Shawn-Summer.github.io/posts/</link><description>Recent content in Posts on A minimal Hugo website</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sun, 01 Jan 2023 08:30:00 -0700</lastBuildDate><atom:link href="https://Shawn-Summer.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Markdown basic testing1</title><link>https://Shawn-Summer.github.io/posts/abc/</link><pubDate>Tue, 03 Jun 2025 00:00:00 +0000</pubDate><guid>https://Shawn-Summer.github.io/posts/abc/</guid><description>一级标题 二级标题 三级标题 加粗文字
-斜体文字
-加粗且斜体
-这是删除线
-📋 列表 无序列表 项目 A 项目 B 子项目 B.1 子项目 B.2 有序列表 第一项 第二项 第三项 🔗 链接与图片 点击这里访问 OpenAI
-🔤 代码 行内代码： 这是 inline code 示例。
-代码块： def hello(name): print(f&amp;#34;Hello, {name}!&amp;#34;) hello(&amp;#34;Markdown&amp;#34;)</description></item><item><title>Markdown basic testing2</title><link>https://Shawn-Summer.github.io/posts/test2/</link><pubDate>Tue, 03 Jun 2025 00:00:00 +0000</pubDate><guid>https://Shawn-Summer.github.io/posts/test2/</guid><description>Markdown: Syntax Overview Philosophy Inline HTML Automatic Escaping for Special Characters Block Elements Paragraphs and Line Breaks Headers Blockquotes Lists Code Blocks Horizontal Rules Span Elements Links Emphasis Code Images Miscellaneous Backslash Escapes Automatic Links Note: This document is itself written using Markdown; you
-can see the source for it by adding '.text' to the URL.
-Overview Philosophy Markdown is intended to be as easy-to-read and easy-to-write as is feasible.</description></item><item><title>Markdown stress testing</title><link>https://Shawn-Summer.github.io/posts/test0/</link><pubDate>Sun, 01 Jun 2025 00:00:00 +0000</pubDate><guid>https://Shawn-Summer.github.io/posts/test0/</guid><description>简介 文章使用方法 这原本是一篇 Typora 下使用 Markdown 语法的案例实践分享，最早创建于 2021 年 11 月之前，于 2023 年 6 月大改。本篇文章使用 Markdown 标记语法编写而成，汇聚了常用 Markdown 语法标注。对于不同目标人群有不同的作用：
-对于 Markdown 学习者。可以获取文章源码（Github 仓库地址在下面），并使用你的本地编辑器打开。通过对比标记语言与渲染结果直接学习。如果你不喜欢这种 MarkDown 学习方式，你可以参考 GitHub 学习相关 Markdown 规范：基本撰写和格式语法 - GitHub 文档 对于其他人。这篇文章包含不同标准 Markdown 语法，你可以在任何 Markdown 编辑器打开以测试其渲染效果。 比如说——你。你使用什么方式看到这篇文章，就了解到你所用的软件对 Markdown 语言的支持情况。如果你通过我的博客打开，那么你看到的就是 Hexo 渲染后的结果（至少目前时是这样）。 比如说——我，笔记重度依赖。我需要对比本地编辑器的渲染器与 Hexo 各类渲染器和插件对 Markdown 的支持程度，以培养合适的写作习惯，加强核心工作流的可移植性。 文章目前可预览的在线版本：
-Hexo 渲染网页：Markdown渲染测试 | 半方池水半方田 (uuanqin.top)。源文件直接通过 Hexo 渲染生成的静态网页。 Github 仓库： https://github.com/uuanqin/Markdown-Grammar-Rendering-Test 。源文件的副本，不定期与 Hexo 本地同步。 Markdown 标准 约翰·格鲁伯在 2004 年创造了 Markdown 语言，Daring Fireball: Markdown。格鲁伯认为不应完全标准化：「不同的网站（和人们）有不同的需求。没有一种语法可以让所有人满意。1」</description></item><item><title>Post 3</title><link>https://Shawn-Summer.github.io/posts/post-3/</link><pubDate>Wed, 15 Mar 2023 11:00:00 -0700</pubDate><guid>https://Shawn-Summer.github.io/posts/post-3/</guid><description>Occaecat aliqua consequat laborum ut ex aute aliqua culpa quis irure esse magna dolore quis. Proident fugiat labore eu laboris officia Lorem enim. Ipsum occaecat cillum ut tempor id sint aliqua incididunt nisi incididunt reprehenderit. Voluptate ad minim sint est aute aliquip esse occaecat tempor officia qui sunt. Aute ex ipsum id ut in est velit est laborum incididunt. Aliqua qui id do esse sunt eiusmod id deserunt eu nostrud aute sit ipsum.</description></item><item><title>Post 2</title><link>https://Shawn-Summer.github.io/posts/post-2/</link><pubDate>Wed, 15 Feb 2023 10:00:00 -0700</pubDate><guid>https://Shawn-Summer.github.io/posts/post-2/</guid><description>Anim eiusmod irure incididunt sint cupidatat. Incididunt irure irure irure nisi ipsum do ut quis fugiat consectetur proident cupidatat incididunt cillum. Dolore voluptate occaecat qui mollit laborum ullamco et. Ipsum laboris officia anim laboris culpa eiusmod ex magna ex cupidatat anim ipsum aute. Mollit aliquip occaecat qui sunt velit ut cupidatat reprehenderit enim sunt laborum. Velit veniam in officia nulla adipisicing ut duis officia.
-Exercitation voluptate irure in irure tempor mollit Lorem nostrud ad officia.</description></item><item><title>Post 1</title><link>https://Shawn-Summer.github.io/posts/post-1/</link><pubDate>Sun, 15 Jan 2023 09:00:00 -0700</pubDate><guid>https://Shawn-Summer.github.io/posts/post-1/</guid><description>Tempor proident minim aliquip reprehenderit dolor et ad anim Lorem duis sint eiusmod. Labore ut ea duis dolor. Incididunt consectetur proident qui occaecat incididunt do nisi Lorem. Tempor do laborum elit laboris excepteur eiusmod do. Eiusmod nisi excepteur ut amet pariatur adipisicing Lorem.
-Occaecat nulla excepteur dolore excepteur duis eiusmod ullamco officia anim in voluptate ea occaecat officia. Cillum sint esse velit ea officia minim fugiat. Elit ea esse id aliquip pariatur cupidatat id duis minim incididunt ea ea.</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on A minimal Hugo website</title><link>https://Shawn-Summer.github.io/posts/</link><description>Recent content in Posts on A minimal Hugo website</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Tue, 03 Jun 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://Shawn-Summer.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Markdown basic testing1</title><link>https://Shawn-Summer.github.io/posts/abc/</link><pubDate>Tue, 03 Jun 2025 00:00:00 +0000</pubDate><guid>https://Shawn-Summer.github.io/posts/abc/</guid><description>&lt;h1 id="一级标题">一级标题&lt;/h1>
+&lt;h2 id="二级标题">二级标题&lt;/h2>
+&lt;h3 id="三级标题">三级标题&lt;/h3>
+&lt;hr>
+&lt;p>&lt;strong>加粗文字&lt;/strong>&lt;/p>
+&lt;p>&lt;em>斜体文字&lt;/em>&lt;/p>
+&lt;p>&lt;em>&lt;strong>加粗且斜体&lt;/strong>&lt;/em>&lt;/p>
+&lt;p>&lt;del>这是删除线&lt;/del>&lt;/p>
+&lt;hr>
+&lt;h3 id="-列表">📋 列表&lt;/h3>
+&lt;h4 id="无序列表">无序列表&lt;/h4>
+&lt;ul>
+&lt;li>项目 A&lt;/li>
+&lt;li>项目 B
+&lt;ul>
+&lt;li>子项目 B.1&lt;/li>
+&lt;li>子项目 B.2&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h4 id="有序列表">有序列表&lt;/h4>
+&lt;ol>
+&lt;li>第一项&lt;/li>
+&lt;li>第二项&lt;/li>
+&lt;li>第三项&lt;/li>
+&lt;/ol>
+&lt;hr>
+&lt;h3 id="-链接与图片">🔗 链接与图片&lt;/h3>
+&lt;p>&lt;a href="https://www.openai.com">点击这里访问 OpenAI&lt;/a>&lt;/p>
+&lt;p>&lt;img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Markdown-mark.svg/1920px-Markdown-mark.svg.png" alt="示例图片">&lt;/p>
+&lt;hr>
+&lt;h3 id="-代码">🔤 代码&lt;/h3>
+&lt;h4 id="行内代码">行内代码：&lt;/h4>
+&lt;p>这是 &lt;code>inline code&lt;/code> 示例。&lt;/p>
+&lt;h4 id="代码块">代码块：&lt;/h4>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">hello&lt;/span>(name):
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> print(&lt;span style="color:#e6db74">f&lt;/span>&lt;span style="color:#e6db74">&amp;#34;Hello, &lt;/span>&lt;span style="color:#e6db74">{&lt;/span>name&lt;span style="color:#e6db74">}&lt;/span>&lt;span style="color:#e6db74">!&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>hello(&lt;span style="color:#e6db74">&amp;#34;Markdown&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Markdown basic testing2</title><link>https://Shawn-Summer.github.io/posts/test2/</link><pubDate>Tue, 03 Jun 2025 00:00:00 +0000</pubDate><guid>https://Shawn-Summer.github.io/posts/test2/</guid><description>&lt;h1 id="markdown-syntax">Markdown: Syntax&lt;/h1>
+&lt;ul>
+&lt;li>&lt;a href="#overview">Overview&lt;/a>
+&lt;ul>
+&lt;li>&lt;a href="#philosophy">Philosophy&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#html">Inline HTML&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#autoescape">Automatic Escaping for Special Characters&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;a href="#block">Block Elements&lt;/a>
+&lt;ul>
+&lt;li>&lt;a href="#p">Paragraphs and Line Breaks&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#header">Headers&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#blockquote">Blockquotes&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#list">Lists&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#precode">Code Blocks&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#hr">Horizontal Rules&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;a href="#span">Span Elements&lt;/a>
+&lt;ul>
+&lt;li>&lt;a href="#link">Links&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#em">Emphasis&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#code">Code&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#img">Images&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;a href="#misc">Miscellaneous&lt;/a>
+&lt;ul>
+&lt;li>&lt;a href="#backslash">Backslash Escapes&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#autolink">Automatic Links&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>Note:&lt;/strong> This document is itself written using Markdown; you&lt;br>
+can &lt;a href="https://Shawn-Summer.github.io/projects/markdown/syntax.text">see the source for it by adding '.text' to the URL&lt;/a>.&lt;/p>
+&lt;hr>
+&lt;h2 id="overview">Overview&lt;/h2>
+&lt;h3 id="philosophy">Philosophy&lt;/h3>
+&lt;p>Markdown is intended to be as easy-to-read and easy-to-write as is feasible.&lt;/p>
+&lt;p>Readability, however, is emphasized above all else. A Markdown-formatted&lt;br>
+document should be publishable as-is, as plain text, without looking&lt;br>
+like it&amp;rsquo;s been marked up with tags or formatting instructions. While&lt;br>
+Markdown&amp;rsquo;s syntax has been influenced by several existing text-to-HTML&lt;br>
+filters &amp;ndash; including &lt;a href="http://docutils.sourceforge.net/mirror/setext.html">Setext&lt;/a>, &lt;a href="http://www.aaronsw.com/2002/atx/">atx&lt;/a>, &lt;a href="http://textism.com/tools/textile/">Textile&lt;/a>, &lt;a href="http://docutils.sourceforge.net/rst.html">reStructuredText&lt;/a>,&lt;br>
+&lt;a href="http://www.triptico.com/software/grutatxt.html">Grutatext&lt;/a>, and &lt;a href="http://ettext.taint.org/doc/">EtText&lt;/a> &amp;ndash; the single biggest source of&lt;br>
+inspiration for Markdown&amp;rsquo;s syntax is the format of plain text email.&lt;/p></description></item><item><title>Markdown stress testing</title><link>https://Shawn-Summer.github.io/posts/test0/</link><pubDate>Sun, 01 Jun 2025 00:00:00 +0000</pubDate><guid>https://Shawn-Summer.github.io/posts/test0/</guid><description>&lt;h1 id="简介">简介&lt;/h1>
+&lt;h2 id="文章使用方法">文章使用方法&lt;/h2>
+&lt;p>这原本是一篇 Typora 下使用 Markdown 语法的案例实践分享，最早创建于 2021 年 11 月之前，于 2023 年 6 月大改。本篇文章使用 Markdown 标记语法编写而成，汇聚了常用 Markdown 语法标注。对于不同目标人群有不同的作用：&lt;/p>
+&lt;ul>
+&lt;li>对于 Markdown 学习者。可以获取文章源码（Github 仓库地址在下面），并使用你的本地编辑器打开。通过对比标记语言与渲染结果直接学习。如果你不喜欢这种 MarkDown 学习方式，你可以参考 GitHub 学习相关 Markdown 规范：&lt;a href="https://docs.github.com/zh/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax">基本撰写和格式语法 - GitHub 文档&lt;/a>&lt;/li>
+&lt;li>对于其他人。这篇文章包含不同标准 Markdown 语法，你可以在任何 Markdown 编辑器打开以测试其渲染效果。
+&lt;ul>
+&lt;li>比如说——你。你使用什么方式看到这篇文章，就了解到你所用的软件对 Markdown 语言的支持情况。如果你通过我的博客打开，那么你看到的就是 Hexo 渲染后的结果（至少目前时是这样）。&lt;/li>
+&lt;li>比如说——我，笔记重度依赖。我需要对比本地编辑器的渲染器与 Hexo 各类渲染器和插件对 Markdown 的支持程度，以培养合适的写作习惯，加强核心工作流的可移植性。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>文章目前可预览的在线版本：&lt;/p>
+&lt;ul>
+&lt;li>Hexo 渲染网页：&lt;a href="https://uuanqin.top/p/3c4a82e6/">Markdown渲染测试 | 半方池水半方田 (uuanqin.top)&lt;/a>。源文件直接通过 Hexo 渲染生成的静态网页。&lt;/li>
+&lt;li>Github 仓库： &lt;a href="https://github.com/uuanqin/Markdown-Grammar-Rendering-Test">https://github.com/uuanqin/Markdown-Grammar-Rendering-Test&lt;/a> 。源文件的副本，不定期与 Hexo 本地同步。&lt;/li>
+&lt;/ul>
+&lt;h2 id="markdown-标准">Markdown 标准&lt;/h2>
+&lt;p>约翰·格鲁伯在 2004 年创造了 Markdown 语言，&lt;a href="https://daringfireball.net/projects/markdown/">Daring Fireball: Markdown&lt;/a>。格鲁伯认为不应完全标准化：「不同的网站（和人们）有不同的需求。没有一种语法可以让所有人满意。&lt;sup id="fnref:1">&lt;a href="#fn:1" class="footnote-ref" role="doc-noteref">1&lt;/a>&lt;/sup>」&lt;/p>
+&lt;p>下文将从 Commonmark、GFM 为基础分板块进行 Markdown 渲染测试。&lt;/p></description></item><item><title>Post 3</title><link>https://Shawn-Summer.github.io/posts/post-3/</link><pubDate>Wed, 15 Mar 2023 11:00:00 -0700</pubDate><guid>https://Shawn-Summer.github.io/posts/post-3/</guid><description>&lt;p>Occaecat aliqua consequat laborum ut ex aute aliqua culpa quis irure esse magna dolore quis. Proident fugiat labore eu laboris officia Lorem enim. Ipsum occaecat cillum ut tempor id sint aliqua incididunt nisi incididunt reprehenderit. Voluptate ad minim sint est aute aliquip esse occaecat tempor officia qui sunt. Aute ex ipsum id ut in est velit est laborum incididunt. Aliqua qui id do esse sunt eiusmod id deserunt eu nostrud aute sit ipsum. Deserunt esse cillum Lorem non magna adipisicing mollit amet consequat.&lt;/p></description></item><item><title>Post 2</title><link>https://Shawn-Summer.github.io/posts/post-2/</link><pubDate>Wed, 15 Feb 2023 10:00:00 -0700</pubDate><guid>https://Shawn-Summer.github.io/posts/post-2/</guid><description>&lt;p>Anim eiusmod irure incididunt sint cupidatat. Incididunt irure irure irure nisi ipsum do ut quis fugiat consectetur proident cupidatat incididunt cillum. Dolore voluptate occaecat qui mollit laborum ullamco et. Ipsum laboris officia anim laboris culpa eiusmod ex magna ex cupidatat anim ipsum aute. Mollit aliquip occaecat qui sunt velit ut cupidatat reprehenderit enim sunt laborum. Velit veniam in officia nulla adipisicing ut duis officia.&lt;/p>
+&lt;p>Exercitation voluptate irure in irure tempor mollit Lorem nostrud ad officia. Velit id fugiat occaecat do tempor. Sit officia Lorem aliquip eu deserunt consectetur. Aute proident deserunt in nulla aliquip dolore ipsum Lorem ut cupidatat consectetur sit sint laborum. Esse cupidatat sit sint sunt tempor exercitation deserunt. Labore dolor duis laborum est do nisi ut veniam dolor et nostrud nostrud.&lt;/p></description></item><item><title>Post 1</title><link>https://Shawn-Summer.github.io/posts/post-1/</link><pubDate>Sun, 15 Jan 2023 09:00:00 -0700</pubDate><guid>https://Shawn-Summer.github.io/posts/post-1/</guid><description>&lt;p>Tempor proident minim aliquip reprehenderit dolor et ad anim Lorem duis sint eiusmod. Labore ut ea duis dolor. Incididunt consectetur proident qui occaecat incididunt do nisi Lorem. Tempor do laborum elit laboris excepteur eiusmod do. Eiusmod nisi excepteur ut amet pariatur adipisicing Lorem.&lt;/p>
+&lt;p>Occaecat nulla excepteur dolore excepteur duis eiusmod ullamco officia anim in voluptate ea occaecat officia. Cillum sint esse velit ea officia minim fugiat. Elit ea esse id aliquip pariatur cupidatat id duis minim incididunt ea ea. Anim ut duis sunt nisi. Culpa cillum sit voluptate voluptate eiusmod dolor. Enim nisi Lorem ipsum irure est excepteur voluptate eu in enim nisi. Nostrud ipsum Lorem anim sint labore consequat do.&lt;/p></description></item></channel></rss>
