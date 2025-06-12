@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>basic on A minimal Hugo website</title><link>https://Shawn-Summer.github.io/tags/basic/</link><description>Recent content in basic on A minimal Hugo website</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 03 Jun 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://Shawn-Summer.github.io/tags/basic/index.xml" rel="self" type="application/rss+xml"/><item><title>Markdown basic testing1</title><link>https://Shawn-Summer.github.io/posts/abc/</link><pubDate>Tue, 03 Jun 2025 00:00:00 +0000</pubDate><guid>https://Shawn-Summer.github.io/posts/abc/</guid><description>一级标题 二级标题 三级标题 加粗文字
+斜体文字
+加粗且斜体
+这是删除线
+📋 列表 无序列表 项目 A 项目 B 子项目 B.1 子项目 B.2 有序列表 第一项 第二项 第三项 🔗 链接与图片 点击这里访问 OpenAI
+🔤 代码 行内代码： 这是 inline code 示例。
+代码块： def hello(name): print(f&amp;#34;Hello, {name}!&amp;#34;) hello(&amp;#34;Markdown&amp;#34;)</description></item><item><title>Markdown basic testing2</title><link>https://Shawn-Summer.github.io/posts/test2/</link><pubDate>Tue, 03 Jun 2025 00:00:00 +0000</pubDate><guid>https://Shawn-Summer.github.io/posts/test2/</guid><description>Markdown: Syntax Overview Philosophy Inline HTML Automatic Escaping for Special Characters Block Elements Paragraphs and Line Breaks Headers Blockquotes Lists Code Blocks Horizontal Rules Span Elements Links Emphasis Code Images Miscellaneous Backslash Escapes Automatic Links Note: This document is itself written using Markdown; you
+can see the source for it by adding '.text' to the URL.
+Overview Philosophy Markdown is intended to be as easy-to-read and easy-to-write as is feasible.</description></item></channel></rss>
