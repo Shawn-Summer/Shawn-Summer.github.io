@@ -1,18 +1,283 @@
-<!doctype html><html lang=en-US><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>markdown syntax testing 1 | Hugo website</title>
-<link rel=stylesheet href=/css/fonts.css><link rel=stylesheet href=/css/light.css media="(prefers-color-scheme: light)"><link rel=stylesheet href=/css/dark.css media="(prefers-color-scheme: dark)"><link rel=stylesheet href=/css/search-light.css media="(prefers-color-scheme: light)"><link rel=stylesheet href=/css/search-dark.css media="(prefers-color-scheme: dark)"><link rel=icon href=/favicon//favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon//favicon-32x32.png><link rel=apple-touch-icon sizes=180x180 href=/favicon//apple-touch-icon.png><link rel=manifest href=/favicon/site.webmanifest></head><nav><ul class=menu><li><a href=/en/>Home</a></li><li><a href=/en/about/>About</a></li><li><a href=/en/categories/>Categories</a></li><li><a href=/en/tags/>Tags</a></li><li><a href=/en/index.xml>Subscribe</a></li><li><a href=/zh/posts/post-1/>Chinese</a></li><li id=search-click class=menu-item><a class=menu-item-link href=javascript:void(0)>Search</a></li></ul><hr></nav><div id=fastSearch><input id=searchInput><ul id=searchResults></ul></div><div class=article-meta><h1><span class=title>markdown syntax testing 1</span></h1><h2 class=date>2023/01/01</h2></div><link rel=stylesheet href=/css/toc-light.css media="(prefers-color-scheme: light)"><link rel=stylesheet href=/css/toc-dark.css media="(prefers-color-scheme: dark)"><div class=post-toc id=post-toc><aside><nav id=TableOfContents><ol><li><a href=#text-styles>Text Styles</a></li><li><a href=#lists>Lists</a><ol><li><a href=#ordered-list>Ordered List</a></li><li><a href=#unordered-list>Unordered List</a></li></ol></li><li><a href=#code-blocks>Code Blocks</a><ol><li><a href=#python-example>Python Example</a></li><li><a href=#bash-commands>Bash Commands</a></li></ol></li><li><a href=#text-styles-1>Text Styles</a></li><li><a href=#lists-1>Lists</a><ol><li><a href=#ordered-list-1>Ordered List</a></li><li><a href=#unordered-list-1>Unordered List</a></li></ol></li><li><a href=#code-blocks-1>Code Blocks</a><ol><li><a href=#python-example-1>Python Example</a></li><li><a href=#bash-commands-1>Bash Commands</a></li></ol></li><li><a href=#math-formula-katex>Math Formula (KaTeX)</a></li><li><a href=#table>Table</a></li><li><a href=#blockquote--divider>Blockquote & Divider</a></li><li><a href=#image-display>Image Display</a></li><li><a href=#task-list>Task List</a></li></ol></nav></aside></div><a href=# id=toc-toggle title=切换目录></a><script src=/js/toc.js></script><main><h2 id=text-styles>Text Styles</h2><ul><li><em>Italic</em> or <em>italic</em></li><li><strong>Bold</strong> or <strong>bold</strong></li><li><del>Strikethrough</del></li><li>Inline code: <code>printf("Hello, DaLEX!");</code></li></ul><h2 id=lists>Lists</h2><h3 id=ordered-list>Ordered List</h3><ol><li>Dark mode support</li><li>KaTeX math rendering</li><li>Search, Table of Contents (TOC), and multilingual support</li></ol><h3 id=unordered-list>Unordered List</h3><ul><li>Minimal color scheme</li><li>Customizable styles</li><li>Quick deployment</li></ul><h2 id=code-blocks>Code Blocks</h2><h3 id=python-example>Python Example</h3><pre><code class=language-python>def greet(name):
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>markdown syntax testing 1  | Hugo website</title>
+    
+    <link rel="stylesheet" href="/css/fonts.css" />
+    
+      <link rel="stylesheet" href="/css/light.css" media="(prefers-color-scheme: light)">
+      <link rel="stylesheet" href="/css/dark.css" media="(prefers-color-scheme: dark)">
+    
+
+    
+        <link rel="stylesheet" href="/css/search-light.css" media="(prefers-color-scheme: light)">
+        <link rel="stylesheet" href="/css/search-dark.css" media="(prefers-color-scheme: dark)">
+      
+
+    <link rel="icon" href="/favicon//favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon//favicon-32x32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon//apple-touch-icon.png">
+    <link rel="manifest" href="/favicon/site.webmanifest">
+
+    
+  </head>
+
+    <nav>
+    <ul class="menu">
+    
+      <li><a href="/en/">Home</a></li>
+    
+      <li><a href="/en/about/">About</a></li>
+    
+      <li><a href="/en/categories/">Categories</a></li>
+    
+      <li><a href="/en/tags/">Tags</a></li>
+    
+      <li><a href="/en/index.xml">Subscribe</a></li>
+    
+    <li>
+      
+        
+          <a href="/zh/posts/post-1/">Chinese</a>
+        
+      
+    </li>
+    <li id="search-click" class="menu-item">
+          <a class="menu-item-link" href="javascript:void(0)">Search</a>
+      </li>
+    </ul>
+    <hr/>
+    </nav>
+    <div id="fastSearch">
+    <input id="searchInput">
+    <ul id="searchResults"></ul>
+</div>
+
+<div class="article-meta">
+<h1><span class="title">markdown syntax testing 1</span></h1>
+
+<h2 class="date">2023/01/01</h2>
+</div>
+
+
+  
+    <link rel="stylesheet" href="/css/toc-light.css" media="(prefers-color-scheme: light)">
+    <link rel="stylesheet" href="/css/toc-dark.css" media="(prefers-color-scheme: dark)">
+  
+
+  <div class="post-toc" id="post-toc">
+    <aside>
+      
+      
+      <nav id="TableOfContents">
+  <ol>
+    <li><a href="#text-styles">Text Styles</a></li>
+    <li><a href="#lists">Lists</a>
+      <ol>
+        <li><a href="#ordered-list">Ordered List</a></li>
+        <li><a href="#unordered-list">Unordered List</a></li>
+      </ol>
+    </li>
+    <li><a href="#code-blocks">Code Blocks</a>
+      <ol>
+        <li><a href="#python-example">Python Example</a></li>
+        <li><a href="#bash-commands">Bash Commands</a></li>
+      </ol>
+    </li>
+    <li><a href="#text-styles-1">Text Styles</a></li>
+    <li><a href="#lists-1">Lists</a>
+      <ol>
+        <li><a href="#ordered-list-1">Ordered List</a></li>
+        <li><a href="#unordered-list-1">Unordered List</a></li>
+      </ol>
+    </li>
+    <li><a href="#code-blocks-1">Code Blocks</a>
+      <ol>
+        <li><a href="#python-example-1">Python Example</a></li>
+        <li><a href="#bash-commands-1">Bash Commands</a></li>
+      </ol>
+    </li>
+    <li><a href="#math-formula-katex">Math Formula (KaTeX)</a></li>
+    <li><a href="#table">Table</a></li>
+    <li><a href="#blockquote--divider">Blockquote &amp; Divider</a></li>
+    <li><a href="#image-display">Image Display</a></li>
+    <li><a href="#task-list">Task List</a></li>
+  </ol>
+</nav>
+      
+    </aside>
+  </div>
+
+  
+  <a href="#" id="toc-toggle" title="切换目录"></a>
+  <script src="/js/toc.js"></script>
+
+
+
+  
+<main>
+<h2 id="text-styles">Text Styles</h2>
+<ul>
+<li><em>Italic</em> or <em>italic</em></li>
+<li><strong>Bold</strong> or <strong>bold</strong></li>
+<li><del>Strikethrough</del></li>
+<li>Inline code: <code>printf(&quot;Hello, DaLEX!&quot;);</code></li>
+</ul>
+<h2 id="lists">Lists</h2>
+<h3 id="ordered-list">Ordered List</h3>
+<ol>
+<li>Dark mode support</li>
+<li>KaTeX math rendering</li>
+<li>Search, Table of Contents (TOC), and multilingual support</li>
+</ol>
+<h3 id="unordered-list">Unordered List</h3>
+<ul>
+<li>Minimal color scheme</li>
+<li>Customizable styles</li>
+<li>Quick deployment</li>
+</ul>
+<h2 id="code-blocks">Code Blocks</h2>
+<h3 id="python-example">Python Example</h3>
+<pre><code class="language-python">def greet(name):
     return f&quot;Hello, {name}!&quot;
 
 print(greet(&quot;XMinimal&quot;))
-</code></pre><h3 id=bash-commands>Bash Commands</h3><pre><code class=language-bash>hugo new site mysite
+</code></pre>
+<h3 id="bash-commands">Bash Commands</h3>
+<pre><code class="language-bash">hugo new site mysite
 cd mysite
 git init
 git submodule add https://github.com/your-theme/xminimal themes/xminimal
-</code></pre><h2 id=text-styles-1>Text Styles</h2><ul><li><em>Italic</em> or <em>italic</em></li><li><strong>Bold</strong> or <strong>bold</strong></li><li><del>Strikethrough</del></li><li>Inline code: <code>printf("Hello, DaLEX!");</code></li></ul><h2 id=lists-1>Lists</h2><h3 id=ordered-list-1>Ordered List</h3><ol><li>Dark mode support</li><li>KaTeX math rendering</li><li>Search, TOC, multilingual support</li></ol><h3 id=unordered-list-1>Unordered List</h3><ul><li>Minimal color scheme</li><li>Customizable styles</li><li>Quick deployment</li></ul><h2 id=code-blocks-1>Code Blocks</h2><h3 id=python-example-1>Python Example</h3><pre><code class=language-python>def greet(name):
+</code></pre>
+<h2 id="text-styles-1">Text Styles</h2>
+<ul>
+<li><em>Italic</em> or <em>italic</em></li>
+<li><strong>Bold</strong> or <strong>bold</strong></li>
+<li><del>Strikethrough</del></li>
+<li>Inline code: <code>printf(&quot;Hello, DaLEX!&quot;);</code></li>
+</ul>
+<h2 id="lists-1">Lists</h2>
+<h3 id="ordered-list-1">Ordered List</h3>
+<ol>
+<li>Dark mode support</li>
+<li>KaTeX math rendering</li>
+<li>Search, TOC, multilingual support</li>
+</ol>
+<h3 id="unordered-list-1">Unordered List</h3>
+<ul>
+<li>Minimal color scheme</li>
+<li>Customizable styles</li>
+<li>Quick deployment</li>
+</ul>
+<h2 id="code-blocks-1">Code Blocks</h2>
+<h3 id="python-example-1">Python Example</h3>
+<pre><code class="language-python">def greet(name):
     return f&quot;Hello, {name}!&quot;
 
 print(greet(&quot;XMinimal&quot;))
-</code></pre><h3 id=bash-commands-1>Bash Commands</h3><pre><code class=language-bash>hugo new site mysite
+</code></pre>
+<h3 id="bash-commands-1">Bash Commands</h3>
+<pre><code class="language-bash">hugo new site mysite
 cd mysite
 git init
 git submodule add https://github.com/your-theme/xminimal themes/xminimal
-</code></pre><h2 id=math-formula-katex>Math Formula (KaTeX)</h2><p>Inline formula: Let $x^2 + y^2 = r^2$, then:</p><p>Block formula:</p><p>$$<br>\int_{-\infty}^{+\infty} e^{-x^2} = \sqrt{\pi}<br>$$</p><h2 id=table>Table</h2><table><thead><tr><th>Feature</th><th>Supported</th><th>Notes</th></tr></thead><tbody><tr><td>Dark Mode</td><td>yes</td><td>Auto or manual toggle</td></tr><tr><td>KaTeX</td><td>yes</td><td>Math formula rendering</td></tr><tr><td>TOC</td><td>yes</td><td>Auto-generated TOC</td></tr><tr><td>Multilingual</td><td>yes</td><td>i18n supported</td></tr><tr><td>Search</td><td>yes</td><td>Powered by fuse.js</td></tr></tbody></table><h2 id=blockquote--divider>Blockquote & Divider</h2><blockquote><p>A beautiful theme needs both soul and structure.<br>&mdash; DaLEX</p></blockquote><hr><h2 id=image-display>Image Display</h2><p><img src=https://raw.githubusercontent.com/Shawn-Summer/hugo-theme-DaLEX/main/images/dalex.jpg alt></p><h2 id=task-list>Task List</h2><ul><li><input checked disabled type=checkbox> Light & dark mode support</li><li><input checked disabled type=checkbox> KaTeX math rendering</li><li><input checked disabled type=checkbox> TOC and search support</li><li><input checked disabled type=checkbox> Multilingual support</li><li><input disabled type=checkbox> Comment system (optional integration)</li></ul></main><footer><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css><script defer src=https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js></script><script defer src=https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js onload='renderMathInElement(document.body,{delimiters:[{left:"$$",right:"$$",display:!0},{left:"$",right:"$",display:!1},{left:"\\[",right:"\\]",display:!0},{left:"\\(",right:"\\)",display:!1}]})'></script><script src=https://cdn.jsdelivr.net/npm/fuse.js@6.4.6></script><script>var currentLang="en"</script><script type=text/javascript src=/js/search.js></script><script src=/js/copybutton.js></script><hr>© <a href=https://shawn-summer.github.io/>Shawn X</a> 2024 &ndash; 2025 | powered by <a href=https://gohugo.io/>Hugo</a> | theme: <a href=https://github.com/Shawn-Summer/hugo-theme-DaLEX>DaLEX</a></footer></body></html>
+</code></pre>
+<h2 id="math-formula-katex">Math Formula (KaTeX)</h2>
+<p>Inline formula: Let $x^2 + y^2 = r^2$, then:</p>
+<p>Block formula:</p>
+<p>$$<br>
+\int_{-\infty}^{+\infty} e^{-x^2} = \sqrt{\pi}<br>
+$$</p>
+<h2 id="table">Table</h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Supported</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dark Mode</td>
+<td>yes</td>
+<td>Auto or manual toggle</td>
+</tr>
+<tr>
+<td>KaTeX</td>
+<td>yes</td>
+<td>Math formula rendering</td>
+</tr>
+<tr>
+<td>TOC</td>
+<td>yes</td>
+<td>Auto-generated TOC</td>
+</tr>
+<tr>
+<td>Multilingual</td>
+<td>yes</td>
+<td>i18n supported</td>
+</tr>
+<tr>
+<td>Search</td>
+<td>yes</td>
+<td>Powered by fuse.js</td>
+</tr>
+</tbody>
+</table>
+<h2 id="blockquote--divider">Blockquote &amp; Divider</h2>
+<blockquote>
+<p>A beautiful theme needs both soul and structure.<br>
+&mdash; DaLEX</p>
+</blockquote>
+<hr>
+<h2 id="image-display">Image Display</h2>
+<p><img src="https://raw.githubusercontent.com/Shawn-Summer/hugo-theme-DaLEX/main/images/dalex.jpg" alt=""></p>
+<h2 id="task-list">Task List</h2>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> Light &amp; dark mode support</li>
+<li><input checked="" disabled="" type="checkbox"> KaTeX math rendering</li>
+<li><input checked="" disabled="" type="checkbox"> TOC and search support</li>
+<li><input checked="" disabled="" type="checkbox"> Multilingual support</li>
+<li><input disabled="" type="checkbox"> Comment system (optional integration)</li>
+</ul>
+
+</main>
+
+
+  <footer>
+  
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false},
+            {left: '\\[', right: '\\]', display: true},
+            {left: '\\(', right: '\\)', display: false}
+        ]});"></script>
+
+
+
+
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6"></script>
+<script>
+  var currentLang = 'en';  
+</script>
+<script type="text/javascript" src="/js/search.js"></script>
+  <script src="/js/copybutton.js"></script>
+  
+  <hr/>
+  © <a href="https://shawn-summer.github.io/">Shawn X</a> 2024 &ndash; 2025 | powered by <a href="https://gohugo.io/">Hugo</a> | theme: <a href="https://github.com/Shawn-Summer/hugo-theme-DaLEX">DaLEX</a>
+  
+  </footer>
+  </body>
+</html>
+
