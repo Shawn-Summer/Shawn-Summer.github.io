@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>kaggle Detect hallucinations in LLMs | Hugo website</title>
+    
+    <link rel="stylesheet" href="/css/fonts.css" />
+    
+      <link rel="stylesheet" href="/css/light.css" media="(prefers-color-scheme: light)">
+      <link rel="stylesheet" href="/css/dark.css" media="(prefers-color-scheme: dark)">
+    
+
+    
+        <link rel="stylesheet" href="/css/search-light.css" media="(prefers-color-scheme: light)">
+        <link rel="stylesheet" href="/css/search-dark.css" media="(prefers-color-scheme: dark)">
+      
+
+    <link rel="icon" href="/favicon//favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon//favicon-32x32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon//apple-touch-icon.png">
+    <link rel="manifest" href="/favicon/site.webmanifest">
+
+    
+  </head>
+
+    <nav>
+    <ul class="menu">
+    
+      <li><a href="/zh/">主页</a></li>
+    
+      <li><a href="/zh/about/">关于</a></li>
+    
+      <li><a href="/zh/categories/">分类</a></li>
+    
+      <li><a href="/zh/tags/">标签</a></li>
+    
+      <li><a href="/zh/index.xml">订阅</a></li>
+    
+    <li>
+      
+    </li>
+    <li id="search-click" class="menu-item">
+          <a class="menu-item-link" href="javascript:void(0)">搜索</a>
+      </li>
+    </ul>
+    <hr/>
+    </nav>
+    <div id="fastSearch">
+    <input id="searchInput">
+    <ul id="searchResults"></ul>
+</div>
+
+<div class="article-meta">
+<h1><span class="title">kaggle Detect hallucinations in LLMs</span></h1>
+
+<h2 class="date">2025/01/29</h2>
+</div>
+
+
+  
+    <link rel="stylesheet" href="/css/toc-light.css" media="(prefers-color-scheme: light)">
+    <link rel="stylesheet" href="/css/toc-dark.css" media="(prefers-color-scheme: dark)">
+  
+
+  <div class="post-toc" id="post-toc">
+    <aside>
+      
+      
+      <nav id="TableOfContents">
+  <ol>
+    <li><a href="#运行环境使用框架语言">运行环境、使用框架、语言</a></li>
+    <li><a href="#数据分析特征设计抽取处理">数据分析、特征设计、抽取、处理</a>
+      <ol>
+        <li><a href="#简单文本特征抽取">简单文本特征抽取</a></li>
+        <li><a href="#tokenizer">tokenizer</a></li>
+        <li><a href="#生成训练集和测试集">生成训练集和测试集</a></li>
+      </ol>
+    </li>
+    <li><a href="#应对类别不平衡----focal_loss">应对：类别不平衡 &ndash; focal_loss</a></li>
+    <li><a href="#模型设计">模型设计</a>
+      <ol>
+        <li><a href="#tinybert">TinyBert</a></li>
+      </ol>
+    </li>
+    <li><a href="#训练模型">训练模型</a>
+      <ol>
+        <li><a href="#使用交叉验证来选择合理模型">使用交叉验证来选择合理模型</a></li>
+        <li><a href="#重新训练模型">重新训练模型</a></li>
+      </ol>
+    </li>
+    <li><a href="#实验结果分析">实验结果分析</a></li>
+    <li><a href="#参考文献">参考文献</a></li>
+  </ol>
+</nav>
+      
+    </aside>
+  </div>
+
+  
+  <a href="#" id="toc-toggle" title="切换目录"></a>
+  <script src="/js/toc.js"></script>
+
+
+
+  
+<main>
+<p>赛题链接：https://www.kaggle.com/competitions/ml-olympiad-detect-hallucinations-in-llms</p>
+<p>任务分析：这是一个文本分类任务，难点在于如何提取文本特征、建立文本关系特征，以及如何解决类别不平衡问题</p>
+<h2 id="运行环境使用框架语言">运行环境、使用框架、语言</h2>
+<p>操作系统：Linux ubuntu 4.15.0-213-generic #224-Ubuntu SMP Mon Jun 19 13:30:12 UTC 2023 x86_64 x86_64 x86_64 GNU/Linux</p>
+<p>硬件环境： Intel(R) Xeon(R) Gold 6226R CPU @ 2.90GHz +  NVIDIA GeForce RTX 3090 * 8 (CUDA Version: 12.4)</p>
+<p>语言和运行环境：python 3.9.21 (main, Dec 11 2024, 16:24:11) + jupyter notebook 7.2.2</p>
+<p>使用框架：pytorch 2.5.1+cu124</p>
+<p>lab2文件夹下，有6个文件：</p>
+<ul>
+<li><code>data_process.ipynb</code>：数据处理源代码</li>
+<li><code>StratifiedKFold.ipynb</code>：交叉验证，选择合理超参数源代码</li>
+<li><code>idea_model.ipynb</code>：训练模型，生成测试结果源代码</li>
+<li><code>submissions.csv</code>：测试结果</li>
+<li><code>lab2_report.pdf</code>：实验报告</li>
+</ul>
+<p>由于训练集和测试集文件太大，以下文件没有放入</p>
+<ul>
+<li><code>test.csv</code>：测试集</li>
+<li><code>train.csv</code>：训练集</li>
+<li><code>train_data.csv</code>：处理后的训练集</li>
+<li><code>test_data.csv</code>：处理后的测试集</li>
+<li><code>trained_model.pth</code>：模型权重</li>
+</ul>
+<h2 id="数据分析特征设计抽取处理">数据分析、特征设计、抽取、处理</h2>
+<p>将训练集和测试集放到一块做特征处理，抛开<code>Target</code>和<code>Id</code>以外，特征有：<code>Prompt</code>和<code>Answer</code>。这两个特征都是长文本特征，所以说这个任务的关键就在于，如何处理文本。</p>
+<h3 id="简单文本特征抽取">简单文本特征抽取</h3>
+<p>新增3列基础特征，分别表示 Prompt长度，Answer长度 以及 Answer是否为空</p>
+<p>代码如下：</p>
+<pre><code class="language-python">def feature_engineering(df_in): #处理数据 新增3列特征：表示 Prompt长度，Answer长度 以及 Answer是否为空
+    df = df_in.copy()
+    df[&quot;Prompt_n&quot;] = df[&quot;Prompt&quot;].apply(lambda x : len(x.split())) #新增两行 将表示 promp和 answer中词的个数
+    df[&quot;Answer_n&quot;] = df[&quot;Answer&quot;].apply(lambda x : len(str(x).split()))
+    df[&quot;isna&quot;] = 0 #新增一行 表示 Answer是否为NAN 是为1 不是为0
+    df.loc[df[&quot;Answer&quot;].isna(), &quot;isna&quot;] = 1
+    df.loc[df[&quot;Answer&quot;].isna(), &quot;Answer_n&quot;] = 0
+    df.loc[df[&quot;Answer&quot;].isna(), &quot;Answer&quot;] = &quot;NAN&quot; #将为nan的值替换为 NAN
+
+    # 对 'Prompt_n' 和 'Answer_n' 进行标准化：均值为 0，方差为 1
+    df['Prompt_n'] = (df['Prompt_n'] - df['Prompt_n'].mean()) / df['Prompt_n'].std()
+    df['Answer_n'] = (df['Answer_n'] - df['Answer_n'].mean()) / df['Answer_n'].std()
+    return df
+</code></pre>
+<h3 id="tokenizer">tokenizer</h3>
+<p>tokenizer将句子分割成词元序列，建立一个字典，给每个词一个整型id，这一既能保持时序特征，又方便计算机处理。</p>
+<p>首先看一下，Prompt的句长和Answer的句长，可以发现长度大于512的Prompt和长度大于256的Answer都很少，所以在做tokenizer时，我们设置prompt的最大长度为512，Answer的最大长度为256。</p>
+<img src="LLMhuanjue/1.jpg" alt="image-20250129032011675" style="zoom: 50%;" />
+<p>代码如下：</p>
+<pre><code class="language-python">from transformers import BertTokenizer
+
+max_len_prompt=512 #prompt最长不超过 512
+max_len_answer=256 #answer最长不超过 256
+# 初始化 tokenizer
+model_name = &quot;huawei-noah/TinyBERT_General_4L_312D&quot;
+tokenizer = BertTokenizer.from_pretrained(model_name)
+
+# 对 df_train 中的每一行进行 tokenization
+prompt_encodings = tokenizer(df_data['Prompt'].tolist(), padding=True, truncation=True, return_tensors='pt',max_length=max_len_prompt)
+answer_encodings = tokenizer(df_data['Answer'].tolist(), padding=True, truncation=True, return_tensors='pt',max_length=max_len_answer)
+</code></pre>
+<h3 id="生成训练集和测试集">生成训练集和测试集</h3>
+<p>在源码文件<code>data_process.ipynb</code>中，将数据处理完之后，存储为<code>train_data.csv</code>和<code>test_data.csv</code>，分别为训练集和测试集</p>
+<pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
+RangeIndex: 16687 entries, 0 to 16686
+Columns: 1541 entries, Id to labels
+dtypes: float64(2), int32(1), int64(1538)
+memory usage: 196.1 MB
+
+
+&lt;class 'pandas.core.frame.DataFrame'&gt;
+RangeIndex: 11125 entries, 16687 to 27811
+Columns: 1540 entries, Id to Answer_attention_mask_255
+dtypes: float64(2), int64(1538)
+memory usage: 130.7 MB
+</code></pre>
+<p>训练集中最后一列为<code>label</code>，即<code>Target</code>，所以比测试集列数大1。</p>
+<p>其余的列，训练集和测试集是一样的，具体表示为：Id，Prompt_n, Answer_n, is_na, 后面紧跟prompt对应的token和mask_attention，这两者的宽度都为<code>max_len_prompt</code>,后面再紧跟answer对应的token和mask_attention，这两者的宽度都为<code>max_len_answer</code>。</p>
+<h2 id="应对类别不平衡----focal_loss">应对：类别不平衡 &ndash; focal_loss</h2>
+<img src="LLMhuanjue/2.jpg" alt="image-20250129034315483" style="zoom:67%;" />
+<p>可见标签1的占比远小于标签0。计算一下具体比值为5793 /894=17.6655480984。</p>
+<p>我使用focal loss来解决这一类别不平衡问题：</p>
+<p>Focal Loss 是一种专门为解决类别不平衡问题设计的损失函数，最早由 Facebook 的研究人员在论文《Focal Loss for Dense Object Detection》中提出。它常用于目标检测任务（例如 RetinaNet），以缓解正负样本比例失衡对模型训练的影响。</p>
+<p>Focal Loss 的数学公式如下：<br>
+$$<br>
+FL(p_t) = -\alpha_t (1 - p_t)^\gamma \log(p_t)<br>
+$$</p>
+<ul>
+<li>
+<p>$p_t$: 样本的预测概率，表示模型预测的正确类别的概率。</p>
+<p>$$<br>
+p_t = \begin{cases} p, &amp; \text{如果标签为正样本} \ 1-p, &amp; \text{如果标签为负样本} \end{cases}<br>
+$$</p>
+<p>其中 p 是正类别的预测概率。</p>
+</li>
+<li>
+<p>$\alpha_t$: 平衡因子，用于平衡正负样本的影响（可选）。</p>
+</li>
+<li>
+<p>$\gamma$: 调节因子（Focusing Parameter），控制易分类样本的损失衰减速度。当 $\gamma=0$ 时，Focal Loss 等价于交叉熵损失。</p>
+</li>
+<li>
+<p>$(1-p_t)^\gamma$: 难度加权项。对于易分类的样本（$p_t$ 大），这一项接近 0，从而减少其对损失的贡献；对于难分类的样本（$p_t$ 小），这一项较大，从而增加其对损失的贡献。</p>
+</li>
+</ul>
+<p>代码如下：</p>
+<pre><code class="language-python">class FocalLoss(nn.Module):
+    def __init__(self, alpha, gamma=2, reduction='mean'):
+        &quot;&quot;&quot;
+        alpha: tensor数组 (num_label,1)
+        gamma: 难易样本调节因子。
+        reduction: 损失的聚合方式，支持 'mean', 'sum', or 'none'。
+        &quot;&quot;&quot;
+        super(FocalLoss, self).__init__()
+        self.alpha = alpha
+        self.gamma = gamma
+        self.reduction = reduction
+            
+    def forward(self, pred, target):
+        '''
+        pred: tensor数组 (batch_size,num_labels) 每个种类的预测概率 （不一定softmax）
+        target: tensor数组 (batch_size,) 真实标签
+        '''
+        device = target.device  # 使用 logits_prompt 的设备，或者根据需要选择一个设备
+        # 确保 target 和 self.alpha 都在同一个设备上
+        self.alpha = self.alpha.to(device)
+        
+        pred = F.softmax(pred, dim=1)  # 应用 softmax
+        pred=pred.gather(1, target.unsqueeze(1))  # 使用 target 索引 pred，每个元素选择其对应类别的概率 (batch_size,1)
+
+        # Focal Loss 计算公式
+        loss = -(1 - pred) ** self.gamma * torch.log(pred)  # -(1-p)^gamma * log(p) (batch_size,1)
+        selected_alpha = torch.matmul(F.one_hot(target, num_classes=2).float(), self.alpha)  # 计算每个pred对应的alpha (batch_size,1)
+        loss = loss * selected_alpha
+        
+        if self.reduction == 'mean':
+            return torch.mean(loss)
+        elif self.reduction == 'sum':
+            return torch.sum(loss)
+        else:
+            return loss
+</code></pre>
+<h2 id="模型设计">模型设计</h2>
+<p>如下图所示，给定prompt，大语言模型（LLM）可以生成answer和hallucinations，所以我认为，hallucinations直接由Prompt和LLM决定，而answer和hallucination之间应该是互相验证的关系。</p>
+<img src="LLMhuanjue/3.jpg" alt="Untitled Diagram.drawio" style="zoom: 80%;" />
+<p>基于以上思想，我设计了如下模型结构：</p>
+<img src="LLMhuanjue/Diagram.png" alt="Untitled Diagram.drawio (1)" style="zoom:80%;" />
+<p>loss函数由两个分类器的损失组成，一个是直接基于prompt生成的分类器，另一个是prompt结合answer后生成的分类器。这是因为，我觉得hallucination是直接由prompt决定的，所以直接训练一个基于prompt的分类器，为了加强这个分类器，将prompt混合answer信息，再训练一个分类器，即可。最终我们可以使用左上角的分类器做文本分类。</p>
+<p>代码如下：</p>
+<pre><code class="language-python">class CustomModel(nn.Module):
+    def __init__(self, model_name, num_labels):
+        super(CustomModel, self).__init__()
+        self.bert_1= BertModel.from_pretrained(model_name)
+        self.bert_2= BertModel.from_pretrained(model_name)
+        self.cross_attention = CrossAttention(self.bert_1.config.hidden_size)
+
+        # Extend classifiers to handle concatenated features
+        self.classifier_prompt = nn.Linear(self.bert_1.config.hidden_size + 1, num_labels)  # +1 for prompt_length_feature
+        self.classifier_mixed = nn.Linear(self.bert_2.config.hidden_size + 3, num_labels)  # +3 for answer_length_feature ,isna_feature and prompt_length_feature
+        
+        # 由于在多卡训练的时候，不希望返回标量，所以使用未平均过的loss，返回每个样本对应的loss，这是一个tensor
+        # 这样子做数据并行的时候，最后模型的输出在 dim0上面concat起来，得到的loss就是所有样本的loss
+        self.loss_fn = FocalLoss(alpha,reduction=None) 
+        
+    def forward(
+        self,
+        prompt_input_ids,
+        prompt_attention_mask,
+        answer_input_ids,
+        answer_attention_mask,
+        prompt_length_feature,
+        answer_length_feature,
+        answer_isna_feature,
+        labels=None
+    ):
+        # Generate hidden states for Prompt
+        prompt_outputs = self.bert_1(input_ids=prompt_input_ids, attention_mask=prompt_attention_mask)
+        prompt_hiddens = prompt_outputs.last_hidden_state  # (batch_size, seq_len, hidden_size)
+
+        # Generate hidden states for Answer
+        answer_outputs = self.bert_2(input_ids=answer_input_ids, attention_mask=answer_attention_mask)
+        answer_hiddens = answer_outputs.last_hidden_state  # (batch_size, seq_len, hidden_size)
+        
+        # Classify based on Prompt hidden states (CLS token)
+        cls_prompt = prompt_hiddens[:, 0, :]  # (batch_size, hidden_size)
+        cls_prompt_with_feature = torch.cat([cls_prompt, prompt_length_feature], dim=-1)  # Concatenate prompt_length_feature
+        logits_prompt = self.classifier_prompt(cls_prompt_with_feature) #仅通过prompt预测label
+        loss_f1 = self.loss_fn(logits_prompt, labels) if labels is not None else None
+        
+        # Cross-Attention between Prompt and Answer，将prompt信息和answer信息混合
+        attended_output = self.cross_attention(prompt_hiddens, answer_hiddens)  # (batch_size, seq_len, hidden_size)
+        cls_mixed = attended_output[:, 0, :]  # Use CLS token of the attended output
+
+        # Classify based on mixed hidden states
+        cls_mixed_with_features = torch.cat([cls_mixed, answer_length_feature, answer_isna_feature, prompt_length_feature], dim=-1)  # Concatenate additional features
+        logits_mixed = self.classifier_mixed(cls_mixed_with_features) #通过prompt和answer的混合特征 预测label
+        loss_f2 = self.loss_fn(logits_mixed, labels) if labels is not None else None
+        # Total loss
+        if labels is not None:
+            total_loss = w_1 * loss_f1 + w_2 * loss_f2
+            return total_loss, logits_prompt, logits_mixed
+        else:
+            # If labels are not provided, return the logits only (for inference)
+            return None,logits_prompt, logits_mixed
+</code></pre>
+<h3 id="tinybert">TinyBert</h3>
+<p>使用的TinyBert是huggingface中的<code>huawei-noah/TinyBERT_General_4L_312D</code>： <a href="https://huggingface.co/huawei-noah/TinyBERT_General_4L_312D">https://huggingface.co/huawei-noah/TinyBERT_General_4L_312D</a>。</p>
+<p>&ldquo;Huawei Noah&rsquo;s TinyBERT_General_4L_312D&rdquo; 是一种轻量级的预训练语言模型，它是基于 Transformer 的架构，旨在为各种自然语言处理（NLP）任务提供高效的解决方案，同时保持较低的计算资源消耗。</p>
+<p>TinyBERT 是 Huawei Noah 提出的一个轻量级的 BERT 变种，它通过模型压缩技术（如知识蒸馏）将 BERT 模型的大小和计算复杂度大幅度减少，同时尽可能保留 BERT 的性能。TinyBERT 适用于资源受限的环境，如移动设备、嵌入式设备等。</p>
+<p><strong>模型结构</strong>：</p>
+<ul>
+<li><strong>4 层（4L）</strong>：该模型有 4 层 Transformer 编码器，相较于 BERT 的 12 层，它显著减少了模型的规模，使得推理速度更快。</li>
+<li><strong>312 维（312D）</strong>：每一层的隐藏层维度为 312，相比 BERT 的 768 维度进一步减少了模型的存储需求。</li>
+</ul>
+<p>对于给定文本的tokens和掩码，TinyBert能生成包含文本上下文信息的隐藏层输出：(batch_size, seq_len, hidden_size)</p>
+<pre><code class="language-python">self.bert_1(input_ids=prompt_input_ids, attention_mask=prompt_attention_mask)
+prompt_hiddens = prompt_outputs.last_hidden_state
+</code></pre>
+<p>可以通过初始字符&rsquo;[cls]&lsquo;对应的信息，获取上下文信息，可用于文本分类</p>
+<pre><code class="language-python">cls_prompt = prompt_hiddens[:, 0, :] #(batch_size, hidden_size)
+</code></pre>
+<h2 id="训练模型">训练模型</h2>
+<h3 id="使用交叉验证来选择合理模型">使用交叉验证来选择合理模型</h3>
+<p>源码文件&rsquo;StratifiedKFold.ipynb&rsquo;中，定义了模型和一系列超参数，并采用层次化交叉验证来选择合理的超参数,代码如下：</p>
+<pre><code class="language-python">def stratified_k_fold_cross_validation(model, dataset, labels, k=5, num_epochs=3, batch_size=800, device=None):
+    # StratifiedKFold 实例化，确保标签分布相同
+    skf = StratifiedKFold(n_splits=k, shuffle=True, random_state=42)
+    all_losses = []
+    all_aucs = []
+    
+    # 将模型包装成多卡训练模式
+    if torch.cuda.device_count() &gt; 1:
+        print(f&quot;Using {torch.cuda.device_count()} GPUs!&quot;)
+        model = torch.nn.DataParallel(model)  # 多卡训练
+
+    initial_model_params = model.state_dict()
+    
+    # StratifiedKFold 划分并训练
+    for fold, (train_idx, val_idx) in enumerate(skf.split(dataset, labels)):
+        print(f&quot;Training fold {fold + 1}/{k}...&quot;)
+        #参数初始化
+        model.load_state_dict(initial_model_params)
+        
+        # 根据索引划分训练集和验证集
+        train_subset = Subset(dataset, train_idx)
+        val_subset = Subset(dataset, val_idx)
+        
+        # 创建 DataLoader
+        train_loader = DataLoader(train_subset, batch_size=batch_size, shuffle=True)
+        val_loader = DataLoader(val_subset, batch_size=batch_size, shuffle=False)
+        
+        # 创建优化器
+        optimizer = AdamW(model.parameters(), lr=5e-5)
+        scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min') #逐渐降低学习率
+
+        
+        # 将模型设置到设备
+        model.to(device)
+        
+        # 开始训练
+        for epoch in range(num_epochs):
+            print(f&quot;Epoch {epoch + 1}/{num_epochs}&quot;)
+            # 训练模型
+            train_loss = train(model, train_loader, optimizer, device)
+            print(f&quot;train_loss: {train_loss}&quot;)
+            # 验证模型
+            val_loss,auc = evaluate(model, val_loader, device)
+            print(f&quot;Validation loss: {val_loss}, AUC: {auc}&quot;)
+        
+        # 记录每一轮的损失（可以选择记录更细的指标）
+        all_aucs.append(auc)
+    
+    # 返回每一轮auc的平均值
+    avg_aucs = sum(all_aucs) / len(all_aucs)
+    print(f&quot;Average auc over {k} folds: {avg_aucs}&quot;)
+    return avg_aucs
+
+
+def train(model, train_loader, optimizer, device):
+    model.train()
+    total_loss = 0
+    for batch in train_loader:
+        batch = {k: v.to(device) for k, v in batch.items()}
+        total_loss, _,_ = model(
+            prompt_input_ids=batch['prompt_input_ids'],
+            prompt_attention_mask=batch['prompt_attention_mask'],
+            answer_input_ids=batch['answer_input_ids'],
+            answer_attention_mask=batch['answer_attention_mask'],
+            prompt_length_feature=batch['prompt_length_feature'],
+            answer_length_feature=batch['answer_length_feature'],
+            answer_isna_feature=batch['answer_isna_feature'],
+            labels=batch['labels']
+        )
+        #由于使用了多卡训练，total_loss为所有GPU上面样本对应的loss，是个tensor
+        total_loss=torch.mean(total_loss)
+        optimizer.zero_grad()
+        total_loss.backward()
+        optimizer.step()
+        total_loss += total_loss.item()
+    
+    avg_loss = total_loss / len(train_loader)
+    return avg_loss
+
+from sklearn.metrics import roc_auc_score
+def evaluate(model, eval_loader, device):
+    model.eval()
+    total_loss = 0
+    all_labels = []
+    all_preds = []
+    
+    with torch.no_grad():
+        for batch in eval_loader:
+            batch = {k: v.to(device) for k, v in batch.items()}
+            total_loss,_,logits_mixed  = model(
+                prompt_input_ids=batch['prompt_input_ids'],
+                prompt_attention_mask=batch['prompt_attention_mask'],
+                answer_input_ids=batch['answer_input_ids'],
+                answer_attention_mask=batch['answer_attention_mask'],
+                prompt_length_feature=batch['prompt_length_feature'],
+                answer_length_feature=batch['answer_length_feature'],
+                answer_isna_feature=batch['answer_isna_feature'],
+                labels=batch['labels']
+            )
+            
+            logits_mixed = F.softmax(logits_mixed, dim=-1)
+            # 计算损失
+            total_loss = torch.mean(total_loss)
+            total_loss += total_loss.item()
+            
+            # 收集标签和预测值用于AUC计算
+            all_labels.append(batch['labels'].cpu().numpy())
+            all_preds.append(logits_mixed.cpu().numpy())  # 假设 logits_mixed 是模型的预测输出
+            
+    # 将所有批次的标签和预测结果合并
+    all_labels = np.concatenate(all_labels)
+    all_preds = np.concatenate(all_preds)
+    
+    # 计算AUC
+    auc = roc_auc_score(all_labels, all_preds[:, 1])  # 选择第二列作为正类概率（假设是二分类）
+    
+    # 计算平均损失
+    avg_loss = total_loss / len(eval_loader)
+    
+    return avg_loss, auc
+
+
+</code></pre>
+<p>在选定的一组合理的超参数下，模型在验证集上的auc值为0.8241：</p>
+<img src="LLMhuanjue/4.jpg" alt="image-20250129070135142" style="zoom:80%;" />
+<h3 id="重新训练模型">重新训练模型</h3>
+<p>选好超参数后，模型需要在完整训练集上重新训练，这部分代码，位于源文件<code>idea_model.ipynb</code>中，其中源文件中<code>trained_model.pth</code>为训练完的权重。</p>
+<pre><code class="language-python">def train(model, train_loader, device):
+    if torch.cuda.device_count() &gt; 1:
+        print(f&quot;Using {torch.cuda.device_count()} GPUs!&quot;)
+        model = torch.nn.DataParallel(model)  # 多卡训练
+
+    optimizer = AdamW(model.parameters(), lr=5e-5)
+    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min') #逐渐降低学习率
+    # 将模型设置到设备
+    model.to(device)
+    model.train()
+    for epoch in range(num_epochs):
+        print(f&quot;Epoch {epoch + 1}/{num_epochs}&quot;)
+        total_loss = 0
+        for batch in train_loader:
+            batch = {k: v.to(device) for k, v in batch.items()}
+            total_loss, _,_ = model(
+                prompt_input_ids=batch['prompt_input_ids'],
+                prompt_attention_mask=batch['prompt_attention_mask'],
+                answer_input_ids=batch['answer_input_ids'],
+                answer_attention_mask=batch['answer_attention_mask'],
+                prompt_length_feature=batch['prompt_length_feature'],
+                answer_length_feature=batch['answer_length_feature'],
+                answer_isna_feature=batch['answer_isna_feature'],
+                labels=batch['labels']
+            )
+            #由于使用了多卡训练，total_loss为所有GPU上面样本对应的loss，是个tensor
+            total_loss=torch.mean(total_loss)
+            optimizer.zero_grad()
+            total_loss.backward()
+            optimizer.step()
+            total_loss += total_loss.item()
+        train_loss=total_loss / len(train_loader)
+        print(f&quot;train_loss: {train_loss}&quot;)
+        
+    model_save_path = 'trained_model.pth'  
+    torch.save(model.state_dict(), model_save_path) #保存模型参数
+    print(f&quot;Model saved to {model_save_path}&quot;)
+</code></pre>
+<h2 id="实验结果分析">实验结果分析</h2>
+<p>在源文件<code>idea_model.ipynb</code>中，最后使用测试集放到模型，输出的 <code>logits_mixed</code>，再加上一次<code>softmax</code>，形成不同标签的概率，然后依照此生成<code>submission.csv</code>文件。</p>
+<p>然后将这个文件上传到kaggle，得到分数，如下图：</p>
+<img src="LLMhuanjue/5.jpg" alt="image-20250129065456521" style="zoom:80%;" />
+<p>这个分数和在交叉验证中得到的结果差不多。</p>
+<h2 id="参考文献">参考文献</h2>
+<p>无</p>
+
+</main>
+
+
+  <footer>
+  
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false},
+            {left: '\\[', right: '\\]', display: true},
+            {left: '\\(', right: '\\)', display: false}
+        ]});"></script>
+
+
+
+
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6"></script>
+<script>
+  var currentLang = 'zh';  
+</script>
+<script type="text/javascript" src="/js/search.js"></script>
+  <script src="/js/copybutton.js"></script>
+  
+  <hr/>
+  © <a href="https://shawn-summer.github.io/">Shawn X</a> 2024 &ndash; 2025 | powered by <a href="https://gohugo.io/">Hugo</a> | theme: <a href="https://github.com/Shawn-Summer/hugo-theme-DaLEX">DaLEX</a>
+  
+  </footer>
+  </body>
+</html>
+

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>重装macOS | Hugo website</title>
+    
+    <link rel="stylesheet" href="/css/fonts.css" />
+    
+      <link rel="stylesheet" href="/css/light.css" media="(prefers-color-scheme: light)">
+      <link rel="stylesheet" href="/css/dark.css" media="(prefers-color-scheme: dark)">
+    
+
+    
+        <link rel="stylesheet" href="/css/search-light.css" media="(prefers-color-scheme: light)">
+        <link rel="stylesheet" href="/css/search-dark.css" media="(prefers-color-scheme: dark)">
+      
+
+    <link rel="icon" href="/favicon//favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon//favicon-32x32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon//apple-touch-icon.png">
+    <link rel="manifest" href="/favicon/site.webmanifest">
+
+    
+  </head>
+
+    <nav>
+    <ul class="menu">
+    
+      <li><a href="/zh/">主页</a></li>
+    
+      <li><a href="/zh/about/">关于</a></li>
+    
+      <li><a href="/zh/categories/">分类</a></li>
+    
+      <li><a href="/zh/tags/">标签</a></li>
+    
+      <li><a href="/zh/index.xml">订阅</a></li>
+    
+    <li>
+      
+    </li>
+    <li id="search-click" class="menu-item">
+          <a class="menu-item-link" href="javascript:void(0)">搜索</a>
+      </li>
+    </ul>
+    <hr/>
+    </nav>
+    <div id="fastSearch">
+    <input id="searchInput">
+    <ul id="searchResults"></ul>
+</div>
+
+<div class="article-meta">
+<h1><span class="title">重装macOS</span></h1>
+
+<h2 class="date">2025/01/05</h2>
+</div>
+
+
+  
+    <link rel="stylesheet" href="/css/toc-light.css" media="(prefers-color-scheme: light)">
+    <link rel="stylesheet" href="/css/toc-dark.css" media="(prefers-color-scheme: dark)">
+  
+
+  <div class="post-toc" id="post-toc">
+    <aside>
+      
+      
+      <nav id="TableOfContents">
+  <ol>
+    <li><a href="#注意事项">注意事项</a></li>
+    <li><a href="#下载-macos-安装包">下载 macOS 安装包</a></li>
+    <li><a href="#mac-中的-devicepartitioncontainer-和-volume-的概念">Mac 中的 device、partition、container 和 Volume 的概念</a></li>
+    <li><a href="#安装-macos-引导程序">安装 macOS 引导程序</a></li>
+    <li><a href="#安装-macos-操作系统">安装 macOS 操作系统</a></li>
+    <li><a href="#恢复数据">恢复数据</a></li>
+  </ol>
+</nav>
+      
+    </aside>
+  </div>
+
+  
+  <a href="#" id="toc-toggle" title="切换目录"></a>
+  <script src="/js/toc.js"></script>
+
+
+
+  
+<main>
+<p>升级指定新版本的 macOS 非常简单，只需要在 app store 中下载并安装即可，这样也不会抹掉原来的数据。但是安装低版本 macOS，要想恢复数据会存在麻烦，因为 <strong>低版本的 macOS 可能不兼容高版本的数据</strong>，本文仅尝试恢复数据。</p>
+<h2 id="注意事项">注意事项</h2>
+<ol>
+<li>为了防止降级失败，我们不能将原来的操作系统抹掉。</li>
+<li>使用时间机器备份数据。</li>
+<li>将低版本的 macOS 安装在磁盘新分区或外部存储设备中。</li>
+</ol>
+<p>我们的总体思路是：安装低版本的 macOS，并使用迁移助手，从时间机器中恢复数据。</p>
+<h2 id="下载-macos-安装包">下载 macOS 安装包</h2>
+<p>下载地址:<a href="https://support.apple.com/zh-cn/102662">https://support.apple.com/zh-cn/102662</a>.<br>
+下载完成后，会得到一个应用程序包，我们会发现点击不了它，因为不能安装低版本 macOS，在 <code>xxx.app/Contents/Resources/</code> 目录下存在两个工具：</p>
+<ul>
+<li>createinstallmedia：制作 macOS 引导程序</li>
+<li>startosinstall：安装 macOS 操作系统</li>
+</ul>
+<p>macOS 引导程序和 macOS 操作系统是两个东西，前者是用来安装操作系统的。</p>
+<p>startosinstall 是无法使用的，因为 startosinstall 的 license 中规定，要安装的 macOS 不能低于当前启动宗卷的 macOS。</p>
+<p>我们可以使用 createinstallmedia 来将 macOS 引导程序安装在某个磁盘分区或者外部存储设备中，这样子在恢复模式中就可以使用该引导程序了。</p>
+<h2 id="mac-中的-devicepartitioncontainer-和-volume-的概念">Mac 中的 device、partition、container 和 Volume 的概念</h2>
+<p>参考：<a href="https://zhuanlan.zhihu.com/p/596119469">https://zhuanlan.zhihu.com/p/596119469</a></p>
+<p>device 是指存储设备：ssd 固态硬盘和 U 盘等</p>
+<p>device 可以进行分区，即获得 partition，相当于将存储设备一分为二，获得两个存储设备。我们需要在分区中安装文件系统，不然无法使用。</p>
+<p>文件系统有：</p>
+<ul>
+<li>APFS：apple file system，只有 macOS 可以识别的文件系统</li>
+<li>Mac OS extended（又称为 HFS+）：早期的苹果文件系统，目前仅用于存放 macOS 引导程序</li>
+<li>NTFS、FAT、EXFAT 等。其中 EXFAT 是 macOS 和 Windows 都可以识别的文件系统。</li>
+</ul>
+<p>container（即 APFS container）是一个逻辑概念，用来容纳 APFS volumes 的。<br>
+volume 又称宗卷，对应真正的文件系统，volume 可以挂载到路径上，例如 Macintosh HD 挂载在 <code>/</code> 中，constainer 下的所有 volumes 共享存储空间。所以一个 container 下，可以放各自独立的文件系统，每个文件系统都可以挂载到不同的路径上。</p>
+<p>我们需要明白：<strong>macOS 引导程序只能安装在 HFS+ 文件系统，macOS 操作系统（新版）只能安装在 APFS 文件系统</strong>。</p>
+<h2 id="安装-macos-引导程序">安装 macOS 引导程序</h2>
+<p>参考：<a href="https://support.apple.com/zh-cn/101578">https://support.apple.com/zh-cn/101578</a></p>
+<p>我们需要将磁盘分区或者 U 盘格式化为 macos 扩展 (日志式) + GUID。</p>
+<p>然后使用 <code>createinstallmedia</code> 工具：</p>
+<pre><code class="language-bash">sudo ./createinstallmedia --volume /Volumes/MyVolume
+</code></pre>
+<p>上面的 <code>Volumes/MyVolume</code> 表示 u 盘或者分区中 宗卷的装载点,其实就是把 macOS 引导程序安装到 <code>Volumes/MyVolume</code> 中.</p>
+<h2 id="安装-macos-操作系统">安装 macOS 操作系统</h2>
+<p>intel 芯片的 Mac,启动时长按 option,m 芯片的 mac,启动时长按电源键就可以进行恢复模式，此时我们可以看到 macOS 引导程序。</p>
+<p>我们需要使用一个新的磁盘分区（新的 APFS 宗卷），然后使用 macOS 引导程序将 macOS 操作系统安装到这个宗卷中。</p>
+<h2 id="恢复数据">恢复数据</h2>
+<p>macOS 安装完成后，会重启，然后以这个新的 APFS 宗卷作为启动盘来运行激活程序，在迁移助手中，选择从时间机器中恢复数据，则我们会看到时间机器中的数据副本，一般来说，这里的数据副本是高版本 macOS 的数据，我们期望用低版本 macOS 可以使用高版本的数据副本。</p>
+
+</main>
+
+
+  <footer>
+  
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false},
+            {left: '\\[', right: '\\]', display: true},
+            {left: '\\(', right: '\\)', display: false}
+        ]});"></script>
+
+
+
+
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6"></script>
+<script>
+  var currentLang = 'zh';  
+</script>
+<script type="text/javascript" src="/js/search.js"></script>
+  <script src="/js/copybutton.js"></script>
+  
+  <hr/>
+  © <a href="https://shawn-summer.github.io/">Shawn X</a> 2024 &ndash; 2025 | powered by <a href="https://gohugo.io/">Hugo</a> | theme: <a href="https://github.com/Shawn-Summer/hugo-theme-DaLEX">DaLEX</a>
+  
+  </footer>
+  </body>
+</html>
+

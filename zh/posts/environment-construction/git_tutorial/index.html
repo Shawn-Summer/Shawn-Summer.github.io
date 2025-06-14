@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Git的一些经验 | Hugo website</title>
+    
+    <link rel="stylesheet" href="/css/fonts.css" />
+    
+      <link rel="stylesheet" href="/css/light.css" media="(prefers-color-scheme: light)">
+      <link rel="stylesheet" href="/css/dark.css" media="(prefers-color-scheme: dark)">
+    
+
+    
+        <link rel="stylesheet" href="/css/search-light.css" media="(prefers-color-scheme: light)">
+        <link rel="stylesheet" href="/css/search-dark.css" media="(prefers-color-scheme: dark)">
+      
+
+    <link rel="icon" href="/favicon//favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon//favicon-32x32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon//apple-touch-icon.png">
+    <link rel="manifest" href="/favicon/site.webmanifest">
+
+    
+  </head>
+
+    <nav>
+    <ul class="menu">
+    
+      <li><a href="/zh/">主页</a></li>
+    
+      <li><a href="/zh/about/">关于</a></li>
+    
+      <li><a href="/zh/categories/">分类</a></li>
+    
+      <li><a href="/zh/tags/">标签</a></li>
+    
+      <li><a href="/zh/index.xml">订阅</a></li>
+    
+    <li>
+      
+    </li>
+    <li id="search-click" class="menu-item">
+          <a class="menu-item-link" href="javascript:void(0)">搜索</a>
+      </li>
+    </ul>
+    <hr/>
+    </nav>
+    <div id="fastSearch">
+    <input id="searchInput">
+    <ul id="searchResults"></ul>
+</div>
+
+<div class="article-meta">
+<h1><span class="title">Git的一些经验</span></h1>
+
+<h2 class="date">2024/11/15</h2>
+</div>
+
+
+  
+    <link rel="stylesheet" href="/css/toc-light.css" media="(prefers-color-scheme: light)">
+    <link rel="stylesheet" href="/css/toc-dark.css" media="(prefers-color-scheme: dark)">
+  
+
+  <div class="post-toc" id="post-toc">
+    <aside>
+      
+      
+      <nav id="TableOfContents">
+  <ol>
+    <li><a href="#连接问题">连接问题</a>
+      <ol>
+        <li><a href="#设置-http-proxy">设置 Http Proxy</a></li>
+        <li><a href="#设置-ssh-proxy">设置 SSH Proxy</a>
+          <ol>
+            <li><a href="#linux--macos">Linux &amp; macOS</a></li>
+            <li><a href="#windows">Windows</a></li>
+            <li><a href="#补充信息">补充信息</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+    <li><a href="#连接远程仓库和设置远程分支">连接远程仓库和设置远程分支</a></li>
+    <li><a href="#回退到某次提交并删除后续提交记录">回退到某次提交,并删除后续提交记录</a></li>
+    <li><a href="#删除一些提交记录">删除一些提交记录</a></li>
+    <li><a href="#git-reflog回溯到以前的状态"><code>git reflog</code>回溯到以前的状态</a></li>
+  </ol>
+</nav>
+      
+    </aside>
+  </div>
+
+  
+  <a href="#" id="toc-toggle" title="切换目录"></a>
+  <script src="/js/toc.js"></script>
+
+
+
+  
+<main>
+<h2 id="连接问题">连接问题</h2>
+<p>参考：https://v2ex.com/t/843383#reply47</p>
+<p>远程仓库有两种连接方式：https 和 ssh：</p>
+<pre><code>https://github.com/xxx.git
+git@github.com:xxx.git
+</code></pre>
+<p>可以使用 <code>git config -l</code> 来看当前仓库对应的远程仓库的链接来分辨使用的是 ssh 连接，还是 https 链接。</p>
+<p>我一般使用ssh key来完成身份验证,基本流程是,将公钥<code>id.rsa.pub</code>存储到GitHub账户上,私钥放到<code>~/.ssh/id_rsa</code>中,这样每次git push的时候,就会自动验证身份.</p>
+<h3 id="设置-http-proxy">设置 Http Proxy</h3>
+<pre><code>git config --global http.proxy socks5://127.0.0.1:7890
+</code></pre>
+<p>事实上使用 socks5h 更佳，即</p>
+<pre><code>git config --global http.proxy socks5h://127.0.0.1:7890
+</code></pre>
+<p>h 代表 host ，包括了域名解析，即域名解析也强制走这个 proxy 。另外不需要配置 <code>https.proxy</code>，git 不认的(<strong>关于这一点我认识不是很清晰，希望有人解惑</strong>)。</p>
+<p>推荐使用 socks5 代理，因为 socks5 包含 http(s)。而且 socks5 代理工作在 osi 七层模型中的会话层（第五层），https/http 代理工作在 osi 七层模型的应用层（第七层）, socks 代理更加底层。所以就没必要配置 <code>git config --global http.proxy http://127.0.0.1:7890</code> 了。</p>
+<p>这样配置的话会使本机所有的 git 服务都走了代理，假如你在良心云上（国内主机）部署了自己的 gitea ，域名 <code>https://gitea.example.com</code>，那么可以只配置 GitHub 的 http proxy ，即</p>
+<pre><code>git config --global http.https://github.com.proxy socks5://127.0.0.1:7890
+</code></pre>
+<p>当你访问 <code>https://github.com</code> 这个地址时，请使用 SOCKS5 代理 <code>127.0.0.1:7890</code></p>
+<h3 id="设置-ssh-proxy">设置 SSH Proxy</h3>
+<h4 id="linux--macos">Linux &amp; macOS</h4>
+<p>配置文件在用户家目录下的 .ssh/config 其中 <code>nc</code> 程序位于 <code>/usr/bin/nc</code></p>
+<pre><code>$ cat ~/.ssh/config
+
+Host github.com
+ Hostname ssh.github.com
+ IdentityFile /xxx/.ssh/github_id_rsa
+ User git
+ Port 443
+ ProxyCommand nc -v -x 127.0.0.1:7890 %h %p
+</code></pre>
+<p>nc 就是 netcat，是一个简单的 unix 实用程序，它使用 TCP 或 UDP 协议跨网络连接读取和写入数据。 它被设计成一个可靠的“后端”工具，可以直接使用或由其他程序和脚本轻松驱动。 同时，它还是一个功能丰富的网络调试和探索工具，因为它几乎可以创建您需要的任何类型的连接，并且具有几个有趣的内置功能。Netcat ，或实际程序命名的“nc”，早就应该作为另一种神秘但标准的 Unix 工具提供。</p>
+<h4 id="windows">Windows</h4>
+<p>Win 下与之对应的 netcat 程序是 <code>connect.exe</code>，程序位于 Git 安装路径 <code>C:\Program Files\Git\mingw64\bin</code>，win 下推荐使用 Git Bash ，路径也是 Linux style</p>
+<pre><code>$ cat ~/.ssh/config
+
+Host github.com
+ Hostname ssh.github.com
+ IdentityFile /c/users/xxx/.ssh/github_id_rsa
+ User git
+ Port 443
+ ProxyCommand connect -S 127.0.0.1:7890 %h %p
+</code></pre>
+<h4 id="补充信息">补充信息</h4>
+<p>为什么 hostname 是 <code>ssh.github.com</code>，为什么要用 443 端口，ssh 默认不是 22 端口么？</p>
+<p>因为有些木弟子对于 22 端口做了限制，要么禁止了，要么有些抽风，这时经常会遇到如下错误</p>
+<blockquote>
+<p>kex_exchange_identification: Connection closed by remote host</p>
+</blockquote>
+<p>所以如果 22 端口不畅就使用 443 ，安全可靠。ps: 22 端口时 hostname 请填 <code>github.com</code>。这部分请扩展阅读 <a href="https://docs.github.com/cn/authentication/troubleshooting-ssh/using-ssh-over-the-https-port">此文</a> 。</p>
+<p>使用 <code>ssh -T git@github.com</code> 来验证连接是否成功：</p>
+<pre><code>ssh -T git@github.com
+
+Connection to ssh.github.com port 443 [tcp/https] succeeded!
+Hi Shawn-Summer! You've successfully authenticated, but GitHub does not provide shell access.
+</code></pre>
+<h2 id="连接远程仓库和设置远程分支">连接远程仓库和设置远程分支</h2>
+<pre><code class="language-bash">git remote add origin &lt;远程仓库地址&gt; #添加名为origin的远程仓库
+</code></pre>
+<p>然后给本地分支绑定一个上游分支(远程分支)</p>
+<pre><code class="language-bash">git branch -u origin/main #给当前的head分支关联远程的main分支
+</code></pre>
+<p>然后就可以使用 <code>git push</code>来推送本地仓库了.</p>
+<h2 id="回退到某次提交并删除后续提交记录">回退到某次提交,并删除后续提交记录</h2>
+<p>使用reset命令将 Git 仓库的当前分支的 HEAD 指针、索引（暂存区）和工作目录都重置到指定的提交（commit）状态。</p>
+<pre><code class="language-shell">git reset --hard commit-hash
+</code></pre>
+<p>或者采用soft来保留修改，意思就是说，工作区代码不变，head回退到某次提交。</p>
+<pre><code class="language-shell">git reset --soft commit-hash
+</code></pre>
+<p>然后使用git push force来将本地HEAD指向的分支,推送到origin(远程仓库)上的同名分支,并且直接覆盖掉.</p>
+<pre><code class="language-shell">git push origin HEAD --force
+</code></pre>
+<p>例如,HEAD指向demo分支,origin为GitHub仓库,则上面这段代码会直接在,GitHub上对应仓库中,创建一个demo分支,用本地的分支copy过去.</p>
+<h2 id="删除一些提交记录">删除一些提交记录</h2>
+<p>可以使用<code>git rebase</code>来完成这个操作,下面指令使用交互式指令,来处理最近5次提交.</p>
+<pre><code class="language-bash">git rebase -i HEAD~5
+</code></pre>
+<p>或者使用下面指令,处理所有提交</p>
+<pre><code class="language-bash">git rebase -i --root
+</code></pre>
+<p>然后会看到类似这样的交互界面:</p>
+<pre><code class="language-bash"># Rebase 628acfa..ba99949 onto 628acfa (3 commands)
+#
+# Commands:
+# p, pick &lt;commit&gt; = use commit
+# r, reword &lt;commit&gt; = use commit, but edit the commit message
+# e, edit &lt;commit&gt; = use commit, but stop for amending
+# s, squash &lt;commit&gt; = use commit, but meld into previous commit
+# f, fixup [-C | -c] &lt;commit&gt; = like &quot;squash&quot; but keep only the previous
+#                    commit's log message, unless -C is used, in which case
+#                    keep only this commit's message; -c is same as -C but
+#                    opens the editor
+# x, exec &lt;command&gt; = run command (the rest of the line) using shell
+# b, break = stop here (continue rebase later with 'git rebase --continue')
+# d, drop &lt;commit&gt; = remove commit
+# l, label &lt;label&gt; = label current HEAD with a name
+# t, reset &lt;label&gt; = reset HEAD to a label
+# m, merge [-C &lt;commit&gt; | -c &lt;commit&gt;] &lt;label&gt; [# &lt;oneline&gt;]
+#         create a merge commit using the original merge commit's
+#         message (or the oneline, if no original merge commit was
+#         specified); use -c &lt;commit&gt; to reword the commit message
+# u, update-ref &lt;ref&gt; = track a placeholder for the &lt;ref&gt; to be updated
+#                       to this position in the new commits. The &lt;ref&gt; is
+#                       updated at the end of the rebase
+#
+# These lines can be re-ordered; they are executed from top to bottom.
+#
+# If you remove a line here THAT COMMIT WILL BE LOST.
+#
+# However, if you remove everything, the rebase will be aborted.
+</code></pre>
+<p>常用操作是:<code>squash</code>和<code>reword</code>,即合并提交和重新编辑提交日志.</p>
+<p>然后可能需要处理一些冲突,处理完毕之后就可以使用<code>git rebase --continue</code>指令,后续可能还有编辑日志等操作,最后完成<code>rebase</code>操作.</p>
+<h2 id="git-reflog回溯到以前的状态"><code>git reflog</code>回溯到以前的状态</h2>
+<p>有时候使用<code>git rebase</code>或者<code>git reset</code>后,一些提交记录直接消失了,这时候可以调用<code>git reflog</code>来查看<code>HEAD</code>的引用记录,</p>
+<pre><code class="language-bash">1a2b3c4 HEAD@{0}: commit: Some commit message
+2b3c4d5 HEAD@{1}: rebase: Some other commit message
+3c4d5e6 HEAD@{2}: commit: Yet another commit
+</code></pre>
+<p>然后使用下面指令恢复之前的状态</p>
+<pre><code class="language-bash">git reset --hard HEAD@{2}
+</code></pre>
+
+</main>
+
+
+  <footer>
+  
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false},
+            {left: '\\[', right: '\\]', display: true},
+            {left: '\\(', right: '\\)', display: false}
+        ]});"></script>
+
+
+
+
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6"></script>
+<script>
+  var currentLang = 'zh';  
+</script>
+<script type="text/javascript" src="/js/search.js"></script>
+  <script src="/js/copybutton.js"></script>
+  
+  <hr/>
+  © <a href="https://shawn-summer.github.io/">Shawn X</a> 2024 &ndash; 2025 | powered by <a href="https://gohugo.io/">Hugo</a> | theme: <a href="https://github.com/Shawn-Summer/hugo-theme-DaLEX">DaLEX</a>
+  
+  </footer>
+  </body>
+</html>
+
