@@ -1,46 +1,18 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Home on Hugo website</title>
-    <link>https://blog.imxxl.top/en/</link>
-    <description>Recent content in Home on Hugo website</description>
+    <title>Hugo website</title>
+    <link>https://shawn-summer.github.io/en/</link>
+    <description>Recent content on Hugo website</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-US</language>
-    <lastBuildDate>Sun, 01 Jan 2023 08:00:00 -0700</lastBuildDate>
-    <atom:link href="https://blog.imxxl.top/en/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://shawn-summer.github.io/en/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>markdown syntax testing 2</title>
-      <link>https://blog.imxxl.top/en/posts/post-3/</link>
-      <pubDate>Tue, 03 Jun 2025 00:00:00 +0000</pubDate>
-      <guid>https://blog.imxxl.top/en/posts/post-3/</guid>
-      <description>Markdown: Syntax Markdown: Syntax Overview Philosophy Block Elements Paragraphs and Line Breaks Headers Blockquotes Lists Code Blocks Span Elements Links Emphasis Code Note: This document is itself written using Markdown; you
-can see the source for it by adding &#39;.text&#39; to the URL.
-Overview Philosophy Markdown is intended to be as easy-to-read and easy-to-write as is feasible.
-Readability, however, is emphasized above all else. A Markdown-formatted
-document should be publishable as-is, as plain text, without looking</description>
-    </item>
-    <item>
-      <title>markdown syntax testing 1 </title>
-      <link>https://blog.imxxl.top/en/posts/post-1/</link>
-      <pubDate>Sun, 01 Jan 2023 08:00:00 -0700</pubDate>
-      <guid>https://blog.imxxl.top/en/posts/post-1/</guid>
-      <description>Text Styles Italic or italic Bold or bold Strikethrough Inline code: printf(&amp;quot;Hello, DaLEX!&amp;quot;); Lists Ordered List Dark mode support KaTeX math rendering Search, Table of Contents (TOC), and multilingual support Unordered List Minimal color scheme Customizable styles Quick deployment Code Blocks Python Example def greet(name): return f&amp;quot;Hello, {name}!&amp;quot; print(greet(&amp;quot;XMinimal&amp;quot;)) Bash Commands hugo new site mysite cd mysite git init git submodule add https://github.com/your-theme/xminimal themes/xminimal Text Styles Italic or italic Bold or bold Strikethrough Inline code: printf(&amp;quot;Hello, DaLEX!</description>
-    </item>
-    <item>
-      <title>About</title>
-      <link>https://blog.imxxl.top/en/about/</link>
+      <title>about me</title>
+      <link>https://shawn-summer.github.io/en/about/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>https://blog.imxxl.top/en/about/</guid>
-      <description>This site follows a minimalist design, using black, white, gray, and blue as its core colors. Black and white create strong contrast; gray softens the transition; blue highlights key interactions like links and buttons—keeping the visual experience clean and focused, inspired by Apple’s aesthetic.
-Generous whitespace and unified sans-serif typography ensure clarity and comfort. Interface elements are minimal, shown only when essential to reduce distractions.
-To enhance simplicity and efficiency , disabling the table of contents and search functions is recommended:</description>
-    </item>
-    <item>
-      <title>DaLEX</title>
-      <link>https://blog.imxxl.top/en/posts/post-2/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>https://blog.imxxl.top/en/posts/post-2/</guid>
-      <description>“Life is not just about the petty struggles in front of us; it also includes poetry and the distant horizon.” This sentence reminds us to hold on to our dreams and yearn for the vastness of the distant world. It encourages people not to forget their innermost longing for beautiful things in the hustle and bustle of daily life.</description>
+      <guid>https://shawn-summer.github.io/en/about/</guid>
+      <description></description>
     </item>
   </channel>
 </rss>

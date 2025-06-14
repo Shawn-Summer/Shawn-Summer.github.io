@@ -2,91 +2,52 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://blog.imxxl.top/en/categories/apple/</loc>
-    <lastmod>2025-06-03T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://blog.imxxl.top/en/tags/basic/</loc>
-    <lastmod>2025-06-03T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://blog.imxxl.top/en/categories/</loc>
-    <lastmod>2025-06-03T00:00:00+00:00</lastmod>
+    <loc>https://shawn-summer.github.io/en/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="zh-CN"
-                href="https://blog.imxxl.top/zh/categories/"
+                href="https://shawn-summer.github.io/zh/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en-US"
-                href="https://blog.imxxl.top/en/categories/"
+                href="https://shawn-summer.github.io/en/"
                 />
   </url><url>
-    <loc>https://blog.imxxl.top/en/categories/example/</loc>
-    <lastmod>2025-06-03T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://blog.imxxl.top/en/posts/post-3/</loc>
-    <lastmod>2025-06-03T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://blog.imxxl.top/en/posts/</loc>
-    <lastmod>2025-06-03T00:00:00+00:00</lastmod>
+    <loc>https://shawn-summer.github.io/en/about/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="zh-CN"
-                href="https://blog.imxxl.top/zh/posts/"
+                href="https://shawn-summer.github.io/zh/about/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en-US"
-                href="https://blog.imxxl.top/en/posts/"
+                href="https://shawn-summer.github.io/en/about/"
                 />
   </url><url>
-    <loc>https://blog.imxxl.top/en/tags/</loc>
-    <lastmod>2025-06-03T00:00:00+00:00</lastmod>
+    <loc>https://shawn-summer.github.io/en/categories/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="zh-CN"
-                href="https://blog.imxxl.top/zh/tags/"
+                href="https://shawn-summer.github.io/zh/categories/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en-US"
-                href="https://blog.imxxl.top/en/tags/"
+                href="https://shawn-summer.github.io/en/categories/"
                 />
   </url><url>
-    <loc>https://blog.imxxl.top/en/</loc>
-    <lastmod>2023-01-01T08:00:00-07:00</lastmod>
+    <loc>https://shawn-summer.github.io/en/tags/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="zh-CN"
-                href="https://blog.imxxl.top/zh/"
+                href="https://shawn-summer.github.io/zh/tags/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en-US"
-                href="https://blog.imxxl.top/en/"
+                href="https://shawn-summer.github.io/en/tags/"
                 />
-  </url><url>
-    <loc>https://blog.imxxl.top/en/posts/post-1/</loc>
-    <lastmod>2023-01-01T08:00:00-07:00</lastmod>
-  </url><url>
-    <loc>https://blog.imxxl.top/en/about/</loc>
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh-CN"
-                href="https://blog.imxxl.top/zh/about/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en-US"
-                href="https://blog.imxxl.top/en/about/"
-                />
-  </url><url>
-    <loc>https://blog.imxxl.top/en/tags/blue/</loc>
-  </url><url>
-    <loc>https://blog.imxxl.top/en/posts/post-2/</loc>
-  </url><url>
-    <loc>https://blog.imxxl.top/en/tags/green/</loc>
-  </url><url>
-    <loc>https://blog.imxxl.top/en/tags/red/</loc>
   </url>
 </urlset>
