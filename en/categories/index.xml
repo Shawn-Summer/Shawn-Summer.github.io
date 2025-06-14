@@ -2,24 +2,24 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Categories on Hugo website</title>
-    <link>https://shawn-summer.github.io/en/categories/</link>
+    <link>https://blog.imxxl.top/en/categories/</link>
     <description>Recent content in Categories on Hugo website</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-US</language>
     <lastBuildDate>Tue, 03 Jun 2025 00:00:00 +0000</lastBuildDate>
-    <atom:link href="https://shawn-summer.github.io/en/categories/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://blog.imxxl.top/en/categories/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>apple</title>
-      <link>https://shawn-summer.github.io/en/categories/apple/</link>
+      <link>https://blog.imxxl.top/en/categories/apple/</link>
       <pubDate>Tue, 03 Jun 2025 00:00:00 +0000</pubDate>
-      <guid>https://shawn-summer.github.io/en/categories/apple/</guid>
+      <guid>https://blog.imxxl.top/en/categories/apple/</guid>
       <description></description>
     </item>
     <item>
       <title>Example</title>
-      <link>https://shawn-summer.github.io/en/categories/example/</link>
+      <link>https://blog.imxxl.top/en/categories/example/</link>
       <pubDate>Tue, 03 Jun 2025 00:00:00 +0000</pubDate>
-      <guid>https://shawn-summer.github.io/en/categories/example/</guid>
+      <guid>https://blog.imxxl.top/en/categories/example/</guid>
       <description></description>
     </item>
   </channel>
